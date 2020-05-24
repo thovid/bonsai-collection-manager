@@ -25,7 +25,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
   void initState() {
     super.initState();
     _tree = _isCreateNew() ? null : widget.collection.findById(widget.id);
-    _title = _tree?.displayName ?? "Add new tree";
+    _title = _tree?.displayName ?? 'Add new tree';
     _isEdit = _isCreateNew();
   }
 
@@ -97,8 +97,6 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
 
   @override
   Widget build(BuildContext context) {
-    print("Build bonsai tree form");
-    //_treeBuilder = BonsaiTreeBuilder(fromTree: widget._originalTree);
     return Scrollbar(
         child: SingleChildScrollView(
       dragStartBehavior: DragStartBehavior.down,

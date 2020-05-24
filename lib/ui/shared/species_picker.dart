@@ -21,25 +21,29 @@ class SpeciesPicker extends StatefulWidget {
       {this.readOnly = false,
       this.initialValue,
       this.decoration,
-      this.onSaved}) {
-    print("created species picker with initialValue=${initialValue.latinName}");
-  }
+      this.onSaved}) {}
 
   @override
   SpeciesPickerState createState() => SpeciesPickerState();
 }
 
 class SpeciesPickerState extends State<SpeciesPicker> {
-  TextEditingController _typeAheadController = TextEditingController();
   Species _selectedValue;
 
   @override
   void initState() {
     super.initState();
-    _selectedValue =
-        widget.initialValue == Species.unknown ? null : widget.initialValue;
-    _typeAheadController.text = _selectedValue?.latinName ?? '';
+    _selectedValue = _findSelectedValue();
   }
+
+  @override
+  void didUpdateWidget(SpeciesPicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _selectedValue = _findSelectedValue();
+  }
+
+  Species _findSelectedValue() =>
+      widget.initialValue == Species.unknown ? null : widget.initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -57,10 +61,12 @@ class SpeciesPickerState extends State<SpeciesPicker> {
   }
 
   Widget _buildTypeAheadField() {
+    final TextEditingController controller =
+        TextEditingController(text: _selectedValue?.latinName ?? '');
     return TypeAheadFormField<Species>(
       textFieldConfiguration: TextFieldConfiguration(
           enabled: !widget.readOnly,
-          controller: _typeAheadController,
+          controller: controller,
           decoration: widget.decoration),
       suggestionsCallback: (pattern) {
         return widget.finder.findSpecies(pattern);
@@ -75,7 +81,7 @@ class SpeciesPickerState extends State<SpeciesPicker> {
         return suggestionsBox;
       },
       onSuggestionSelected: (suggestion) {
-        _typeAheadController.text = suggestion?.latinName;
+        controller.text = suggestion?.latinName;
         setState(() {
           _selectedValue = suggestion;
         });

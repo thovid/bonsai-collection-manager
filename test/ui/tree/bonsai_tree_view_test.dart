@@ -20,8 +20,8 @@ main() {
       .build();
 
   testWidgets('screen shows tree data', (WidgetTester tester) async {
-    await tester.pumpWidget(testAppWith(
-        BonsaiTreeView(BonsaiCollection.withTrees([aTree]), aTree.id)));
+    var collection = BonsaiCollection.withTrees([aTree]);
+    await tester.pumpWidget(testAppWith(BonsaiTreeView(collection, aTree.id)));
 
     expect(find.text(aTree.displayName), findsOneWidget);
     expect(find.text(aTree.species.latinName), findsOneWidget);
@@ -37,42 +37,53 @@ main() {
 
   testWidgets('screen can enter and cancel edit mode',
       (WidgetTester tester) async {
-    await tester.pumpWidget(testAppWith(
-        BonsaiTreeView(BonsaiCollection.withTrees([aTree]), aTree.id)));
+    var collection = BonsaiCollection.withTrees([aTree]);
+    await tester.pumpWidget(testAppWith(BonsaiTreeView(collection, aTree.id)));
     expect(find.text(aTree.treeName), findsOneWidget);
 
-    await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.edit));
-    await tester.pump();
+    await tester
+        .tap(find.widgetWithIcon(FloatingActionButton, Icons.edit))
+        .then((value) => tester.pump());
     expect(find.widgetWithText(RaisedButton, 'Cancel'), findsOneWidget);
     expect(find.widgetWithText(RaisedButton, 'Save'), findsOneWidget);
 
     await tester.enterText(find.bySemanticsLabel('Name'), 'Other Name');
     expect(find.text('Other Name'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(RaisedButton, 'Cancel'));
-    await tester.pump();
-    expect(
-        find.widgetWithIcon(FloatingActionButton, Icons.edit), findsOneWidget);
+    var cancelButton = find.widgetWithText(RaisedButton, 'Cancel');
+    await tester
+        .ensureVisible(cancelButton)
+        .then((value) => tester.tap(cancelButton))
+        .then((value) => tester.pump());
+    expect(collection.trees[0].treeName, aTree.treeName);
     expect(find.text(aTree.treeName), findsOneWidget);
   });
 
   testWidgets('screen can edit and save tree', (WidgetTester tester) async {
-    await tester.pumpWidget(testAppWith(
-        BonsaiTreeView(BonsaiCollection.withTrees([aTree]), aTree.id)));
-    await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.edit));
-    await tester.pump();
+    var collection = BonsaiCollection.withTrees([aTree]);
+    await tester
+        .pumpWidget(testAppWith(BonsaiTreeView(collection, aTree.id)))
+        .then((value) =>
+            tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.edit)))
+        .then((value) => tester.pump());
+    expect(find.widgetWithText(RaisedButton, 'Cancel'), findsOneWidget);
+    expect(find.widgetWithText(RaisedButton, 'Save'), findsOneWidget);
+
     await tester.enterText(find.bySemanticsLabel('Name'), 'Other Name');
-    await tester.tap(find.widgetWithText(RaisedButton, 'Save'));
-    await tester.pump();
+
+    var saveButton = find.widgetWithText(RaisedButton, 'Save');
+    await tester
+        .ensureVisible(saveButton)
+        .then((value) => tester.tap(saveButton))
+        .then((value) => tester.pump());
+
     expect(find.text('Other Name'), findsOneWidget);
-    expect(
-        find.widgetWithIcon(FloatingActionButton, Icons.edit), findsOneWidget);
+    expect(collection.trees[0].treeName, 'Other Name');
   });
 
   testWidgets('screen can create new tree', (WidgetTester tester) async {
     var collection = BonsaiCollection();
-    await tester
-        .pumpWidget(testAppWith(BonsaiTreeView(collection, null)));
+    await tester.pumpWidget(testAppWith(BonsaiTreeView(collection, null)));
 
     expect(find.widgetWithText(RaisedButton, 'Cancel'), findsOneWidget);
     expect(find.widgetWithText(RaisedButton, 'Save'), findsOneWidget);
