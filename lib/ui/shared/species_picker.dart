@@ -6,22 +6,22 @@ import 'package:bonsaicollectionmanager/ui/shared/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-mixin SpeciesFinder {
-  FutureOr<Iterable<Species>> findSpecies(String patter);
-}
+typedef FutureOr<Iterable<Species>> FindSpecies(String pattern);
 
 class SpeciesPicker extends StatefulWidget {
   final bool readOnly;
   final Species initialValue;
   final InputDecoration decoration;
   final Function(Species) onSaved;
-  final SpeciesFinder finder;
+  final FindSpecies findSpecies;
 
-  SpeciesPicker(this.finder,
+  SpeciesPicker(
       {this.readOnly = false,
       this.initialValue,
       this.decoration,
-      this.onSaved}) {}
+      @required this.onSaved,
+      @required this.findSpecies})
+      : assert(onSaved != null && findSpecies != null);
 
   @override
   SpeciesPickerState createState() => SpeciesPickerState();
@@ -69,7 +69,7 @@ class SpeciesPickerState extends State<SpeciesPicker> {
           controller: controller,
           decoration: widget.decoration),
       suggestionsCallback: (pattern) {
-        return widget.finder.findSpecies(pattern);
+        return widget.findSpecies(pattern);
       },
       itemBuilder: (context, suggestion) {
         return ListTile(

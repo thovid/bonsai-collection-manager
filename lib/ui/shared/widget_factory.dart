@@ -25,13 +25,6 @@ TextFormField formTextField(context,
       validator: null,
     );
 
-class TestSpeciesFinder with SpeciesFinder {
-  @override
-  FutureOr<Iterable<Species>> findSpecies(String patter) {
-    return KnownSpecies.knownSpecies;
-  }
-}
-
 /// Creates a widget to pick a tree species.
 Widget speciesPicker(context,
     {Species initialValue,
@@ -40,7 +33,6 @@ Widget speciesPicker(context,
     String label,
     Function(Species value) onChanged}) {
   return SpeciesPicker(
-    TestSpeciesFinder(),
     readOnly: readOnly,
     initialValue: initialValue,
     decoration: InputDecoration(
@@ -48,6 +40,7 @@ Widget speciesPicker(context,
       labelText: label,
     ),
     onSaved: onChanged,
+    findSpecies: KnownSpecies.findByPattern,
   );
 }
 
@@ -72,7 +65,7 @@ DropdownButtonFormField<T> formDropdownField<T>(context,
         onSaved: onSaved,
         onChanged: readOnly
             ? null // null to disable dropdown
-            : (_){});
+            : (_) {});
 
 /// Helper function to create a date field where the value can be edited via a
 /// date picker dialog.
