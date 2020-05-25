@@ -26,7 +26,7 @@ void main() {
     expect(tree.displayName, "Pinus Silvestris 1 \'The Tester\'");
     BonsaiTree treeWithoutName = (BonsaiTreeBuilder()
           ..species = pinusSilvestris
-          ..speciesCounter = 2)
+          ..speciesOrdinal = 2)
         .build();
     expect(treeWithoutName.displayName, "Pinus Silvestris 2");
   });

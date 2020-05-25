@@ -49,7 +49,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
       Visibility(
         visible: !_isEdit,
         child: FloatingActionButton(
-          onPressed: () => _startEdit(model, widget.id),
+          onPressed: _startEdit,
           tooltip: 'Edit',
           child: Icon(Icons.edit),
         ),
@@ -57,7 +57,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
 
   bool _isCreateNew() => widget.id == null;
 
-  _startEdit(BonsaiCollection collection, BonsaiTreeID id) {
+  _startEdit() {
     setState(() {
       _isEdit = true;
     });
@@ -72,8 +72,8 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
     setState(() {
       _isEdit = false;
       if (!wasCanceled) {
-        widget.collection.update(updatedTree);
-        _title = updatedTree.displayName;
+        _tree = widget.collection.update(updatedTree);
+        _title = _tree.displayName;
       }
     });
   }
@@ -113,14 +113,16 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    speciesPicker(context,
-                        initialValue: _treeBuilder.species,
-                        readOnly: widget._readOnly,
-                        hint: 'The species of the tree',
-                        label: 'Species',
-                        onChanged: (value) => setState(() {
-                              _treeBuilder.species = value;
-                            }),),
+                    speciesPicker(
+                      context,
+                      initialValue: _treeBuilder.species,
+                      readOnly: widget._readOnly,
+                      hint: 'The species of the tree',
+                      label: 'Species',
+                      onChanged: (value) => setState(() {
+                        _treeBuilder.species = value;
+                      }),
+                    ),
                     mediumSpace,
                     formTextField(context,
                         initialValue: _treeBuilder.treeName,

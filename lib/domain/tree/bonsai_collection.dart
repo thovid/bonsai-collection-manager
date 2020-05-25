@@ -26,23 +26,18 @@ class BonsaiCollection extends ChangeNotifier {
 
   List<BonsaiTree> get trees => List<BonsaiTree>.unmodifiable(_trees);
 
-  void add(BonsaiTree tree) {
-    _trees.add(tree);
-    notifyListeners();
-  }
-
-  List<BonsaiTree> findAll(Species species) {
-    return _trees.fold(<BonsaiTree>[], (previousValue, element) {
-      if (element.species == species) previousValue.add(element);
-      return previousValue;
-    });
+  BonsaiTree add(BonsaiTree tree) {
+   return update(tree);
   }
 
   BonsaiTree findById(BonsaiTreeID id) {
     return _trees.firstWhere((element) => element.id == id);
   }
 
-  void update(BonsaiTree tree) {
+  BonsaiTree update(BonsaiTree tree) {
+    tree = (BonsaiTreeBuilder(fromTree: tree)
+          ..speciesOrdinal = _nextOrdinalFor(tree.species))
+        .build();
     int index = _trees.indexWhere((element) => element.id == tree.id);
     if (index < 0) {
       _trees.add(tree);
@@ -52,19 +47,25 @@ class BonsaiCollection extends ChangeNotifier {
     }
 
     notifyListeners();
+    return tree;
   }
 
   Future<List<Species>> findSpeciesMatching(String pattern) async {
-    var lowerCasePattern = pattern.toLowerCase();
-    return Future(() {
-      var result = <Species>[];
-      species.forEach((element) {
-        if (element.latinName.toLowerCase().contains(lowerCasePattern) ||
-            element.informalName.toLowerCase().contains(lowerCasePattern)) {
-          result.add(element);
-        }
-      });
-      return result;
+    return _allSpecies.findMatching(pattern);
+  }
+
+  List<BonsaiTree> _findAll(Species species) {
+    return _trees.fold(<BonsaiTree>[], (previousValue, element) {
+      if (element.species == species) previousValue.add(element);
+      return previousValue;
     });
+  }
+
+  int _nextOrdinalFor(Species species) {
+    return _findAll(species).fold(
+        1,
+        (previousValue, element) => element.speciesOrdinal >= previousValue
+            ? element.speciesOrdinal + 1
+            : previousValue);
   }
 }

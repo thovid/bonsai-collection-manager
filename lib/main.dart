@@ -42,7 +42,7 @@ BonsaiCollection _testCollection(SpeciesRepository species) {
       30,
       (i) => (BonsaiTreeBuilder()
             ..species = aSpecies
-            ..speciesCounter = i)
+            ..speciesOrdinal = i)
           .build());
 
   final BonsaiCollection collection =

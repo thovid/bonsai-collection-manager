@@ -41,11 +41,11 @@ class BonsaiTree {
   /// The species of the tree.
   final Species species;
 
-  /// The counter of this tree in the species.
+  /// The orinal of this tree in the species.
   ///
   /// For example if this this is the third 'pinus silvestris' in the collection,
-  /// the speicesCounter would be 3.
-  final int speciesCounter;
+  /// the speicesOrdinal would be 3.
+  final int speciesOrdinal;
 
   /// The development level of the tree.
   final DevelopmentLevel developmentLevel;
@@ -63,7 +63,7 @@ class BonsaiTree {
       : id = builder._id,
         treeName = builder.treeName,
         species = builder.species,
-        speciesCounter = builder.speciesCounter,
+        speciesOrdinal = builder.speciesOrdinal,
         developmentLevel = builder.developmentLevel,
         potType = builder.potType,
         acquiredAt = builder.acquiredAt,
@@ -71,7 +71,7 @@ class BonsaiTree {
 
   /// Gets a nice display name for the tree.
   String get displayName {
-    String result = "${species.latinName} $speciesCounter";
+    String result = "${species.latinName} $speciesOrdinal";
     if (treeName != null && treeName.isNotEmpty) {
       result += " \'$treeName\'";
     }
@@ -84,7 +84,7 @@ class BonsaiTreeBuilder {
   BonsaiTreeID _id;
   String treeName;
   Species species;
-  int speciesCounter;
+  int speciesOrdinal;
   DevelopmentLevel developmentLevel;
   PotType potType;
   DateTime acquiredAt;
@@ -94,7 +94,7 @@ class BonsaiTreeBuilder {
       : _id = fromTree?.id ?? BonsaiTreeID.newId(),
         treeName = fromTree?.treeName ?? '',
         species = fromTree?.species ?? Species.unknown,
-        speciesCounter = fromTree?.speciesCounter ?? 1,
+        speciesOrdinal = fromTree?.speciesOrdinal ?? 1,
         developmentLevel = fromTree?.developmentLevel ?? DevelopmentLevel.raw,
         potType = fromTree?.potType ?? PotType.nursery_pot,
         acquiredAt = fromTree?.acquiredAt ?? DateTime.now(),

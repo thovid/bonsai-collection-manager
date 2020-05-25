@@ -17,34 +17,32 @@ main() {
 
   final BonsaiTree firstMugo = (BonsaiTreeBuilder()
         ..species = mugo
-        ..speciesCounter = 1)
+        ..speciesOrdinal = 1)
       .build();
 
   final BonsaiTree secondMugo = (BonsaiTreeBuilder()
         ..species = mugo
-        ..speciesCounter = 2)
+        ..speciesOrdinal = 2)
       .build();
 
   test('a new collection is empty', () {
     var collection = BonsaiCollection(species: testSpecies);
-    expect(collection.size, 0);
+    expect(collection.size, equals(0));
   });
 
   test('can add a tree to the collection', () {
     var collection = BonsaiCollection(species: testSpecies);
     var aTree = (BonsaiTreeBuilder()..treeName = "Test Tree").build();
     collection.add(aTree);
-    expect(collection.size, 1);
-    expect(collection.trees, contains(aTree));
+    expect(collection.size, equals(1));
   });
 
-  test('can get all trees for a given species', () {
+  test('calculates next ordinal for added tree', () {
     var collection = BonsaiCollection.withTrees([firstMugo, secondMugo], species: testSpecies);
-
-    var foundMugos = collection.findAll(mugo);
-    expect(foundMugos.length, 2);
-    var foundSilvestris = collection.findAll(silvestris);
-    expect(foundSilvestris.length, 0);
+    var aTree = (BonsaiTreeBuilder()..treeName = "Test Tree"
+    ..species = mugo).build();
+    var addedTree = collection.add(aTree);
+    expect(addedTree.speciesOrdinal, equals(3));
   });
 
   test('can get a tree with a given id', () {
@@ -61,6 +59,7 @@ main() {
         .build();
     collection.update(updated);
     var found = collection.findById(id);
-    expect(found, equals(updated));
+    expect(found.treeName, equals(updated.treeName));
+    expect(found.speciesOrdinal, equals(3));
   });
 }

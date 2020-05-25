@@ -17,7 +17,7 @@ main() {
   final BonsaiTree aTree = (BonsaiTreeBuilder()
         ..species = Species(TreeType.conifer, latinName: 'Pinus Mugo')
         ..treeName = 'My Tree'
-        ..speciesCounter = 1
+        ..speciesOrdinal = 1
         ..developmentLevel = DevelopmentLevel.refinement
         ..potType = PotType.bonsai_pot
         ..acquiredAt = DateTime(2020, 5, 20)
