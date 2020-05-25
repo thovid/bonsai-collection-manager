@@ -60,6 +60,6 @@ main() {
     collection.update(updated);
     var found = collection.findById(id);
     expect(found.treeName, equals(updated.treeName));
-    expect(found.speciesOrdinal, equals(3));
+    expect(found.speciesOrdinal, equals(2)); // ordinal should not change
   });
 }

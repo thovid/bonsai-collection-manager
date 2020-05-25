@@ -35,14 +35,16 @@ class BonsaiCollection extends ChangeNotifier {
   }
 
   BonsaiTree update(BonsaiTree tree) {
-    tree = (BonsaiTreeBuilder(fromTree: tree)
-          ..speciesOrdinal = _nextOrdinalFor(tree.species))
-        .build();
     int index = _trees.indexWhere((element) => element.id == tree.id);
+
     if (index < 0) {
+      tree = _updateSpeciesOrdinal(tree);
       _trees.add(tree);
     } else {
-      _trees.removeAt(index);
+      BonsaiTree oldVersion = _trees.removeAt(index);
+      if(oldVersion.species.latinName != tree.species.latinName) {
+        tree = _updateSpeciesOrdinal(tree);
+      }
       _trees.insert(index, tree);
     }
 
@@ -52,6 +54,12 @@ class BonsaiCollection extends ChangeNotifier {
 
   Future<List<Species>> findSpeciesMatching(String pattern) async {
     return _allSpecies.findMatching(pattern);
+  }
+
+  BonsaiTree _updateSpeciesOrdinal(BonsaiTree tree) {
+    return (BonsaiTreeBuilder(fromTree: tree)
+      ..speciesOrdinal = _nextOrdinalFor(tree.species))
+        .build();
   }
 
   List<BonsaiTree> _findAll(Species species) {
