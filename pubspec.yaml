@@ -23,9 +23,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   provider:
   intl:
+  intl_translation:
   uuid:
   flutter_typeahead:
 

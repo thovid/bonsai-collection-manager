@@ -1,0 +1,9 @@
+{
+  "@@last_modified": "2020-05-25T22:48:13.364340",
+  "app_title": "Bonsai Collection Manager",
+  "@app_title": {
+    "description": "title of the app",
+    "type": "text",
+    "placeholders": {}
+  }
+}
