@@ -3,13 +3,23 @@ import 'package:bonsaicollectionmanager/domain/tree/species.dart';
 import 'package:flutter/material.dart';
 
 class BonsaiCollection extends ChangeNotifier {
+  final SpeciesRepository _allSpecies;
   final List<BonsaiTree> _trees = <BonsaiTree>[];
-  BonsaiCollection();
-  BonsaiCollection.withTrees(List<BonsaiTree> trees) {
+
+  BonsaiCollection({@required SpeciesRepository species})
+      : this.withTrees([], species: species);
+
+  BonsaiCollection.withTrees(List<BonsaiTree> trees,
+      {@required SpeciesRepository species})
+      : assert(species != null),
+        _allSpecies = species {
     _trees.addAll(trees);
   }
 
-  num get size => _trees.length;
+  int get size => _trees.length;
+
+  List<Species> get species => _allSpecies.species;
+
   List<BonsaiTree> get trees => List<BonsaiTree>.unmodifiable(_trees);
 
   void add(BonsaiTree tree) {
@@ -30,7 +40,7 @@ class BonsaiCollection extends ChangeNotifier {
 
   void update(BonsaiTree tree) {
     int index = _trees.indexWhere((element) => element.id == tree.id);
-    if(index < 0) {
+    if (index < 0) {
       _trees.add(tree);
     } else {
       _trees.removeAt(index);
@@ -38,5 +48,19 @@ class BonsaiCollection extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  Future<List<Species>> findSpeciesMatching(String pattern) async {
+    var lowerCasePattern = pattern.toLowerCase();
+    return Future(() {
+      var result = <Species>[];
+      species.forEach((element) {
+        if (element.latinName.toLowerCase().contains(lowerCasePattern) ||
+            element.informalName.toLowerCase().contains(lowerCasePattern)) {
+          result.add(element);
+        }
+      });
+      return result;
+    });
   }
 }

@@ -4,6 +4,7 @@ import 'package:bonsaicollectionmanager/domain/tree/species.dart';
 import 'package:bonsaicollectionmanager/ui/tree/bonsai_collection_view.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../domain/tree/test_data.dart';
 import '../test_utils.dart';
 
 void main() {
@@ -13,7 +14,7 @@ void main() {
             ..treeName = "My Tree"
             ..species = Species(TreeType.conifer, latinName: "Testus Treeus"))
           .build()
-    ]);
+    ], species: testSpecies);
 
     await tester.pumpWidget(testAppWith(BonsaiCollectionView(collection)));
     expect(find.text('Testus Treeus 1 \'My Tree\''), findsOneWidget);

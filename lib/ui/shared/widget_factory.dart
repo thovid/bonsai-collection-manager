@@ -1,12 +1,14 @@
 import 'dart:async';
 
+import 'package:bonsaicollectionmanager/domain/tree/bonsai_collection.dart';
 import 'package:bonsaicollectionmanager/domain/tree/species.dart';
 import 'package:bonsaicollectionmanager/ui/shared/species_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 /// Simple helper to create a text form field.
-TextFormField formTextField(context,
+TextFormField formTextField(BuildContext context,
         {String initialValue,
         bool readOnly = true,
         String hint,
@@ -26,12 +28,14 @@ TextFormField formTextField(context,
     );
 
 /// Creates a widget to pick a tree species.
-Widget speciesPicker(context,
+Widget speciesPicker(BuildContext context,
     {Species initialValue,
     bool readOnly = true,
     String hint,
     String label,
+    FindSpecies findSpecies,
     Function(Species value) onChanged}) {
+  var finder = context.watch<BonsaiCollection>().findSpeciesMatching;
   return SpeciesPicker(
     readOnly: readOnly,
     initialValue: initialValue,
@@ -40,7 +44,7 @@ Widget speciesPicker(context,
       labelText: label,
     ),
     onSaved: onChanged,
-    findSpecies: KnownSpecies.findByPattern,
+    findSpecies: finder,
   );
 }
 

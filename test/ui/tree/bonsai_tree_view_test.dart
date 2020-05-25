@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
+import '../../domain/tree/test_data.dart';
 import '../test_utils.dart';
 
 main() {
@@ -20,7 +21,7 @@ main() {
       .build();
 
   testWidgets('screen shows tree data', (WidgetTester tester) async {
-    var collection = BonsaiCollection.withTrees([aTree]);
+    var collection = BonsaiCollection.withTrees([aTree], species: testSpecies);
     await tester.pumpWidget(testAppWith(BonsaiTreeView(collection, aTree.id)));
 
     expect(find.text(aTree.displayName), findsOneWidget);
@@ -37,7 +38,7 @@ main() {
 
   testWidgets('screen can enter and cancel edit mode',
       (WidgetTester tester) async {
-    var collection = BonsaiCollection.withTrees([aTree]);
+    var collection = BonsaiCollection.withTrees([aTree], species: testSpecies);
     await tester.pumpWidget(testAppWith(BonsaiTreeView(collection, aTree.id)));
     expect(find.text(aTree.treeName), findsOneWidget);
 
@@ -60,7 +61,7 @@ main() {
   });
 
   testWidgets('screen can edit and save tree', (WidgetTester tester) async {
-    var collection = BonsaiCollection.withTrees([aTree]);
+    var collection = BonsaiCollection.withTrees([aTree], species: testSpecies) ;
     await tester
         .pumpWidget(testAppWith(BonsaiTreeView(collection, aTree.id)))
         .then((value) =>
@@ -82,7 +83,7 @@ main() {
   });
 
   testWidgets('screen can create new tree', (WidgetTester tester) async {
-    var collection = BonsaiCollection();
+    var collection = BonsaiCollection(species: testSpecies);
     await tester.pumpWidget(testAppWith(BonsaiTreeView(collection, null)));
 
     expect(find.widgetWithText(RaisedButton, 'Cancel'), findsOneWidget);

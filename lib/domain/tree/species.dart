@@ -1,16 +1,36 @@
 /// General type a tree can be.
 enum TreeType { conifer, deciduous, broadleaf_evergreen, tropical }
 
+abstract class SpeciesRepository {
+  List<Species> get species;
+
+  Future<List<Species>> findMatching(String pattern) async {
+    var lowerCasePattern = pattern.toLowerCase();
+    return Future(() {
+      var result = <Species>[];
+      species.forEach((element) {
+        if (element._searchString.contains(lowerCasePattern)) {
+          result.add(element);
+        }
+      });
+      return result;
+    });
+  }
+}
+
 // The species of the tree.
 class Species {
-  static const Species unknown = const Species(TreeType.conifer,
-      latinName: "unknown", informalName: "unknown");
+  static Species unknown =
+      Species(TreeType.conifer, latinName: "unknown", informalName: "unknown");
 
   final String latinName;
   final String informalName;
   final TreeType type;
+  final String _searchString;
 
-  const Species(this.type, {this.latinName, this.informalName});
+  Species(this.type, {this.latinName, this.informalName})
+      : _searchString =
+            latinName?.toLowerCase() ?? '' + informalName?.toLowerCase() ?? '';
 }
 
 /// List of known species

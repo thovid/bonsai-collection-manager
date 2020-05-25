@@ -116,7 +116,7 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
                         label: 'Species',
                         onChanged: (value) => setState(() {
                               _treeBuilder.species = value;
-                            })),
+                            }),),
                     mediumSpace,
                     formTextField(context,
                         initialValue: _treeBuilder.treeName,

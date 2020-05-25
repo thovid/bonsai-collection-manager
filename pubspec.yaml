@@ -54,6 +54,8 @@ flutter:
     - family:  TreeTypeIcons
       fonts:
         - asset: icons/TreeTypeIcons.ttf
+  assets:
+   - data/bonsai_species.json
 
   # To add assets to your application, add an assets section, like this:
   # assets:

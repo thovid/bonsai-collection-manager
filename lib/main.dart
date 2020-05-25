@@ -4,12 +4,21 @@ import 'package:flutter/material.dart';
 
 import 'domain/tree/bonsai_tree.dart';
 import 'domain/tree/species.dart';
+import 'infrastructure/masterdata/tree_species_loader.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final SpeciesRepository species = await loadSpecies();
+  final BonsaiCollection collection = _testCollection(species);
+
+  runApp(MyApp(collection));
 }
 
 class MyApp extends StatelessWidget {
+  final BonsaiCollection collection;
+
+  MyApp(this.collection);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,20 +27,21 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.lightGreen,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: BonsaiCollectionView(testCollection()),
+      home: BonsaiCollectionView(collection),
     );
   }
+}
 
-  BonsaiCollection testCollection() {
-    final Species mugo = Species(TreeType.conifer, latinName: "Pinus Mugo");
-    final List<BonsaiTree> trees = List<BonsaiTree>.generate(
-        30,
-        (i) => (BonsaiTreeBuilder()
-              ..species = mugo
-              ..speciesCounter = i)
-            .build());
+BonsaiCollection _testCollection(SpeciesRepository species) {
+  final Species aSpecies = species.species[0];
+  final List<BonsaiTree> trees = List<BonsaiTree>.generate(
+      30,
+      (i) => (BonsaiTreeBuilder()
+            ..species = aSpecies
+            ..speciesCounter = i)
+          .build());
 
-    final BonsaiCollection collection = BonsaiCollection.withTrees(trees);
-    return collection;
-  }
+  final BonsaiCollection collection =
+      BonsaiCollection.withTrees(trees, species: species);
+  return collection;
 }
