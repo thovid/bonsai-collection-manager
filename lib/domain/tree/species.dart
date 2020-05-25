@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 by Thomas Vidic
+ */
+
 /// General type a tree can be.
 enum TreeType { conifer, deciduous, broadleaf_evergreen, tropical }
 

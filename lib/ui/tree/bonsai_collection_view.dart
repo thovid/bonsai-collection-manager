@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 by Thomas Vidic
+ */
+
 import 'package:bonsaicollectionmanager/domain/tree/bonsai_collection.dart';
 import 'package:bonsaicollectionmanager/ui/base/base_view.dart';
 import 'package:bonsaicollectionmanager/ui/shared/bonsai_tree_list_item.dart';

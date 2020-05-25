@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 by Thomas Vidic
+ */
+
 import 'package:bonsaicollectionmanager/domain/tree/species.dart';
 
 final SpeciesRepository testSpecies = TestSpeciesRepository([

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 by Thomas Vidic
+ */
+
 import 'dart:async' show Future;
 import 'dart:convert';
 import 'package:bonsaicollectionmanager/domain/tree/species.dart';

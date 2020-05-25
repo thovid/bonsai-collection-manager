@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 by Thomas Vidic
+ */
+
 // the development level of a tree
 import 'package:bonsaicollectionmanager/domain/tree/species.dart';
 import 'package:uuid/uuid.dart';

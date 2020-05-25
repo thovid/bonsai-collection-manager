@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 by Thomas Vidic
+ */
+
 import 'package:bonsaicollectionmanager/domain/tree/bonsai_collection.dart';
 import 'package:bonsaicollectionmanager/ui/tree/bonsai_collection_view.dart';
 import 'package:flutter/material.dart';

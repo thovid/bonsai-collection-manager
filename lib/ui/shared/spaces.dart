@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 by Thomas Vidic
+ */
+
 import 'package:flutter/material.dart';
 
 const smallSpace = SizedBox(height: 18);

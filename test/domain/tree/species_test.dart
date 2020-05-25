@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 by Thomas Vidic
+ */
+
 import 'package:test/test.dart';
 
 import 'test_data.dart';
