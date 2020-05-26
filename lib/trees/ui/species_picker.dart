@@ -57,17 +57,27 @@ class SpeciesPicker extends StatefulWidget {
 
 class SpeciesPickerState extends State<SpeciesPicker> {
   Species _selectedValue;
+  TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
     _selectedValue = _findSelectedValue();
+    _controller =
+        new TextEditingController(text: _selectedValue?.latinName ?? '');
   }
 
   @override
   void didUpdateWidget(SpeciesPicker oldWidget) {
     super.didUpdateWidget(oldWidget);
     _selectedValue = _findSelectedValue();
+    _controller.text = _selectedValue?.latinName ?? '';
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
   }
 
   Species _findSelectedValue() =>
@@ -89,13 +99,10 @@ class SpeciesPickerState extends State<SpeciesPicker> {
   }
 
   Widget _buildTypeAheadField() {
-    // TODO should I (and if so, how) dispose this?
-    var controller =
-        TextEditingController(text: _selectedValue?.latinName ?? '');
     return TypeAheadFormField<Species>(
       textFieldConfiguration: TextFieldConfiguration(
           enabled: !widget.readOnly,
-          controller: controller,
+          controller: _controller,
           decoration: widget.decoration),
       suggestionsCallback: (pattern) {
         return widget.findSpecies(pattern);
@@ -111,7 +118,7 @@ class SpeciesPickerState extends State<SpeciesPicker> {
         return suggestionsBox;
       },
       onSuggestionSelected: (suggestion) {
-        controller.text = suggestion?.latinName;
+        _controller.text = suggestion?.latinName;
         setState(() {
           _selectedValue = suggestion;
         });
