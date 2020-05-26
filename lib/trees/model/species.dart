@@ -33,8 +33,8 @@ class Species {
   final String _searchString;
 
   Species(this.type, {this.latinName, this.informalName})
-      : _searchString =
-            latinName?.toLowerCase() ?? '' + informalName?.toLowerCase() ?? '';
+      : _searchString = (latinName?.toLowerCase() ?? '') +
+            (informalName?.toLowerCase() ?? '');
 }
 
 /// List of known species

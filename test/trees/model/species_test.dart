@@ -14,4 +14,9 @@ main() {
     result = await testSpecies.findMatching("Tes");
     expect(result[0].latinName, 'test');
   });
+
+  test('repository finds species matching informal name', () async {
+    var result = await testSpecies.findMatching('reh');
+    expect(result[0].latinName, 'other');
+  });
 }
