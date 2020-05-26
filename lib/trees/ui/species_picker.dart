@@ -70,6 +70,7 @@ class SpeciesPickerState extends State<SpeciesPicker> {
     _selectedValue = _findSelectedValue();
   }
 
+
   Species _findSelectedValue() =>
       widget.initialValue == Species.unknown ? null : widget.initialValue;
 
@@ -89,8 +90,8 @@ class SpeciesPickerState extends State<SpeciesPicker> {
   }
 
   Widget _buildTypeAheadField() {
-    final TextEditingController controller =
-        TextEditingController(text: _selectedValue?.latinName ?? '');
+    // TODO should I (and if so, how) dispose this?
+   var controller = TextEditingController(text: _selectedValue?.latinName ?? '');
     return TypeAheadFormField<Species>(
       textFieldConfiguration: TextFieldConfiguration(
           enabled: !widget.readOnly,
@@ -102,7 +103,7 @@ class SpeciesPickerState extends State<SpeciesPicker> {
       itemBuilder: (context, suggestion) {
         return ListTile(
           title: Text(suggestion.latinName),
-          trailing: _avatarFor(suggestion.type, false),
+          trailing: avatarFor(context, suggestion.type, false),
         );
       },
       transitionBuilder: (context, suggestionsBox, controller) {
@@ -120,44 +121,39 @@ class SpeciesPickerState extends State<SpeciesPicker> {
 
   List<Widget> _buildTreeTypeBar(BuildContext context) {
     return [
-      _selectedValue?.type == TreeType.conifer
-          ? _avatarFor(TreeType.conifer, true)
-          : _avatarFor(TreeType.conifer, false),
-      _selectedValue?.type == TreeType.deciduous
-          ? _avatarFor(TreeType.deciduous, true)
-          : _avatarFor(TreeType.deciduous, false),
-      _selectedValue?.type == TreeType.broadleaf_evergreen
-          ? _avatarFor(TreeType.broadleaf_evergreen, true)
-          : _avatarFor(TreeType.broadleaf_evergreen, false),
-      _selectedValue?.type == TreeType.tropical
-          ? _avatarFor(TreeType.tropical, true)
-          : _avatarFor(TreeType.tropical, false),
+      avatarFor(
+          context, TreeType.conifer, _selectedValue?.type == TreeType.conifer),
+      avatarFor(context, TreeType.deciduous,
+          _selectedValue?.type == TreeType.deciduous),
+      avatarFor(context, TreeType.broadleaf_evergreen,
+          _selectedValue?.type == TreeType.broadleaf_evergreen),
+      avatarFor(context, TreeType.tropical,
+          _selectedValue?.type == TreeType.tropical),
     ];
   }
+}
 
-  CircleAvatar _avatarFor(TreeType treeType, bool active) {
-    IconData iconData = TreeTypeIcons.pine;
-    switch (treeType) {
-      case TreeType.conifer:
-        iconData = TreeTypeIcons.pine;
-        break;
-      case TreeType.deciduous:
-        iconData = TreeTypeIcons.tree_1;
-        break;
-      case TreeType.broadleaf_evergreen:
-        iconData = TreeTypeIcons.tree_17;
-        break;
-      case TreeType.tropical:
-        iconData = TreeTypeIcons.palm_tree;
-        break;
-    }
-
-    final Color color = active
-        ? Theme.of(context).accentColor
-        : Theme.of(context).disabledColor;
-    return CircleAvatar(
-      child: Icon(iconData),
-      backgroundColor: color,
-    );
+CircleAvatar avatarFor(BuildContext context, TreeType treeType, bool active) {
+  IconData iconData = TreeTypeIcons.pine;
+  switch (treeType) {
+    case TreeType.conifer:
+      iconData = TreeTypeIcons.pine;
+      break;
+    case TreeType.deciduous:
+      iconData = TreeTypeIcons.tree_1;
+      break;
+    case TreeType.broadleaf_evergreen:
+      iconData = TreeTypeIcons.tree_17;
+      break;
+    case TreeType.tropical:
+      iconData = TreeTypeIcons.palm_tree;
+      break;
   }
+
+  final Color color =
+      active ? Theme.of(context).accentColor : Theme.of(context).disabledColor;
+  return CircleAvatar(
+    child: Icon(iconData),
+    backgroundColor: color,
+  );
 }
