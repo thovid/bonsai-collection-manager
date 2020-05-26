@@ -19,7 +19,7 @@ Widget speciesPicker(BuildContext context,
     String hint,
     String label,
     FindSpecies findSpecies,
-    Function(Species value) onChanged}) {
+    Function(Species value) onSaved}) {
   var finder = AppState.of(context).speciesRepository.findMatching;
   return SpeciesPicker(
     readOnly: readOnly,
@@ -28,7 +28,7 @@ Widget speciesPicker(BuildContext context,
       filled: !readOnly,
       labelText: label,
     ),
-    onSaved: onChanged,
+    onSaved: onSaved,
     findSpecies: finder,
   );
 }
@@ -56,7 +56,9 @@ class SpeciesPicker extends StatefulWidget {
 }
 
 class SpeciesPickerState extends State<SpeciesPicker> {
-  final TextEditingController _controller = new TextEditingController();
+  // List to store created controllers so that they can be disposed when the
+  // widget is disposed
+  final List<TextEditingController> _controllerList = [];
   Species _selectedValue;
 
   @override
@@ -73,7 +75,8 @@ class SpeciesPickerState extends State<SpeciesPicker> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    print("disposing picker");
+    _controllerList.forEach((element) => element.dispose());
     super.dispose();
   }
 
@@ -93,6 +96,15 @@ class SpeciesPickerState extends State<SpeciesPicker> {
   }
 
   Widget _buildTypeAheadField() {
+    // we create a new controller to avoid triggering a rebuild due to modifying
+    // an existing controller
+    var _controller =
+        TextEditingController(text: _selectedValue?.latinName ?? '');
+    // each controller is stored so that we can dispose 'em all once the widget
+    // is disposed - This most likely is an issue with me not understanding the
+    // framework correctly...
+    _controllerList.add(_controller);
+
     return TypeAheadFormField<Species>(
       textFieldConfiguration: TextFieldConfiguration(
           enabled: !widget.readOnly,
@@ -137,7 +149,6 @@ class SpeciesPickerState extends State<SpeciesPicker> {
   void _updateSelectedValue() {
     _selectedValue =
         widget.initialValue == Species.unknown ? null : widget.initialValue;
-    _controller.text = _selectedValue?.latinName ?? '';
   }
 }
 

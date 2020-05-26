@@ -10,9 +10,7 @@ mixin Screen<T extends ChangeNotifier> {
       initializer: initialModel,
       builder: (context, model, _) => SafeArea(
               child: Scaffold(
-            appBar: AppBar(
-              title: Text(title(context, model)),
-            ),
+            appBar: appBar(context, model),
             body: body(context, model),
             floatingActionButton: floatingActionButton(context, model),
           )));
@@ -21,6 +19,15 @@ mixin Screen<T extends ChangeNotifier> {
   String title(BuildContext context, T model);
   Widget body(BuildContext context, T model);
   Widget floatingActionButton(BuildContext context, T model);
+
+  AppBar appBar(BuildContext context, T model) => AppBar(
+        leading: appBarLeading(context, model),
+        title: Text(title(context, model)),
+        actions: appBarTrailing(context, model),
+      );
+
+  Widget appBarLeading(BuildContext context, T model) => null;
+  List<Widget> appBarTrailing(BuildContext context, T model) => [];
 }
 
 class _BaseScreenProvider<T extends ChangeNotifier> extends StatefulWidget {

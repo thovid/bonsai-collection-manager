@@ -52,6 +52,31 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
   }
 
   @override
+  Widget appBarLeading(BuildContext context, BonsaiCollection model) {
+    if (!_isEdit || _isCreateNew()) {
+      return null;
+    }
+
+    return BackButton(
+      onPressed: () => _finishEdit(model, null),
+    );
+  }
+
+  @override
+  List<Widget> appBarTrailing(BuildContext context, BonsaiCollection model) {
+    if (!_isEdit) {
+      return [];
+    }
+
+    return [
+      IconButton(
+        icon: Icon(Icons.done),
+        onPressed: () {},
+      )
+    ];
+  }
+
+  @override
   Widget floatingActionButton(BuildContext context, BonsaiCollection model) =>
       Visibility(
         visible: !_isEdit,
@@ -108,6 +133,16 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
   }
 
   @override
+  void didUpdateWidget(BonsaiTreeForm oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget._readOnly) {
+      // reset everything if the form becomes readonly
+      _treeBuilder = BonsaiTreeBuilder(fromTree: widget._originalTree);
+      _formKey.currentState.reset();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scrollbar(
         child: SingleChildScrollView(
@@ -121,16 +156,12 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    speciesPicker(
-                      context,
-                      initialValue: _treeBuilder.species,
-                      readOnly: widget._readOnly,
-                      hint: "The species of the tree".i18n,
-                      label: "Species".i18n,
-                      onChanged: (value) => setState(() {
-                        _treeBuilder.species = value;
-                      }),
-                    ),
+                    speciesPicker(context,
+                        initialValue: _treeBuilder.species,
+                        readOnly: widget._readOnly,
+                        hint: "The species of the tree".i18n,
+                        label: "Species".i18n,
+                        onSaved: (value) => _treeBuilder.species = value),
                     mediumSpace,
                     formTextField(context,
                         initialValue: _treeBuilder.treeName,
