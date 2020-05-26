@@ -3,10 +3,10 @@
  */
 
 import 'package:bonsaicollectionmanager/domain/tree/bonsai_collection.dart';
-import 'package:bonsaicollectionmanager/infrastructure/localization/bcm_localizations.dart';
 import 'package:bonsaicollectionmanager/ui/tree/bonsai_collection_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:i18n_extension/i18n_widget.dart';
 
 import 'domain/tree/bonsai_tree.dart';
 import 'domain/tree/species.dart';
@@ -30,18 +30,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bonsai Collection Manager',
       localizationsDelegates: [
-        BCMLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: [const Locale('de', ''), const Locale('en', '')],
-      onGenerateTitle: (context) => I10L.of(context).app_title,
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: BonsaiCollectionView(collection),
+      home: I18n(child: BonsaiCollectionView(collection)),
     );
   }
 }

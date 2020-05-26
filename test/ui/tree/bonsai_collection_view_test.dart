@@ -7,6 +7,7 @@ import 'package:bonsaicollectionmanager/domain/tree/bonsai_tree.dart';
 import 'package:bonsaicollectionmanager/domain/tree/species.dart';
 import 'package:bonsaicollectionmanager/ui/tree/bonsai_collection_view.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:i18n_extension/i18n_extension.dart';
 
 import '../../domain/tree/test_data.dart';
 import '../test_utils.dart';
@@ -22,5 +23,11 @@ void main() {
 
     await tester.pumpWidget(testAppWith(BonsaiCollectionView(collection)));
     expect(find.text('Testus Treeus 1 \'My Tree\''), findsOneWidget);
+  });
+
+  testWidgets('All translations defined', (WidgetTester tester) async {
+    await tester.pumpWidget(testAppWith(BonsaiCollectionView(BonsaiCollection(species: testSpecies))));
+    expect(Translations.missingKeys, isEmpty);
+    expect(Translations.missingTranslations, isEmpty);
   });
 }

@@ -4,12 +4,12 @@
 
 import 'package:bonsaicollectionmanager/domain/tree/bonsai_collection.dart';
 import 'package:bonsaicollectionmanager/domain/tree/bonsai_tree.dart';
-import 'package:bonsaicollectionmanager/infrastructure/localization/bcm_localizations.dart';
 import 'package:bonsaicollectionmanager/ui/base/base_view.dart';
 import 'package:bonsaicollectionmanager/ui/shared/spaces.dart';
 import 'package:bonsaicollectionmanager/ui/shared/widget_factory.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'i18n/bonsai_tree_view.i18n.dart';
 
 class BonsaiTreeView extends StatefulWidget {
   final BonsaiCollection collection;
@@ -30,7 +30,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
   void initState() {
     super.initState();
     _tree = _isCreateNew() ? null : widget.collection.findById(widget.id);
-    _title = _tree?.displayName ?? I10L.of(context).add_new_tree;
+    _title = _tree?.displayName ?? "Add new tree".i18n;
     _isEdit = _isCreateNew();
   }
 
@@ -51,7 +51,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
         visible: !_isEdit,
         child: FloatingActionButton(
           onPressed: _startEdit,
-          tooltip: I10L.of(context).edit,
+          tooltip: "Edit".i18n,
           child: Icon(Icons.edit),
         ),
       );
@@ -118,8 +118,8 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
                       context,
                       initialValue: _treeBuilder.species,
                       readOnly: widget._readOnly,
-                      hint: I10L.of(context).species_hint,
-                      label: I10L.of(context).species,
+                      hint: "The species of the tree".i18n,
+                      label: "Species".i18n,
                       onChanged: (value) => setState(() {
                         _treeBuilder.species = value;
                       }),
@@ -128,8 +128,8 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
                     formTextField(context,
                         initialValue: _treeBuilder.treeName,
                         readOnly: widget._readOnly,
-                        hint: I10L.of(context).tree_name_hint,
-                        label: I10L.of(context).tree_name,
+                        hint: "Name your tree (optional)".i18n,
+                        label: "Name".i18n,
                         onSaved: (value) => _treeBuilder.treeName = value),
                     mediumSpace,
                     formDropdownField(
@@ -152,7 +152,7 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
                       context,
                       initialValue: _treeBuilder.acquiredAt,
                       readOnly: widget._readOnly,
-                      label: I10L.of(context).acquired_at,
+                      label: "Acquired at".i18n,
                       onChanged: (value) => setState(() {
                         _treeBuilder.acquiredAt = value;
                       }),
@@ -162,8 +162,8 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
                       context,
                       initialValue: _treeBuilder.acquiredFrom,
                       readOnly: widget._readOnly,
-                      hint: I10L.of(context).acquired_from_hint,
-                      label: I10L.of(context).acquired_from,
+                      hint: "Where did you acquire the tree from?".i18n,
+                      label: "Acquired from".i18n,
                       onSaved: (value) => _treeBuilder.acquiredFrom = value,
                     ),
                     mediumSpace,
@@ -174,12 +174,12 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
                             children: [
                               RaisedButton(
                                 color: Theme.of(context).buttonColor,
-                                child: Text(I10L.of(context).cancel),
+                                child: Text("Cancel".i18n),
                                 onPressed: _cancel,
                               ),
                               RaisedButton(
                                 color: Theme.of(context).primaryColor,
-                                child: Text(I10L.of(context).save),
+                                child: Text("Save".i18n),
                                 onPressed: _save,
                               )
                             ]),

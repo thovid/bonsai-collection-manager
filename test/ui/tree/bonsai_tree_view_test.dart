@@ -8,6 +8,7 @@ import 'package:bonsaicollectionmanager/domain/tree/species.dart';
 import 'package:bonsaicollectionmanager/ui/tree/bonsai_tree_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:i18n_extension/i18n_extension.dart';
 import 'package:intl/intl.dart';
 
 import '../../domain/tree/test_data.dart';
@@ -92,5 +93,11 @@ main() {
 
     expect(find.widgetWithText(RaisedButton, 'Cancel'), findsOneWidget);
     expect(find.widgetWithText(RaisedButton, 'Save'), findsOneWidget);
+  });
+
+  testWidgets('All translations defined', (WidgetTester tester) async {
+    await tester.pumpWidget(testAppWith(BonsaiTreeView(BonsaiCollection(species: testSpecies), null)));
+    expect(Translations.missingKeys, isEmpty);
+    expect(Translations.missingTranslations, isEmpty);
   });
 }
