@@ -141,6 +141,7 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
                       readOnly: widget._readOnly,
                       values: DevelopmentLevel.values,
                       onSaved: (value) => _treeBuilder.developmentLevel = value,
+                      translate: (value) => value.toString().i18n
                     ),
                     mediumSpace,
                     formDropdownField(
@@ -149,6 +150,7 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
                       readOnly: widget._readOnly,
                       values: PotType.values,
                       onSaved: (value) => _treeBuilder.potType = value,
+                        translate: (value) => value.toString().i18n
                     ),
                     mediumSpace,
                     formDatePickerField(

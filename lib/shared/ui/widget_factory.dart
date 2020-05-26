@@ -31,17 +31,18 @@ DropdownButtonFormField<T> formDropdownField<T>(context,
         T value,
         bool readOnly = true,
         List<T> values,
-        Function(T value) onSaved}) =>
+        Function(T value) onSaved,
+        String Function(T value) translate}) =>
     DropdownButtonFormField<T>(
         decoration: InputDecoration(
           filled: !readOnly,
           labelText: label,
         ),
         value: value,
-        hint: Text(value.toString()), // hint to show value while disabled
+        hint: Text(translate(value)), // hint to show value while disabled
         items: values
             .map(
-                (e) => DropdownMenuItem<T>(value: e, child: Text(e.toString())))
+                (e) => DropdownMenuItem<T>(value: e, child: Text(translate(e))))
             .toList(),
         onSaved: onSaved,
         onChanged: readOnly
