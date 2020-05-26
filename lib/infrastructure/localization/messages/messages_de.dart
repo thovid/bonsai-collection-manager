@@ -21,6 +21,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "app_title" : MessageLookupByLibrary.simpleMessage("Bonsai Collection Manager")
+    "acquired_at" : MessageLookupByLibrary.simpleMessage("Erworben am"),
+    "acquired_from" : MessageLookupByLibrary.simpleMessage("Erworben von"),
+    "acquired_from_hint" : MessageLookupByLibrary.simpleMessage("Wo wurde der Baum erworben?"),
+    "add_new_tree" : MessageLookupByLibrary.simpleMessage("Neuen Baum hinzufügen"),
+    "add_tree" : MessageLookupByLibrary.simpleMessage("Baum Hinzufügen"),
+    "app_title" : MessageLookupByLibrary.simpleMessage("Bonsai Collection Manager"),
+    "cancel" : MessageLookupByLibrary.simpleMessage("Abbrechen"),
+    "collection_title" : MessageLookupByLibrary.simpleMessage("Sammlung"),
+    "edit" : MessageLookupByLibrary.simpleMessage("Bearbeiten"),
+    "save" : MessageLookupByLibrary.simpleMessage("Speichern"),
+    "species" : MessageLookupByLibrary.simpleMessage("Spezies"),
+    "species_hint" : MessageLookupByLibrary.simpleMessage("Die Spezies des Baumes"),
+    "tree_name" : MessageLookupByLibrary.simpleMessage("Name"),
+    "tree_name_hint" : MessageLookupByLibrary.simpleMessage("Optionaler Name für den Baum")
   };
 }

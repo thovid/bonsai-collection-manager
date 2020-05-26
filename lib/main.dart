@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: [const Locale('de', ''), const Locale('en', '')],
-      onGenerateTitle: (context) => BCMLocalizations.of(context).app_title,
+      onGenerateTitle: (context) => I10L.of(context).app_title,
       theme: ThemeData(
         primarySwatch: Colors.lightGreen,
         visualDensity: VisualDensity.adaptivePlatformDensity,

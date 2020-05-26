@@ -1,8 +1,86 @@
 {
-  "@@last_modified": "2020-05-25T22:48:13.364340",
+  "@@last_modified": "2020-05-26T08:47:07.391623",
   "app_title": "Bonsai Collection Manager",
   "@app_title": {
     "description": "title of the app",
+    "type": "text",
+    "placeholders": {}
+  },
+  "add_new_tree": "Add new tree",
+  "@add_new_tree": {
+    "description": "title of add tree screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "edit": "edit",
+  "@edit": {
+    "description": "edit button text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "species_hint": "The species of the tree",
+  "@species_hint": {
+    "description": "hint shown for species selection",
+    "type": "text",
+    "placeholders": {}
+  },
+  "species": "Species",
+  "@species": {
+    "description": "species label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "tree_name_hint": "Name of the tree (optional)",
+  "@tree_name_hint": {
+    "description": "hint shown for tree name",
+    "type": "text",
+    "placeholders": {}
+  },
+  "tree_name": "Name",
+  "@tree_name": {
+    "description": "tree name label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "acquired_at": "Acquired at",
+  "@acquired_at": {
+    "description": "acquired at label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "acquired_from_hint": "Where the tree was acquired from",
+  "@acquired_from_hint": {
+    "description": "hint shown for acquired from",
+    "type": "text",
+    "placeholders": {}
+  },
+  "acquired_from": "Acquired from",
+  "@acquired_from": {
+    "description": "acquired from label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "cancel button text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "save": "Save",
+  "@save": {
+    "description": "save button text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "add_tree": "Add Tree",
+  "@add_tree": {
+    "description": "add tree button text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "collection_title": "Collection",
+  "@collection_title": {
+    "description": "title of the collection view",
     "type": "text",
     "placeholders": {}
   }

@@ -3,6 +3,7 @@
  */
 
 import 'package:bonsaicollectionmanager/domain/tree/bonsai_collection.dart';
+import 'package:bonsaicollectionmanager/infrastructure/localization/bcm_localizations.dart';
 import 'package:bonsaicollectionmanager/ui/base/base_view.dart';
 import 'package:bonsaicollectionmanager/ui/shared/bonsai_tree_list_item.dart';
 import 'package:bonsaicollectionmanager/ui/tree/bonsai_tree_view.dart';
@@ -16,7 +17,7 @@ class BonsaiCollectionView extends StatelessWidget with Screen<BonsaiCollection>
   BonsaiCollection initialModel(BuildContext context) => collection;
 
   @override
-  String title(BuildContext context, BonsaiCollection model) => 'Collection';
+  String title(BuildContext context, BonsaiCollection model) => I10L.of(context).collection_title;
 
   @override
   Widget body(BuildContext context, BonsaiCollection model) => Center(
@@ -36,7 +37,7 @@ class BonsaiCollectionView extends StatelessWidget with Screen<BonsaiCollection>
           BuildContext context, BonsaiCollection model) =>
       FloatingActionButton(
         onPressed: () => _addTree(context, model),
-        tooltip: 'Add Tree',
+        tooltip: I10L.of(context).add_tree,
         child: Icon(Icons.add),
       );
 

@@ -4,6 +4,7 @@
 
 import 'package:bonsaicollectionmanager/domain/tree/bonsai_collection.dart';
 import 'package:bonsaicollectionmanager/domain/tree/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/infrastructure/localization/bcm_localizations.dart';
 import 'package:bonsaicollectionmanager/ui/base/base_view.dart';
 import 'package:bonsaicollectionmanager/ui/shared/spaces.dart';
 import 'package:bonsaicollectionmanager/ui/shared/widget_factory.dart';
@@ -29,7 +30,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
   void initState() {
     super.initState();
     _tree = _isCreateNew() ? null : widget.collection.findById(widget.id);
-    _title = _tree?.displayName ?? 'Add new tree';
+    _title = _tree?.displayName ?? I10L.of(context).add_new_tree;
     _isEdit = _isCreateNew();
   }
 
@@ -50,7 +51,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
         visible: !_isEdit,
         child: FloatingActionButton(
           onPressed: _startEdit,
-          tooltip: 'Edit',
+          tooltip: I10L.of(context).edit,
           child: Icon(Icons.edit),
         ),
       );
@@ -117,8 +118,8 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
                       context,
                       initialValue: _treeBuilder.species,
                       readOnly: widget._readOnly,
-                      hint: 'The species of the tree',
-                      label: 'Species',
+                      hint: I10L.of(context).species_hint,
+                      label: I10L.of(context).species,
                       onChanged: (value) => setState(() {
                         _treeBuilder.species = value;
                       }),
@@ -127,8 +128,8 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
                     formTextField(context,
                         initialValue: _treeBuilder.treeName,
                         readOnly: widget._readOnly,
-                        hint: 'Name of the tree (optional)',
-                        label: 'Name',
+                        hint: I10L.of(context).tree_name_hint,
+                        label: I10L.of(context).tree_name,
                         onSaved: (value) => _treeBuilder.treeName = value),
                     mediumSpace,
                     formDropdownField(
@@ -151,7 +152,7 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
                       context,
                       initialValue: _treeBuilder.acquiredAt,
                       readOnly: widget._readOnly,
-                      label: 'Acquired at',
+                      label: I10L.of(context).acquired_at,
                       onChanged: (value) => setState(() {
                         _treeBuilder.acquiredAt = value;
                       }),
@@ -161,8 +162,8 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
                       context,
                       initialValue: _treeBuilder.acquiredFrom,
                       readOnly: widget._readOnly,
-                      hint: 'Where the tree was acquired from',
-                      label: 'Acquired from',
+                      hint: I10L.of(context).acquired_from_hint,
+                      label: I10L.of(context).acquired_from,
                       onSaved: (value) => _treeBuilder.acquiredFrom = value,
                     ),
                     mediumSpace,
@@ -173,12 +174,12 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
                             children: [
                               RaisedButton(
                                 color: Theme.of(context).buttonColor,
-                                child: Text('Cancel'),
+                                child: Text(I10L.of(context).cancel),
                                 onPressed: _cancel,
                               ),
                               RaisedButton(
                                 color: Theme.of(context).primaryColor,
-                                child: Text('Save'),
+                                child: Text(I10L.of(context).save),
                                 onPressed: _save,
                               )
                             ]),
