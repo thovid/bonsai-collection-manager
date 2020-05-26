@@ -3,14 +3,14 @@
  */
 
 import 'dart:async';
-import 'package:bonsaicollectionmanager/shared/icons/tree_type_icons.dart';
-import 'package:bonsaicollectionmanager/shared/ui/spaces.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:provider/provider.dart';
 
+import '../../shared/icons/tree_type_icons.dart';
+import '../../shared/ui/app_state.dart';
+import '../../shared/ui/spaces.dart';
 import '../model/species.dart';
-import '../model/bonsai_collection.dart';
 
 /// Creates a widget to pick a tree species.
 Widget speciesPicker(BuildContext context,
@@ -20,7 +20,7 @@ Widget speciesPicker(BuildContext context,
     String label,
     FindSpecies findSpecies,
     Function(Species value) onChanged}) {
-  var finder = context.watch<BonsaiCollection>().findSpeciesMatching;
+  var finder = AppState.of(context).speciesRepository.findMatching;
   return SpeciesPicker(
     readOnly: readOnly,
     initialValue: initialValue,
@@ -70,7 +70,6 @@ class SpeciesPickerState extends State<SpeciesPicker> {
     _selectedValue = _findSelectedValue();
   }
 
-
   Species _findSelectedValue() =>
       widget.initialValue == Species.unknown ? null : widget.initialValue;
 
@@ -91,7 +90,8 @@ class SpeciesPickerState extends State<SpeciesPicker> {
 
   Widget _buildTypeAheadField() {
     // TODO should I (and if so, how) dispose this?
-   var controller = TextEditingController(text: _selectedValue?.latinName ?? '');
+    var controller =
+        TextEditingController(text: _selectedValue?.latinName ?? '');
     return TypeAheadFormField<Species>(
       textFieldConfiguration: TextFieldConfiguration(
           enabled: !widget.readOnly,

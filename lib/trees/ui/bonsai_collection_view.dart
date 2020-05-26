@@ -1,15 +1,17 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
-import '../../shared/ui/app_state.dart';
-import '../../shared/ui/base_view.dart';
-import './bonsai_tree_list_item.dart';
 
 import 'package:flutter/material.dart';
 
+import '../../shared/ui/app_state.dart';
+import '../../shared/ui/base_view.dart';
+
 import '../model/bonsai_collection.dart';
-import './bonsai_tree_view.dart';
 import '../i18n/bonsai_collection_view.i18n.dart';
+
+import './bonsai_tree_view.dart';
+import './bonsai_tree_list_item.dart';
 
 class BonsaiCollectionView extends StatelessWidget
     with Screen<BonsaiCollection> {

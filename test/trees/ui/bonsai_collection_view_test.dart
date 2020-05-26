@@ -19,7 +19,7 @@ void main() {
             ..treeName = "My Tree"
             ..species = Species(TreeType.conifer, latinName: "Testus Treeus"))
           .build()
-    ], species: testSpecies);
+    ]);
 
     await tester.pumpWidget(testAppWith(BonsaiCollectionView(), collection));
     expect(find.text('Testus Treeus 1 \'My Tree\''), findsOneWidget);
@@ -27,7 +27,7 @@ void main() {
 
   testWidgets('All translations defined', (WidgetTester tester) async {
     await tester.pumpWidget(testAppWith(
-        BonsaiCollectionView(), BonsaiCollection(species: testSpecies)));
+        BonsaiCollectionView(), BonsaiCollection()));
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);
   });

@@ -6,8 +6,8 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/services.dart' show rootBundle;
 
-import '../../shared/i18n/i18n.dart';
 import '../model/species.dart';
+import '../../shared/i18n/i18n.dart';
 
 /// Load species list from json file
 Future<SpeciesRepository> loadSpecies(Locale locale) async {

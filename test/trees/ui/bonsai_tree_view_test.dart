@@ -26,7 +26,7 @@ main() {
       .build();
 
   testWidgets('screen shows tree data', (WidgetTester tester) async {
-    var collection = BonsaiCollection.withTrees([aTree], species: testSpecies);
+    var collection = BonsaiCollection.withTrees([aTree]);
     await tester.pumpWidget(testAppWith(BonsaiTreeView(aTree.id), collection));
 
     expect(find.text(aTree.displayName), findsOneWidget);
@@ -43,7 +43,7 @@ main() {
 
   testWidgets('screen can enter and cancel edit mode',
       (WidgetTester tester) async {
-    var collection = BonsaiCollection.withTrees([aTree], species: testSpecies);
+    var collection = BonsaiCollection.withTrees([aTree]);
     await tester.pumpWidget(testAppWith(BonsaiTreeView(aTree.id), collection));
     expect(find.text(aTree.treeName), findsOneWidget);
 
@@ -66,7 +66,7 @@ main() {
   });
 
   testWidgets('screen can edit and save tree', (WidgetTester tester) async {
-    var collection = BonsaiCollection.withTrees([aTree], species: testSpecies);
+    var collection = BonsaiCollection.withTrees([aTree]);
     await tester
         .pumpWidget(testAppWith(BonsaiTreeView(aTree.id), collection))
         .then((value) =>
@@ -88,7 +88,7 @@ main() {
   });
 
   testWidgets('screen can create new tree', (WidgetTester tester) async {
-    var collection = BonsaiCollection(species: testSpecies);
+    var collection = BonsaiCollection();
     await tester.pumpWidget(testAppWith(BonsaiTreeView(null), collection));
 
     expect(find.widgetWithText(RaisedButton, 'Cancel'), findsOneWidget);
@@ -97,7 +97,7 @@ main() {
 
   testWidgets('All translations defined', (WidgetTester tester) async {
     await tester.pumpWidget(testAppWith(
-        BonsaiTreeView(null), BonsaiCollection(species: testSpecies)));
+        BonsaiTreeView(null), BonsaiCollection()));
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);
   });

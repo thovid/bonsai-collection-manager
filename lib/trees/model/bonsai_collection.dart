@@ -2,27 +2,21 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import './bonsai_tree.dart';
-import './species.dart';
 import 'package:flutter/material.dart';
 
+import './bonsai_tree.dart';
+import './species.dart';
+
 class BonsaiCollection extends ChangeNotifier {
-  final SpeciesRepository _allSpecies;
   final List<BonsaiTree> _trees = <BonsaiTree>[];
 
-  BonsaiCollection({@required SpeciesRepository species})
-      : this.withTrees([], species: species);
+  BonsaiCollection() : this.withTrees([]);
 
-  BonsaiCollection.withTrees(List<BonsaiTree> trees,
-      {@required SpeciesRepository species})
-      : assert(species != null),
-        _allSpecies = species {
+  BonsaiCollection.withTrees(List<BonsaiTree> trees) {
     _trees.addAll(trees);
   }
 
   int get size => _trees.length;
-
-  List<Species> get species => _allSpecies.species;
 
   List<BonsaiTree> get trees => List<BonsaiTree>.unmodifiable(_trees);
 
@@ -50,10 +44,6 @@ class BonsaiCollection extends ChangeNotifier {
 
     notifyListeners();
     return tree;
-  }
-
-  Future<List<Species>> findSpeciesMatching(String pattern) async {
-    return _allSpecies.findMatching(pattern);
   }
 
   BonsaiTree _updateSpeciesOrdinal(BonsaiTree tree) {

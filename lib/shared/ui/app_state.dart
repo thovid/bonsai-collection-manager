@@ -12,8 +12,9 @@ import '../../trees/model/species.dart';
 class AppState extends StatefulWidget {
   final Widget child;
   final BonsaiCollection initial;
+  final SpeciesRepository speciesRepository;
 
-  AppState({@required this.child, this.initial}) : assert(child != null);
+  AppState({@required this.child, this.initial, this.speciesRepository}) : assert(child != null);
 
   static _AppStateState of(BuildContext context) {
     return context
@@ -27,6 +28,7 @@ class AppState extends StatefulWidget {
 
 class _AppStateState extends State<AppState> {
   BonsaiCollection collection;
+  SpeciesRepository speciesRepository;
 
   @override
   void initState() {
@@ -49,6 +51,7 @@ class _AppStateState extends State<AppState> {
     if (widget.initial != null) {
       setState(() {
         collection = widget.initial;
+        speciesRepository = widget.speciesRepository;
       });
       return;
     }
@@ -60,6 +63,7 @@ class _AppStateState extends State<AppState> {
     // TODO implement
     var species = await loadSpecies(I18n.locale);
     setState(() {
+      speciesRepository = species;
       collection = _testCollection(species);
     });
   }
@@ -88,6 +92,6 @@ BonsaiCollection _testCollection(SpeciesRepository species) {
           .build());
 
   final BonsaiCollection collection =
-      BonsaiCollection.withTrees(trees, species: species);
+      BonsaiCollection.withTrees(trees);
   return collection;
 }

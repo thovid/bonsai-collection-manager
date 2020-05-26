@@ -2,9 +2,9 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-// the development level of a tree
-import './species.dart';
 import 'package:uuid/uuid.dart';
+
+import './species.dart';
 
 /// The development level of a tree.
 enum DevelopmentLevel { raw, development, refinement }

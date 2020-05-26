@@ -53,6 +53,6 @@ BonsaiCollection _testCollection(SpeciesRepository species) {
           .build());
 
   final BonsaiCollection collection =
-      BonsaiCollection.withTrees(trees, species: species);
+      BonsaiCollection.withTrees(trees);
   return collection;
 }

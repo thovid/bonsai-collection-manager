@@ -7,8 +7,6 @@ import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
 import 'package:bonsaicollectionmanager/trees/model/species.dart';
 import 'package:test/test.dart';
 
-import '../../utils/test_data.dart';
-
 main() {
   final Species silvestris =
       Species(TreeType.conifer, latinName: "Pinus Silvestris");
@@ -26,19 +24,19 @@ main() {
       .build();
 
   test('a new collection is empty', () {
-    var collection = BonsaiCollection(species: testSpecies);
+    var collection = BonsaiCollection();
     expect(collection.size, equals(0));
   });
 
   test('can add a tree to the collection', () {
-    var collection = BonsaiCollection(species: testSpecies);
+    var collection = BonsaiCollection();
     var aTree = (BonsaiTreeBuilder()..treeName = "Test Tree").build();
     collection.add(aTree);
     expect(collection.size, equals(1));
   });
 
   test('calculates next ordinal for added tree', () {
-    var collection = BonsaiCollection.withTrees([firstMugo, secondMugo], species: testSpecies);
+    var collection = BonsaiCollection.withTrees([firstMugo, secondMugo]);
     var aTree = (BonsaiTreeBuilder()..treeName = "Test Tree"
     ..species = mugo).build();
     var addedTree = collection.add(aTree);
@@ -46,13 +44,13 @@ main() {
   });
 
   test('can get a tree with a given id', () {
-    var collection = BonsaiCollection.withTrees([firstMugo, secondMugo], species: testSpecies);
+    var collection = BonsaiCollection.withTrees([firstMugo, secondMugo]);
     var found = collection.findById(secondMugo.id);
     expect(found, equals(secondMugo));
   });
 
   test('can update a tree with new data', () {
-    var collection = BonsaiCollection.withTrees([firstMugo, secondMugo], species: testSpecies);
+    var collection = BonsaiCollection.withTrees([firstMugo, secondMugo]);
     var id = secondMugo.id;
     var updated = (BonsaiTreeBuilder(fromTree: secondMugo)
           ..treeName = "Updated Tree Name")
