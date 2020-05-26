@@ -57,31 +57,25 @@ class SpeciesPicker extends StatefulWidget {
 
 class SpeciesPickerState extends State<SpeciesPicker> {
   Species _selectedValue;
-  TextEditingController _controller;
+  TextEditingController _controller = new TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _selectedValue = _findSelectedValue();
-    _controller =
-        new TextEditingController(text: _selectedValue?.latinName ?? '');
+    _updateSelectedValue();
   }
 
   @override
   void didUpdateWidget(SpeciesPicker oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _selectedValue = _findSelectedValue();
-    _controller.text = _selectedValue?.latinName ?? '';
+    _updateSelectedValue();
   }
 
   @override
   void dispose() {
-    _controller?.dispose();
+    _controller.dispose();
     super.dispose();
   }
-
-  Species _findSelectedValue() =>
-      widget.initialValue == Species.unknown ? null : widget.initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -138,6 +132,12 @@ class SpeciesPickerState extends State<SpeciesPicker> {
       avatarFor(context, TreeType.tropical,
           _selectedValue?.type == TreeType.tropical),
     ];
+  }
+
+  void _updateSelectedValue() {
+    _selectedValue =
+        widget.initialValue == Species.unknown ? null : widget.initialValue;
+    _controller.text = _selectedValue?.latinName ?? '';
   }
 }
 
