@@ -104,6 +104,7 @@ class SpeciesPickerState extends State<SpeciesPicker> {
         return ListTile(
           title: Text(suggestion.latinName),
           trailing: avatarFor(context, suggestion.type, false),
+          subtitle: Text(suggestion.informalName ?? ''),
         );
       },
       transitionBuilder: (context, suggestionsBox, controller) {
