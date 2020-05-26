@@ -56,8 +56,8 @@ class SpeciesPicker extends StatefulWidget {
 }
 
 class SpeciesPickerState extends State<SpeciesPicker> {
+  final TextEditingController _controller = new TextEditingController();
   Species _selectedValue;
-  TextEditingController _controller = new TextEditingController();
 
   @override
   void initState() {
