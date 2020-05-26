@@ -3,15 +3,39 @@
  */
 
 import 'dart:async';
-
-import 'package:bonsaicollectionmanager/domain/tree/species.dart';
-import 'package:bonsaicollectionmanager/ui/icons/tree_type_icons.dart';
-import 'package:bonsaicollectionmanager/ui/shared/spaces.dart';
+import 'package:bonsaicollectionmanager/shared/icons/tree_type_icons.dart';
+import 'package:bonsaicollectionmanager/shared/ui/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:provider/provider.dart';
+
+import '../model/species.dart';
+import '../model/bonsai_collection.dart';
+
+/// Creates a widget to pick a tree species.
+Widget speciesPicker(BuildContext context,
+    {Species initialValue,
+    bool readOnly = true,
+    String hint,
+    String label,
+    FindSpecies findSpecies,
+    Function(Species value) onChanged}) {
+  var finder = context.watch<BonsaiCollection>().findSpeciesMatching;
+  return SpeciesPicker(
+    readOnly: readOnly,
+    initialValue: initialValue,
+    decoration: InputDecoration(
+      filled: !readOnly,
+      labelText: label,
+    ),
+    onSaved: onChanged,
+    findSpecies: finder,
+  );
+}
 
 typedef FutureOr<Iterable<Species>> FindSpecies(String pattern);
 
+/// Widget to pick a tree species
 class SpeciesPicker extends StatefulWidget {
   final bool readOnly;
   final Species initialValue;

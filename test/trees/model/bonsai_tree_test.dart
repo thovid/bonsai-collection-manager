@@ -2,8 +2,8 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/domain/tree/bonsai_tree.dart';
-import 'package:bonsaicollectionmanager/domain/tree/species.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/trees/model/species.dart';
 import 'package:test/test.dart';
 
 void main() {

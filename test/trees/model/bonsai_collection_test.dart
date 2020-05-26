@@ -2,12 +2,12 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/domain/tree/bonsai_collection.dart';
-import 'package:bonsaicollectionmanager/domain/tree/bonsai_tree.dart';
-import 'package:bonsaicollectionmanager/domain/tree/species.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/trees/model/species.dart';
 import 'package:test/test.dart';
 
-import 'test_data.dart';
+import '../../utils/test_data.dart';
 
 main() {
   final Species silvestris =

@@ -2,14 +2,17 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/domain/tree/bonsai_collection.dart';
-import 'package:bonsaicollectionmanager/domain/tree/bonsai_tree.dart';
-import 'package:bonsaicollectionmanager/ui/base/base_view.dart';
-import 'package:bonsaicollectionmanager/ui/shared/spaces.dart';
-import 'package:bonsaicollectionmanager/ui/shared/widget_factory.dart';
+import 'package:bonsaicollectionmanager/shared/ui/base_view.dart';
+import 'package:bonsaicollectionmanager/shared/ui/spaces.dart';
+import 'package:bonsaicollectionmanager/shared/ui/widget_factory.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'i18n/bonsai_tree_view.i18n.dart';
+
+import '../model/bonsai_collection.dart';
+import '../model/bonsai_tree.dart';
+import '../i18n/bonsai_tree_view.i18n.dart';
+
+import './species_picker.dart';
 
 class BonsaiTreeView extends StatefulWidget {
   final BonsaiCollection collection;

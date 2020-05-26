@@ -3,7 +3,7 @@
  */
 
 // the development level of a tree
-import 'package:bonsaicollectionmanager/domain/tree/species.dart';
+import './species.dart';
 import 'package:uuid/uuid.dart';
 
 /// The development level of a tree.

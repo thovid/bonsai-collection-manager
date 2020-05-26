@@ -1,16 +1,17 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
-
-import 'package:bonsaicollectionmanager/domain/tree/bonsai_collection.dart';
-import 'package:bonsaicollectionmanager/ui/tree/bonsai_collection_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 
-import 'domain/tree/bonsai_tree.dart';
-import 'domain/tree/species.dart';
-import 'infrastructure/masterdata/tree_species_loader.dart';
+import './trees/model/bonsai_collection.dart';
+import './trees/model/bonsai_tree.dart';
+import './trees/model/species.dart';
+
+import './trees/infrastructure/tree_species_loader.dart';
+
+import './trees/ui/bonsai_collection_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

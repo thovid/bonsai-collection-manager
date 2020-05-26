@@ -2,7 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/infrastructure/masterdata/tree_species_loader.dart';
+import 'package:bonsaicollectionmanager/trees/infrastructure/tree_species_loader.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 main() {

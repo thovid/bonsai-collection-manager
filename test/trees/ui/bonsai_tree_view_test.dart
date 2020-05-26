@@ -2,17 +2,17 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/domain/tree/bonsai_collection.dart';
-import 'package:bonsaicollectionmanager/domain/tree/bonsai_tree.dart';
-import 'package:bonsaicollectionmanager/domain/tree/species.dart';
-import 'package:bonsaicollectionmanager/ui/tree/bonsai_tree_view.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/trees/model/species.dart';
+import 'package:bonsaicollectionmanager/trees/ui/bonsai_tree_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:i18n_extension/i18n_extension.dart';
 import 'package:intl/intl.dart';
 
-import '../../domain/tree/test_data.dart';
-import '../test_utils.dart';
+import '../../utils/test_data.dart';
+import '../../utils/test_utils.dart';
 
 main() {
   final BonsaiTree aTree = (BonsaiTreeBuilder()

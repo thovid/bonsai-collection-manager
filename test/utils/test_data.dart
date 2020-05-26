@@ -2,7 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/domain/tree/species.dart';
+import 'package:bonsaicollectionmanager/trees/model/species.dart';
 
 final SpeciesRepository testSpecies = TestSpeciesRepository([
   Species(TreeType.tropical, latinName: 'test'),

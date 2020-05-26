@@ -1,21 +1,22 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
-
 import 'dart:async' show Future;
+
 import 'dart:convert';
-import 'package:bonsaicollectionmanager/domain/tree/species.dart';
 import 'package:flutter/services.dart' show rootBundle;
+
+import '../model/species.dart';
 
 /// Load species list from json file
 Future<SpeciesRepository> loadSpecies() async {
-  return InMemorySpeciesRepository(
+  return _InMemorySpeciesRepository(
       await _loadSpeciesFile().then((json) => _parseSpeciesList(json)));
 }
 
-class InMemorySpeciesRepository extends SpeciesRepository {
+class _InMemorySpeciesRepository extends SpeciesRepository {
   final List<Species> species;
-  InMemorySpeciesRepository(this.species);
+  _InMemorySpeciesRepository(this.species);
 }
 
 List<Species> _parseSpeciesList(String jsonString) {

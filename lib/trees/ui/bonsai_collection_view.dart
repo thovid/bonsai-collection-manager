@@ -1,15 +1,17 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
+import 'package:bonsaicollectionmanager/shared/ui/base_view.dart';
+import 'package:bonsaicollectionmanager/trees/ui/bonsai_tree_list_item.dart';
 
-import 'package:bonsaicollectionmanager/domain/tree/bonsai_collection.dart';
-import 'package:bonsaicollectionmanager/ui/base/base_view.dart';
-import 'package:bonsaicollectionmanager/ui/shared/bonsai_tree_list_item.dart';
-import 'package:bonsaicollectionmanager/ui/tree/bonsai_tree_view.dart';
 import 'package:flutter/material.dart';
-import 'i18n/bonsai_collection_view.i18n.dart';
 
-class BonsaiCollectionView extends StatelessWidget with Screen<BonsaiCollection> {
+import '../model/bonsai_collection.dart';
+import './bonsai_tree_view.dart';
+import '../i18n/bonsai_collection_view.i18n.dart';
+
+class BonsaiCollectionView extends StatelessWidget
+    with Screen<BonsaiCollection> {
   final BonsaiCollection collection;
   BonsaiCollectionView(this.collection);
 
@@ -17,7 +19,8 @@ class BonsaiCollectionView extends StatelessWidget with Screen<BonsaiCollection>
   BonsaiCollection initialModel(BuildContext context) => collection;
 
   @override
-  String title(BuildContext context, BonsaiCollection model) => "My collection".i18n;
+  String title(BuildContext context, BonsaiCollection model) =>
+      "My collection".i18n;
 
   @override
   Widget body(BuildContext context, BonsaiCollection model) => Center(

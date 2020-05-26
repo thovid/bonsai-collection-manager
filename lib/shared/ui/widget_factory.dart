@@ -1,13 +1,7 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
-
 import 'dart:async';
-
-import 'package:bonsaicollectionmanager/domain/tree/bonsai_collection.dart';
-import 'package:bonsaicollectionmanager/domain/tree/species.dart';
-import 'package:bonsaicollectionmanager/ui/shared/species_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -30,27 +24,6 @@ TextFormField formTextField(BuildContext context,
       onSaved: onSaved,
       validator: null,
     );
-
-/// Creates a widget to pick a tree species.
-Widget speciesPicker(BuildContext context,
-    {Species initialValue,
-    bool readOnly = true,
-    String hint,
-    String label,
-    FindSpecies findSpecies,
-    Function(Species value) onChanged}) {
-  var finder = context.watch<BonsaiCollection>().findSpeciesMatching;
-  return SpeciesPicker(
-    readOnly: readOnly,
-    initialValue: initialValue,
-    decoration: InputDecoration(
-      filled: !readOnly,
-      labelText: label,
-    ),
-    onSaved: onChanged,
-    findSpecies: finder,
-  );
-}
 
 /// Simple helper to create a dropdown form field.
 DropdownButtonFormField<T> formDropdownField<T>(context,

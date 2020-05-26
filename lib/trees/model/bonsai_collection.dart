@@ -2,8 +2,8 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/domain/tree/bonsai_tree.dart';
-import 'package:bonsaicollectionmanager/domain/tree/species.dart';
+import './bonsai_tree.dart';
+import './species.dart';
 import 'package:flutter/material.dart';
 
 class BonsaiCollection extends ChangeNotifier {

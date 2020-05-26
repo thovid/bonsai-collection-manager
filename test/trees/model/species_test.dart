@@ -4,7 +4,7 @@
 
 import 'package:test/test.dart';
 
-import 'test_data.dart';
+import '../../utils/test_data.dart';
 
 main() {
   test('repository finds species matching pattern', () async {
