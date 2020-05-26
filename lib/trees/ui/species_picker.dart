@@ -75,7 +75,6 @@ class SpeciesPickerState extends State<SpeciesPicker> {
 
   @override
   void dispose() {
-    print("disposing picker");
     _controllerList.forEach((element) => element.dispose());
     super.dispose();
   }

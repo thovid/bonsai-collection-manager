@@ -11,7 +11,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:i18n_extension/i18n_extension.dart';
 import 'package:intl/intl.dart';
 
-import '../../utils/test_data.dart';
 import '../../utils/test_utils.dart';
 
 main() {
@@ -50,13 +49,12 @@ main() {
     await tester
         .tap(find.widgetWithIcon(FloatingActionButton, Icons.edit))
         .then((value) => tester.pump());
-    expect(find.widgetWithText(RaisedButton, 'Cancel'), findsOneWidget);
-    expect(find.widgetWithText(RaisedButton, 'Save'), findsOneWidget);
+    expect(find.widgetWithIcon(IconButton, Icons.done), findsOneWidget);
 
     await tester.enterText(find.bySemanticsLabel('Name'), 'Other Name');
     expect(find.text('Other Name'), findsOneWidget);
 
-    var cancelButton = find.widgetWithText(RaisedButton, 'Cancel');
+    var cancelButton = find.byType(BackButton);
     await tester
         .ensureVisible(cancelButton)
         .then((value) => tester.tap(cancelButton))
@@ -72,12 +70,10 @@ main() {
         .then((value) =>
             tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.edit)))
         .then((value) => tester.pump());
-    expect(find.widgetWithText(RaisedButton, 'Cancel'), findsOneWidget);
-    expect(find.widgetWithText(RaisedButton, 'Save'), findsOneWidget);
 
     await tester.enterText(find.bySemanticsLabel('Name'), 'Other Name');
 
-    var saveButton = find.widgetWithText(RaisedButton, 'Save');
+    var saveButton = find.widgetWithIcon(IconButton, Icons.done);
     await tester
         .ensureVisible(saveButton)
         .then((value) => tester.tap(saveButton))
@@ -91,8 +87,7 @@ main() {
     var collection = BonsaiCollection();
     await tester.pumpWidget(testAppWith(BonsaiTreeView(null), collection));
 
-    expect(find.widgetWithText(RaisedButton, 'Cancel'), findsOneWidget);
-    expect(find.widgetWithText(RaisedButton, 'Save'), findsOneWidget);
+    expect(find.widgetWithIcon(IconButton, Icons.done), findsOneWidget);
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
