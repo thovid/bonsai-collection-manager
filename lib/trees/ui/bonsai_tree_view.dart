@@ -135,23 +135,22 @@ class BonsaiTreeFormState extends State<BonsaiTreeForm> {
                         label: "Name".i18n,
                         onSaved: (value) => _treeBuilder.treeName = value),
                     mediumSpace,
-                    formDropdownField(
-                      context,
-                      value: _treeBuilder.developmentLevel,
-                      readOnly: widget._readOnly,
-                      values: DevelopmentLevel.values,
-                      onSaved: (value) => _treeBuilder.developmentLevel = value,
-                      translate: (value) => value.toString().i18n
-                    ),
+                    formDropdownField(context,
+                        label: "Development Level".i18n,
+                        value: _treeBuilder.developmentLevel,
+                        readOnly: widget._readOnly,
+                        values: DevelopmentLevel.values,
+                        onSaved: (value) =>
+                            _treeBuilder.developmentLevel = value,
+                        translate: (value) => value.toString().i18n),
                     mediumSpace,
-                    formDropdownField(
-                      context,
-                      value: _treeBuilder.potType,
-                      readOnly: widget._readOnly,
-                      values: PotType.values,
-                      onSaved: (value) => _treeBuilder.potType = value,
-                        translate: (value) => value.toString().i18n
-                    ),
+                    formDropdownField(context,
+                        label: "Pot Type".i18n,
+                        value: _treeBuilder.potType,
+                        readOnly: widget._readOnly,
+                        values: PotType.values,
+                        onSaved: (value) => _treeBuilder.potType = value,
+                        translate: (value) => value.toString().i18n),
                     mediumSpace,
                     formDatePickerField(
                       context,

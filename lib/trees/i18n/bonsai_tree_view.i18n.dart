@@ -15,6 +15,8 @@ extension Localization on String {
             "en_us": "Name your tree (optional)",
             "de": "Gib deinem Baum einen Namen (optional)"
           } +
+          {"en_us": "Pot Type", "de": "Schale"} +
+          {"en_us": "Development Level", "de": "Entwicklungsstand"} +
           {"en_us": "Name", "de": "Name"} +
           {"en_us": "Acquired at", "de": "Erworben am"} +
           {
