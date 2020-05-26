@@ -2,11 +2,13 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/shared/ui/base_view.dart';
-import 'package:bonsaicollectionmanager/shared/ui/spaces.dart';
-import 'package:bonsaicollectionmanager/shared/ui/widget_factory.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
+import '../../shared/ui/app_state.dart';
+import '../../shared/ui/base_view.dart';
+import '../../shared/ui/spaces.dart';
+import '../../shared/ui/widget_factory.dart';
 
 import '../model/bonsai_collection.dart';
 import '../model/bonsai_tree.dart';
@@ -15,37 +17,38 @@ import '../i18n/bonsai_tree_view.i18n.dart';
 import './species_picker.dart';
 
 class BonsaiTreeView extends StatefulWidget {
-  final BonsaiCollection collection;
   final BonsaiTreeID id;
-  BonsaiTreeView(this.collection, this.id);
+  BonsaiTreeView(this.id);
 
   @override
-  BonsaiTreeViewState createState() => BonsaiTreeViewState();
+  BonsaiTreeViewState createState() => BonsaiTreeViewState(id);
 }
 
 class BonsaiTreeViewState extends State<BonsaiTreeView>
     with Screen<BonsaiCollection> {
-  String _title;
-  BonsaiTree _tree;
   bool _isEdit;
+  BonsaiTreeID id;
+
+  BonsaiTreeViewState(this.id);
 
   @override
   void initState() {
     super.initState();
-    _tree = _isCreateNew() ? null : widget.collection.findById(widget.id);
-    _title = _tree?.displayName ?? "Add new tree".i18n;
     _isEdit = _isCreateNew();
   }
 
   @override
-  BonsaiCollection initialModel(BuildContext context) => widget.collection;
+  BonsaiCollection initialModel(BuildContext context) =>
+      AppState.of(context).collection;
 
   @override
-  String title(BuildContext context, BonsaiCollection model) => _title;
+  String title(BuildContext context, BonsaiCollection model) =>
+      model.findById(id)?.displayName ?? 'Add new tree'.i18n;
 
   @override
   Widget body(BuildContext context, BonsaiCollection model) {
-    return BonsaiTreeForm(_tree, !_isEdit, _finishEdit);
+    return BonsaiTreeForm(
+        _tree(model), !_isEdit, (tree) => _finishEdit(model, tree));
   }
 
   @override
@@ -59,7 +62,9 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
         ),
       );
 
-  bool _isCreateNew() => widget.id == null;
+  bool _isCreateNew() => id == null;
+
+  BonsaiTree _tree(BonsaiCollection model) => model.findById(id);
 
   _startEdit() {
     setState(() {
@@ -67,7 +72,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
     });
   }
 
-  _finishEdit(BonsaiTree updatedTree) {
+  _finishEdit(BonsaiCollection model, BonsaiTree updatedTree) {
     bool wasCanceled = updatedTree == null;
     if (wasCanceled && _isCreateNew()) {
       Navigator.pop(context);
@@ -76,8 +81,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
     setState(() {
       _isEdit = false;
       if (!wasCanceled) {
-        _tree = widget.collection.update(updatedTree);
-        _title = _tree.displayName;
+        id = model.update(updatedTree).id;
       }
     });
   }

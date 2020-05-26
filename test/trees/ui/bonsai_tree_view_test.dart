@@ -27,7 +27,7 @@ main() {
 
   testWidgets('screen shows tree data', (WidgetTester tester) async {
     var collection = BonsaiCollection.withTrees([aTree], species: testSpecies);
-    await tester.pumpWidget(testAppWith(BonsaiTreeView(collection, aTree.id)));
+    await tester.pumpWidget(testAppWith(BonsaiTreeView(aTree.id), collection));
 
     expect(find.text(aTree.displayName), findsOneWidget);
     expect(find.text(aTree.species.latinName), findsOneWidget);
@@ -44,7 +44,7 @@ main() {
   testWidgets('screen can enter and cancel edit mode',
       (WidgetTester tester) async {
     var collection = BonsaiCollection.withTrees([aTree], species: testSpecies);
-    await tester.pumpWidget(testAppWith(BonsaiTreeView(collection, aTree.id)));
+    await tester.pumpWidget(testAppWith(BonsaiTreeView(aTree.id), collection));
     expect(find.text(aTree.treeName), findsOneWidget);
 
     await tester
@@ -66,9 +66,9 @@ main() {
   });
 
   testWidgets('screen can edit and save tree', (WidgetTester tester) async {
-    var collection = BonsaiCollection.withTrees([aTree], species: testSpecies) ;
+    var collection = BonsaiCollection.withTrees([aTree], species: testSpecies);
     await tester
-        .pumpWidget(testAppWith(BonsaiTreeView(collection, aTree.id)))
+        .pumpWidget(testAppWith(BonsaiTreeView(aTree.id), collection))
         .then((value) =>
             tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.edit)))
         .then((value) => tester.pump());
@@ -89,14 +89,15 @@ main() {
 
   testWidgets('screen can create new tree', (WidgetTester tester) async {
     var collection = BonsaiCollection(species: testSpecies);
-    await tester.pumpWidget(testAppWith(BonsaiTreeView(collection, null)));
+    await tester.pumpWidget(testAppWith(BonsaiTreeView(null), collection));
 
     expect(find.widgetWithText(RaisedButton, 'Cancel'), findsOneWidget);
     expect(find.widgetWithText(RaisedButton, 'Save'), findsOneWidget);
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
-    await tester.pumpWidget(testAppWith(BonsaiTreeView(BonsaiCollection(species: testSpecies), null)));
+    await tester.pumpWidget(testAppWith(
+        BonsaiTreeView(null), BonsaiCollection(species: testSpecies)));
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);
   });

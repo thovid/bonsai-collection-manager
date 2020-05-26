@@ -2,16 +2,17 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 import 'dart:async' show Future;
-
 import 'dart:convert';
+import 'dart:ui';
 import 'package:flutter/services.dart' show rootBundle;
 
+import '../../shared/i18n/i18n.dart';
 import '../model/species.dart';
 
 /// Load species list from json file
-Future<SpeciesRepository> loadSpecies() async {
+Future<SpeciesRepository> loadSpecies(Locale locale) async {
   return _InMemorySpeciesRepository(
-      await _loadSpeciesFile().then((json) => _parseSpeciesList(json)));
+      await _loadSpeciesFile().then((json) => _parseSpeciesList(json, locale)));
 }
 
 class _InMemorySpeciesRepository extends SpeciesRepository {
@@ -19,17 +20,18 @@ class _InMemorySpeciesRepository extends SpeciesRepository {
   _InMemorySpeciesRepository(this.species);
 }
 
-List<Species> _parseSpeciesList(String jsonString) {
+List<Species> _parseSpeciesList(String jsonString, Locale locale) {
   Map<String, dynamic> data = jsonDecode(jsonString);
   List species = data['species'];
-  return species.map((e) => _parseSpecies(e)).toList();
+  return species.map((e) => _parseSpecies(e, locale)).toList();
 }
 
-Species _parseSpecies(Map<String, dynamic> data) {
+Species _parseSpecies(Map<String, dynamic> data, Locale locale) {
   String genus = data['genus'];
   String species = data['species'];
   String type = data['type'];
-  String commonName = data['common_name.en'];
+  String commonNameKey = extractSupportedLanguageCode(locale);
+  String commonName = data['common_name.' + commonNameKey];
 
   return Species(_parseTreeType(type),
       latinName: species?.isEmpty ?? true ? genus : species,

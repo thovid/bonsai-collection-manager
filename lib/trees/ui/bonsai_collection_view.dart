@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
-import 'package:bonsaicollectionmanager/shared/ui/base_view.dart';
-import 'package:bonsaicollectionmanager/trees/ui/bonsai_tree_list_item.dart';
+import '../../shared/ui/app_state.dart';
+import '../../shared/ui/base_view.dart';
+import './bonsai_tree_list_item.dart';
 
 import 'package:flutter/material.dart';
 
@@ -12,11 +13,10 @@ import '../i18n/bonsai_collection_view.i18n.dart';
 
 class BonsaiCollectionView extends StatelessWidget
     with Screen<BonsaiCollection> {
-  final BonsaiCollection collection;
-  BonsaiCollectionView(this.collection);
 
   @override
-  BonsaiCollection initialModel(BuildContext context) => collection;
+  BonsaiCollection initialModel(BuildContext context) =>
+      AppState.of(context).collection;
 
   @override
   String title(BuildContext context, BonsaiCollection model) =>
@@ -25,15 +25,15 @@ class BonsaiCollectionView extends StatelessWidget
   @override
   Widget body(BuildContext context, BonsaiCollection model) => Center(
       child: ListView(
-          children: model.trees
-              .map((tree) => BonsaiTreeListItem(
+          children: model?.trees
+              ?.map((tree) => BonsaiTreeListItem(
                   tree: tree,
                   onTap: () => Navigator.of(context).push(
                           MaterialPageRoute<void>(
                               builder: (BuildContext context) {
-                        return BonsaiTreeView(model, tree.id);
+                        return BonsaiTreeView(tree.id);
                       }))))
-              .toList()));
+              ?.toList() ?? const []));
 
   @override
   FloatingActionButton floatingActionButton(
@@ -47,7 +47,7 @@ class BonsaiCollectionView extends StatelessWidget
   _addTree(BuildContext context, BonsaiCollection collection) {
     Navigator.of(context)
         .push(MaterialPageRoute<void>(builder: (BuildContext context) {
-      return BonsaiTreeView(collection, null);
+      return BonsaiTreeView(null);
     }));
   }
 }

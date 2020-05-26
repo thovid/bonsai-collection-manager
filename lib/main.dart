@@ -12,36 +12,34 @@ import './trees/model/species.dart';
 import './trees/infrastructure/tree_species_loader.dart';
 
 import './trees/ui/bonsai_collection_view.dart';
+import './shared/i18n/i18n.dart';
+import 'shared/ui/app_state.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final SpeciesRepository species = await loadSpecies();
-  final BonsaiCollection collection = _testCollection(species);
-
-  runApp(MyApp(collection));
+void main() {
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final BonsaiCollection collection;
-
-  MyApp(this.collection);
+  MyApp();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Bonsai Collection Manager',
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: [const Locale('de', ''), const Locale('en', '')],
-      theme: ThemeData(
-        primarySwatch: Colors.lightGreen,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: I18n(child: BonsaiCollectionView(collection)),
-    );
+    return AppState(
+        child: MaterialApp(
+            title: 'Bonsai Collection Manager',
+            localizationsDelegates: [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: supportedLanguageCodes,
+            theme: ThemeData(
+              primarySwatch: Colors.lightGreen,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            home: I18n(
+              child: BonsaiCollectionView(),
+            )));
   }
 }
 

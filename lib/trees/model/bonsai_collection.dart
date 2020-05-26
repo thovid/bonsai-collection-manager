@@ -27,11 +27,11 @@ class BonsaiCollection extends ChangeNotifier {
   List<BonsaiTree> get trees => List<BonsaiTree>.unmodifiable(_trees);
 
   BonsaiTree add(BonsaiTree tree) {
-   return update(tree);
+    return update(tree);
   }
 
   BonsaiTree findById(BonsaiTreeID id) {
-    return _trees.firstWhere((element) => element.id == id);
+    return _trees.firstWhere((element) => element.id == id, orElse: () => null);
   }
 
   BonsaiTree update(BonsaiTree tree) {
@@ -42,7 +42,7 @@ class BonsaiCollection extends ChangeNotifier {
       _trees.add(tree);
     } else {
       BonsaiTree oldVersion = _trees.removeAt(index);
-      if(oldVersion.species.latinName != tree.species.latinName) {
+      if (oldVersion.species.latinName != tree.species.latinName) {
         tree = _updateSpeciesOrdinal(tree);
       }
       _trees.insert(index, tree);
@@ -58,7 +58,7 @@ class BonsaiCollection extends ChangeNotifier {
 
   BonsaiTree _updateSpeciesOrdinal(BonsaiTree tree) {
     return (BonsaiTreeBuilder(fromTree: tree)
-      ..speciesOrdinal = _nextOrdinalFor(tree.species))
+          ..speciesOrdinal = _nextOrdinalFor(tree.species))
         .build();
   }
 
