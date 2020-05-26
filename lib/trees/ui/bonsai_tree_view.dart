@@ -118,8 +118,6 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
         ],
       ),
     ));
-    /*  return BonsaiTreeForm(
-        _tree(model), !_isEdit, (tree) => _finishEdit(model, tree));*/
   }
 
   @override
