@@ -14,20 +14,20 @@ import '../../utils/test_utils.dart';
 
 void main() {
   testWidgets('Shows tree from collection', (WidgetTester tester) async {
-    BonsaiCollection collection = BonsaiCollection.withTrees([
+    BonsaiCollection collection = await TestBonsaiRepository([
       (BonsaiTreeBuilder()
             ..treeName = "My Tree"
             ..species = Species(TreeType.conifer, latinName: "Testus Treeus"))
           .build()
-    ]);
+    ]).loadCollection();
 
     await tester.pumpWidget(testAppWith(BonsaiCollectionView(), collection));
     expect(find.text('Testus Treeus 1 \'My Tree\''), findsOneWidget);
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
-    await tester.pumpWidget(testAppWith(
-        BonsaiCollectionView(), BonsaiCollection()));
+    await tester.pumpWidget(testAppWith(BonsaiCollectionView(),
+        await TestBonsaiRepository([]).loadCollection()));
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);
   });

@@ -2,7 +2,6 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
 import 'package:bonsaicollectionmanager/trees/model/species.dart';
 import 'package:bonsaicollectionmanager/trees/ui/bonsai_tree_view.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:i18n_extension/i18n_extension.dart';
 import 'package:intl/intl.dart';
 
+import '../../utils/test_data.dart';
 import '../../utils/test_utils.dart';
 
 main() {
@@ -25,7 +25,7 @@ main() {
       .build();
 
   testWidgets('screen shows tree data', (WidgetTester tester) async {
-    var collection = BonsaiCollection.withTrees([aTree]);
+    var collection = await TestBonsaiRepository([aTree]).loadCollection();
     await tester.pumpWidget(testAppWith(BonsaiTreeView(aTree.id), collection));
 
     expect(find.text(aTree.displayName), findsOneWidget);
@@ -42,7 +42,7 @@ main() {
 
   testWidgets('screen can enter and cancel edit mode',
       (WidgetTester tester) async {
-    var collection = BonsaiCollection.withTrees([aTree]);
+    var collection = await TestBonsaiRepository([aTree]).loadCollection();
     await tester.pumpWidget(testAppWith(BonsaiTreeView(aTree.id), collection));
     expect(find.text(aTree.treeName), findsOneWidget);
 
@@ -64,7 +64,7 @@ main() {
   });
 
   testWidgets('screen can edit and save tree', (WidgetTester tester) async {
-    var collection = BonsaiCollection.withTrees([aTree]);
+    var collection = await TestBonsaiRepository([aTree]).loadCollection();
     await tester
         .pumpWidget(testAppWith(BonsaiTreeView(aTree.id), collection))
         .then((value) =>
@@ -84,7 +84,7 @@ main() {
   });
 
   testWidgets('screen can create new tree', (WidgetTester tester) async {
-    var collection = BonsaiCollection();
+    var collection = await TestBonsaiRepository([]).loadCollection();
     await tester.pumpWidget(testAppWith(BonsaiTreeView(null), collection));
 
     expect(find.widgetWithIcon(IconButton, Icons.done), findsOneWidget);
@@ -92,7 +92,7 @@ main() {
 
   testWidgets('All translations defined', (WidgetTester tester) async {
     await tester.pumpWidget(testAppWith(
-        BonsaiTreeView(null), BonsaiCollection()));
+        BonsaiTreeView(null), await TestBonsaiRepository([]).loadCollection()));
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);
   });

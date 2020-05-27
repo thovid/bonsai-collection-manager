@@ -100,9 +100,9 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
                       readOnly: !_isEdit,
                       label: "Acquired at".i18n,
                       onChanged: (value) => //setState(() {
-                        _treeBuilder.acquiredAt = value,
-    //;
-    //)                }),
+                          _treeBuilder.acquiredAt = value,
+                      //;
+                      //)                }),
                     ),
                     mediumSpace,
                     formTextField(
@@ -179,9 +179,12 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
     _formKey.currentState.save();
 
     BonsaiTree updatedTree = _treeBuilder.build();
-    setState(() {
-      _isEdit = false;
-      id = model.update(updatedTree).id;
-    });
+
+    model.update(updatedTree).then((value) => {
+          setState(() {
+            _isEdit = false;
+            id = value.id;
+          })
+        });
   }
 }

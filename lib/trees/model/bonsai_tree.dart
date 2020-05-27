@@ -17,10 +17,14 @@ class BonsaiTreeID {
   static final uuid = Uuid();
   final String _id;
 
-  BonsaiTreeID(this._id);
-  BonsaiTreeID.newId() : this(uuid.v4());
+  BonsaiTreeID._internal(this._id);
+  BonsaiTreeID.newId() : this._internal(uuid.v4());
+  factory BonsaiTreeID.fromID(String id) {
+    if (id == null) return null;
+    return BonsaiTreeID._internal(id);
+  }
 
-  String get id => _id;
+  String get value => _id;
 
   @override
   operator ==(other) => _id == other._id;
@@ -90,8 +94,8 @@ class BonsaiTreeBuilder {
   DateTime acquiredAt;
   String acquiredFrom;
 
-  BonsaiTreeBuilder({BonsaiTree fromTree})
-      : _id = fromTree?.id ?? BonsaiTreeID.newId(),
+  BonsaiTreeBuilder({BonsaiTree fromTree, String id})
+      : _id = BonsaiTreeID.fromID(id) ?? fromTree?.id ?? BonsaiTreeID.newId(),
         treeName = fromTree?.treeName ?? '',
         species = fromTree?.species ?? Species.unknown,
         speciesOrdinal = fromTree?.speciesOrdinal ?? 1,
