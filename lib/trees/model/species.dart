@@ -20,6 +20,15 @@ abstract class SpeciesRepository {
       return result;
     });
   }
+
+  Future<Species> findOne({String latinName}) async {
+    var lowerCasePattern = latinName.toLowerCase();
+    return Future(() {
+      return species.firstWhere(
+          (element) => element.latinName.toLowerCase() == lowerCasePattern,
+          orElse: () => null);
+    });
+  }
 }
 
 // The species of the tree.
@@ -35,6 +44,14 @@ class Species {
   Species(this.type, {this.latinName, this.informalName})
       : _searchString = (latinName?.toLowerCase() ?? '') +
             (informalName?.toLowerCase() ?? '');
+
+  @override
+  bool operator ==(other) {
+    return latinName == other.latinName;
+  }
+
+  @override
+  int get hashCode => latinName.hashCode;
 }
 
 /// List of known species
