@@ -15,7 +15,6 @@ import './bonsai_tree_list_item.dart';
 
 class BonsaiCollectionView extends StatelessWidget
     with Screen<BonsaiCollection> {
-
   @override
   BonsaiCollection initialModel(BuildContext context) =>
       AppState.of(context).collection;
@@ -25,17 +24,28 @@ class BonsaiCollectionView extends StatelessWidget
       "My collection".i18n;
 
   @override
-  Widget body(BuildContext context, BonsaiCollection model) => Center(
-      child: ListView(
-          children: model?.trees
-              ?.map((tree) => BonsaiTreeListItem(
-                  tree: tree,
-                  onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute<void>(
-                              builder: (BuildContext context) {
-                        return BonsaiTreeView(tree.id);
-                      }))))
-              ?.toList() ?? const []));
+  Widget body(BuildContext context, BonsaiCollection model) =>
+      withLoadingIndicator(
+          model == null,
+          Center(
+              child: ListView(
+                  children: model?.trees
+                          ?.map((tree) => BonsaiTreeListItem(
+                              tree: tree,
+                              onTap: () => Navigator.of(context).push(
+                                      MaterialPageRoute<void>(
+                                          builder: (BuildContext context) {
+                                    return BonsaiTreeView(tree.id);
+                                  }))))
+                          ?.toList() ??
+                      const [])));
+
+  Widget withLoadingIndicator(bool isLoading, Widget child) => Stack(
+        children: <Widget>[
+          isLoading ? CircularProgressIndicator() : Container(),
+          child
+        ],
+      );
 
   @override
   FloatingActionButton floatingActionButton(
