@@ -3,6 +3,9 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
+import './expanded_section.dart';
 
 class ImageDescriptor {
   final String location;
@@ -98,15 +101,66 @@ class _ImageTile extends StatelessWidget {
   }
 }
 
-class _AddImageTile extends StatelessWidget {
+class _AddImageTile extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _AddImageTileState();
+}
+
+class _AddImageTileState extends State<_AddImageTile>
+    with SingleTickerProviderStateMixin {
+  bool _showSelector = false;
+  AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
-        child: FlatButton(
-      child: Icon(Icons.add),
-      onPressed: _openImagePicker,
+        child: Column(
+      children: [
+        FlatButton(
+          child: AnimatedIcon(
+            icon: AnimatedIcons.menu_close,
+            progress: _animationController,
+          ),
+          onPressed: () {
+            if (!_showSelector)
+              _animationController.forward();
+            else
+              _animationController.reverse();
+            setState(() {
+              _showSelector = !_showSelector;
+            });
+          },
+        ),
+        ExpandedSection(
+            expand: _showSelector,
+            child: Column(children: [
+              FlatButton(
+                child: Icon(Icons.camera),
+                onPressed: () {},
+              ),
+              FlatButton(
+                child: Icon(Icons.image),
+                onPressed: () {},
+              )
+            ])),
+      ],
     ));
   }
+}
 
-  Future _openImagePicker() async {}
+Future _openImagePicker() async {
+  //await ImagePicker.pickImage(source: ImageSource.camera);
 }
