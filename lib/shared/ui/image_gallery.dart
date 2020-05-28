@@ -2,10 +2,36 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import './expanded_section.dart';
+
+class ImageGalleryModel with ChangeNotifier {
+  ImageDescriptor _primary;
+  List<ImageDescriptor> _images;
+
+  ImageGalleryModel({ImageDescriptor primary, List<ImageDescriptor> images})
+      : _primary = primary,
+        _images = images;
+
+  List<ImageDescriptor> get images => _images;
+
+  void addImage(ImageDescriptor image) {
+    _images.insert(0, image);
+    notifyListeners();
+  }
+
+  ImageDescriptor get primaryImage => _primary;
+
+  set primaryImage(ImageDescriptor image) {
+    _primary = image;
+    notifyListeners();
+  }
+}
 
 class ImageDescriptor {
   final String location;
@@ -19,7 +45,6 @@ class ImageGallery extends StatelessWidget {
     return Container(
         padding: EdgeInsets.all(10),
         height: MediaQuery.of(context).size.height * .5 - 20,
-        //width: MediaQuery.of(context).size.width,
         child: Card(
             child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -34,56 +59,42 @@ class ImageGallery extends StatelessWidget {
 }
 
 class _MainImage extends StatelessWidget {
-  final ImageDescriptor imageDescriptor = ImageDescriptor(
-      //'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg');
-      'https://www.bonsaipflege.ch/images/bilder/Bonsai%20-%20Nadel/E-H/Picea_.jpg');
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(5),
-      child: ClipRRect(
-          borderRadius: BorderRadius.circular(5.0),
-          child: Image.network(
-            imageDescriptor.location,
-            fit: BoxFit.cover,
-          )),
-    );
+    return Consumer<ImageGalleryModel>(
+        builder: (BuildContext context, ImageGalleryModel imageGalleryModel,
+                Widget _) =>
+            Container(
+              padding: EdgeInsets.all(5),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5.0),
+                  child: Image.network(
+                    imageGalleryModel.primaryImage.location,
+                    fit: BoxFit.cover,
+                  )),
+            ));
   }
 }
 
 class _ImagePanel extends StatelessWidget {
-  final List<ImageDescriptor> images = [
-    ImageDescriptor(
-        'https://www.gartenjournal.net/wp-content/uploads/fichte-bonsai.jpg'),
-    ImageDescriptor(
-        'https://www.bonsaipflege.ch/images/bilder/Bonsai%20-%20Nadel/E-H/Picea_.jpg'),
-    ImageDescriptor(
-        'https://www.gartenjournal.net/wp-content/uploads/fichte-bonsai.jpg'),
-    ImageDescriptor(
-        'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
-    ImageDescriptor(
-        'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-    ImageDescriptor(
-        'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
-  ];
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        _AddImageTile(),
-        //Row()
-        Expanded(
-            child: Container(
-                padding: EdgeInsets.only(bottom: 5),
-                child: ListView.builder(
-                  itemCount: images.length,
-                  itemBuilder: (context, index) {
-                    return _ImageTile(images[index]);
-                  },
-                )))
-      ],
-    );
+    return Consumer<ImageGalleryModel>(
+        builder: (context, imageGalleryModel, _) => Column(
+              children: <Widget>[
+                _MenuTile(),
+                //Row()
+                Expanded(
+                    child: Container(
+                        padding: EdgeInsets.only(bottom: 5),
+                        child: ListView.builder(
+                          itemCount: imageGalleryModel.images.length,
+                          itemBuilder: (context, index) {
+                            return _ImageTile(imageGalleryModel.images[index]);
+                          },
+                        )))
+              ],
+            ));
   }
 }
 
@@ -93,20 +104,64 @@ class _ImageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(5),
-        child: ClipRRect(
-            borderRadius: BorderRadius.circular(5.0),
-            child: Image.network(imageDescriptor.location, fit: BoxFit.cover)));
+    return GestureDetector(
+        onTap: () async {
+          await showDialog(
+              context: context,
+              // TODO extract into distinct widget, use for main image, add close button
+              builder: (context) => Dialog(
+                      child: IntrinsicHeight(
+                    child: Container(
+                      padding: EdgeInsets.all(5),
+                      //width: MediaQuery.of(context).size.width * .9,
+                      //height: MediaQuery.of(context).size.height * .5,
+                      child: Column(children: [
+                        Center(
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5.0),
+                              child: Image.network(imageDescriptor.location,
+                                  fit: BoxFit.contain)),
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.delete,
+                                ),
+                                onPressed: () {
+                                  print("deleted");
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.star_border,
+                                  //color: Colors.amberAccent,
+                                ),
+                                onPressed: () {
+                                  print("starred");
+                                },
+                              ),
+                            ]),
+                      ]),
+                    ),
+                  )));
+        },
+        child: Container(
+            padding: EdgeInsets.all(5),
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(5.0),
+                child: Image.network(imageDescriptor.location,
+                    fit: BoxFit.cover))));
   }
 }
 
-class _AddImageTile extends StatefulWidget {
+class _MenuTile extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _AddImageTileState();
+  State<StatefulWidget> createState() => _MenuTileState();
 }
 
-class _AddImageTileState extends State<_AddImageTile>
+class _MenuTileState extends State<_MenuTile>
     with SingleTickerProviderStateMixin {
   bool _showSelector = false;
   AnimationController _animationController;
@@ -148,19 +203,32 @@ class _AddImageTileState extends State<_AddImageTile>
             expand: _showSelector,
             child: Column(children: [
               FlatButton(
-                child: Icon(Icons.camera),
-                onPressed: () {},
+                child: Icon(Icons.photo_camera),
+                onPressed: () async {
+                  _handleImagePicked(
+                      await _openImagePicker(ImageSource.camera));
+                },
               ),
               FlatButton(
-                child: Icon(Icons.image),
-                onPressed: () {},
+                child: Icon(Icons.photo_album),
+                onPressed: () async {
+                  _handleImagePicked(
+                      await _openImagePicker(ImageSource.gallery));
+                },
               )
             ])),
       ],
     ));
   }
-}
 
-Future _openImagePicker() async {
-  //await ImagePicker.pickImage(source: ImageSource.camera);
+  Future<File> _openImagePicker(ImageSource source) async {
+    return await ImagePicker.pickImage(source: source);
+  }
+
+  void _handleImagePicked(File image) {
+    _animationController.reverse();
+    setState(() {
+      _showSelector = false;
+    });
+  }
 }

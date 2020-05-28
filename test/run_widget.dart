@@ -8,11 +8,31 @@ import 'package:bonsaicollectionmanager/shared/ui/image_gallery.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n_extension/i18n_widget.dart';
+import 'package:provider/provider.dart';
 
 /// Helper to run a widget in a scaffold for visual checking purposes
 
+ImageGalleryModel model = ImageGalleryModel(
+    primary: ImageDescriptor(
+        'https://www.bonsaipflege.ch/images/bilder/Bonsai%20-%20Nadel/E-H/Picea_.jpg'),
+    images: [
+      ImageDescriptor(
+          'https://www.gartenjournal.net/wp-content/uploads/fichte-bonsai.jpg'),
+      ImageDescriptor(
+          'https://www.bonsaipflege.ch/images/bilder/Bonsai%20-%20Nadel/E-H/Picea_.jpg'),
+      ImageDescriptor(
+          'https://www.gartenjournal.net/wp-content/uploads/fichte-bonsai.jpg'),
+      ImageDescriptor(
+          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
+      ImageDescriptor(
+          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+      ImageDescriptor(
+          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
+    ]);
+
 void main() {
-  runApp(WidgetRunner(ImageGallery()));
+  runApp(WidgetRunner(ChangeNotifierProvider<ImageGalleryModel>.value(
+      value: model, builder: (context, _) => ImageGallery())));
 }
 
 class WidgetRunner extends StatelessWidget {
@@ -36,9 +56,10 @@ class WidgetRunner extends StatelessWidget {
           ),
           home: I18n(
               child: Scaffold(
-                  body: Center(
-            child: child,
-          )))),
+            body: Center(
+              child: child,
+            ),
+          ))),
     );
   }
 }
