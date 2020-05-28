@@ -23,7 +23,7 @@ class TestSpeciesRepository extends SpeciesRepository {
 
 class TestBonsaiRepository extends BonsaiTreeRepository {
   List<BonsaiTree> trees;
-  BonsaiTree lastUpdated;
+  static BonsaiTree lastUpdated;
   TestBonsaiRepository(this.trees);
 
   @override

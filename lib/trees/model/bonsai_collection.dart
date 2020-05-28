@@ -8,7 +8,7 @@ import './bonsai_tree.dart';
 import './species.dart';
 
 abstract class BonsaiTreeRepository {
-  Future<BonsaiTree> update(BonsaiTree tree);
+  Future<void> update(BonsaiTree tree);
   Future<BonsaiCollection> loadCollection();
 }
 
@@ -38,19 +38,26 @@ class BonsaiCollection extends ChangeNotifier {
   }
 
   Future<BonsaiTree> update(BonsaiTree tree) async {
-    int index = _trees.indexWhere((element) => element.id == tree.id);
+    final int index = _trees.indexWhere((element) => element.id == tree.id);
+    if (index < 0) return _insert(tree);
+    return _update(index, tree);
+  }
 
-    if (index < 0) {
+  BonsaiTree _update(int index, BonsaiTree tree) {
+    final BonsaiTree oldVersion = _trees[index];
+    if (oldVersion.species.latinName != tree.species.latinName) {
       tree = _updateSpeciesOrdinal(tree);
-      _trees.add(tree);
-    } else {
-      BonsaiTree oldVersion = _trees.removeAt(index);
-      if (oldVersion.species.latinName != tree.species.latinName) {
-        tree = _updateSpeciesOrdinal(tree);
-      }
-      _trees.insert(index, tree);
     }
+    _trees[index] = tree;
+    _repository.update(tree);
+    notifyListeners();
+    return tree;
+  }
 
+  BonsaiTree _insert(BonsaiTree tree) {
+    tree = _updateSpeciesOrdinal(tree);
+    _trees.add(tree);
+    _repository.update(tree);
     notifyListeners();
     return tree;
   }

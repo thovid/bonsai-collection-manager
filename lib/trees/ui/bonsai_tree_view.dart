@@ -2,10 +2,11 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/ui/app_state.dart';
+import '../../shared/state/app_context.dart';
 import '../../shared/ui/base_view.dart';
 import '../../shared/ui/spaces.dart';
 import '../../shared/ui/widget_factory.dart';
@@ -42,7 +43,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
 
   @override
   BonsaiCollection initialModel(BuildContext context) =>
-      AppState.of(context).collection;
+      AppContext.of(context).collection;
 
   @override
   String title(BuildContext context, BonsaiCollection model) =>

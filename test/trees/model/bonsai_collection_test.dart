@@ -9,9 +9,6 @@ import 'package:test/test.dart';
 import '../../utils/test_data.dart';
 
 main() {
-  final Species silvestris =
-      Species(TreeType.conifer, latinName: "Pinus Silvestris");
-
   final Species mugo = Species(TreeType.conifer, latinName: "Pinus Mugo");
 
   final BonsaiTree firstMugo = (BonsaiTreeBuilder()
@@ -32,9 +29,9 @@ main() {
   test('can add a tree to the collection', () async {
     var collection = await TestBonsaiRepository([]).loadCollection();
     var aTree = (BonsaiTreeBuilder()..treeName = "Test Tree").build();
-    await collection.add(aTree);
+    var savedTree = await collection.add(aTree);
     expect(collection.size, equals(1));
-    // TODO test repo updated
+    expect(TestBonsaiRepository.lastUpdated, savedTree);
   });
 
   test('calculates next ordinal for added tree', () async {
@@ -63,6 +60,6 @@ main() {
     var found = collection.findById(id);
     expect(found.treeName, equals(updated.treeName));
     expect(found.speciesOrdinal, equals(2)); // ordinal should not change
-    // Todo test repo updated
+    expect(TestBonsaiRepository.lastUpdated, equals(found));
   });
 }

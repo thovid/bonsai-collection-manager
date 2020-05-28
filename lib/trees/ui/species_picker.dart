@@ -7,8 +7,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
+import '../../shared/state/app_context.dart';
 import '../../shared/icons/tree_type_icons.dart';
-import '../../shared/ui/app_state.dart';
 import '../../shared/ui/spaces.dart';
 import '../model/species.dart';
 
@@ -20,7 +20,7 @@ Widget speciesPicker(BuildContext context,
     String label,
     FindSpecies findSpecies,
     Function(Species value) onSaved}) {
-  var finder = AppState.of(context).speciesRepository.findMatching;
+  var finder = AppContext.of(context).speciesRepository.findMatching;
   return SpeciesPicker(
     readOnly: readOnly,
     initialValue: initialValue,
