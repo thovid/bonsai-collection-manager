@@ -10,7 +10,7 @@ import '../model/species.dart';
 import '../../shared/i18n/i18n.dart';
 
 /// Load species list from json file
-Future<SpeciesRepository> loadSpecies(Locale locale) async {
+Future<SpeciesRepository> fetchSpecies(Locale locale) async {
   return _InMemorySpeciesRepository(
       await _loadSpeciesFile().then((json) => _parseSpeciesList(json, locale)));
 }

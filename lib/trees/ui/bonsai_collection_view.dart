@@ -24,8 +24,8 @@ class BonsaiCollectionView extends StatelessWidget
   @override
   Widget body(BuildContext context, BonsaiCollection model) =>
       withLoadingIndicator(
-          !AppContext.of(context).isInitialized,
-          Center(
+          isLoading: !AppContext.of(context).isInitialized,
+          child: Center(
               child: ListView(
                   children: model?.trees
                           ?.map((tree) => BonsaiTreeListItem(
@@ -38,10 +38,10 @@ class BonsaiCollectionView extends StatelessWidget
                           ?.toList() ??
                       const [])));
 
-  Widget withLoadingIndicator(bool isLoading, Widget child) {
+  Widget withLoadingIndicator({bool isLoading, Widget child}) {
     return Stack(
       children: <Widget>[
-        isLoading ? Center(child:CircularProgressIndicator()) : Container(),
+        isLoading ? Center(child: CircularProgressIndicator()) : Container(),
         child
       ],
     );

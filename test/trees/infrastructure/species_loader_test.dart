@@ -11,12 +11,12 @@ main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('can load species file with language en', () async {
-    var loaded = await loadSpecies(Locale('en'));
+    var loaded = await fetchSpecies(Locale('en'));
     expect(loaded.species.length, greaterThan(0));
   });
 
   test('can load species file with language de', () async {
-    var loaded = await loadSpecies(Locale('de'));
+    var loaded = await fetchSpecies(Locale('de'));
     expect(loaded.species.length, greaterThan(0));
   });
 }

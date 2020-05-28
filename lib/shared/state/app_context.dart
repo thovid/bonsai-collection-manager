@@ -40,8 +40,13 @@ class _WithAppContextState extends State<WithAppContext> {
   @override
   void initState() {
     super.initState();
+    if (widget.testContext != null) {
+      _appContext = widget.testContext;
+      return;
+    }
+
     _appContext = AppContext(isInitialized: false);
-    _loadAppContext(widget.testContext);
+    _loadAppContext();
   }
 
   @override
@@ -52,14 +57,9 @@ class _WithAppContextState extends State<WithAppContext> {
     );
   }
 
-  Future<void> _loadAppContext(AppContext testContext) async {
-    if (testContext != null) {
-      _appContext = testContext;
-      return;
-    }
-
+  Future<void> _loadAppContext() async {
     Locale locale = await fetchLocale();
-    SpeciesRepository species = await loadSpecies(locale);
+    SpeciesRepository species = await fetchSpecies(locale);
     BonsaiCollection collection =
         await SQLBonsaiTreeRepository(species).loadCollection();
 
