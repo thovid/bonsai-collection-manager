@@ -39,7 +39,9 @@ class ImageGalleryModel with ChangeNotifier {
 
   void removeImage(ImageDescriptor image) {
     _images.remove(image);
-    // TODO update primary
+    if (image == _primary) {
+      _primary = _images.length > 0 ? _images[0] : null;
+    }
     notifyListeners();
   }
 
@@ -285,8 +287,8 @@ class _ImagePopupState extends State<ImagePopup> {
               IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () {
-                  // TODO implement
-                  print("deleted");
+                  widget.image.remove();
+                  Navigator.of(context).pop();
                 },
               ),
               IconButton(

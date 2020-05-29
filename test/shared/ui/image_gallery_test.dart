@@ -139,6 +139,28 @@ main() async {
     expect(find.byIcon(Icons.favorite_border), findsOneWidget);
     expect(model.primaryImage, equals(secondImage));
   });
+
+  testWidgets('can delete images', (WidgetTester tester) async {
+    var model = ImageGalleryModel()..addImage(File('firstImage.jpg'));
+    var secondImage = model.addImage(File('secondImage.jpg'));
+    await _startViewWith(model, tester)
+        .then((_) => tester.tap(find.byType(MainImageTile)))
+        .then((_) => tester.pumpAndSettle())
+        .then((_) => tester.tap(find.byIcon(Icons.delete)))
+        .then((_) => tester.pump());
+    expect(model.images.length, equals(1));
+    expect(find.byType(ImageTile), findsNWidgets(1));
+    expect(model.primaryImage, equals(secondImage));
+
+    await tester.tap(find.byType(MainImageTile))
+        .then((_) => tester.pumpAndSettle())
+        .then((_) => tester.tap(find.byIcon(Icons.delete)))
+        .then((_) => tester.pump());
+    expect(model.images.length, equals(0));
+    expect(find.byType(ImageTile), findsNothing);
+    expect(find.text("Add your first image"), findsOneWidget);
+  });
+
 }
 
 Future<dynamic> _tapMenuButton(WidgetTester tester, Finder button) async {
