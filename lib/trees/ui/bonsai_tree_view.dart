@@ -58,7 +58,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: <Widget>[
-          if (!_isEdit) ImageGallery(),
+          //if (!_isEdit) ImageGallery(),
           mediumSpace,
           Form(
               key: _formKey,

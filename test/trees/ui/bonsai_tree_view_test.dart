@@ -2,8 +2,6 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
-import 'package:bonsaicollectionmanager/trees/model/species.dart';
 import 'package:bonsaicollectionmanager/trees/ui/bonsai_tree_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,37 +12,29 @@ import '../../utils/test_data.dart';
 import '../../utils/test_utils.dart';
 
 main() {
-  final BonsaiTree aTree = (BonsaiTreeBuilder()
-        ..species = Species(TreeType.conifer, latinName: 'Pinus Mugo')
-        ..treeName = 'My Tree'
-        ..speciesOrdinal = 1
-        ..developmentLevel = DevelopmentLevel.refinement
-        ..potType = PotType.bonsai_pot
-        ..acquiredAt = DateTime(2020, 5, 20)
-        ..acquiredFrom = 'Bonsai Shop')
-      .build();
-
   testWidgets('screen shows tree data', (WidgetTester tester) async {
-    var collection = await TestBonsaiRepository([aTree]).loadCollection();
-    await tester.pumpWidget(testAppWith(BonsaiTreeView(aTree.id), collection));
+    var collection = await TestBonsaiRepository([aBonsaiTree]).loadCollection();
+    await tester
+        .pumpWidget(testAppWith(BonsaiTreeView(aBonsaiTree.id), collection));
 
-    expect(find.text(aTree.displayName), findsOneWidget);
-    expect(find.text(aTree.species.latinName), findsOneWidget);
-    expect(find.text(aTree.treeName), findsOneWidget);
+    expect(find.text(aBonsaiTree.displayName), findsOneWidget);
+    expect(find.text(aBonsaiTree.species.latinName), findsOneWidget);
+    expect(find.text(aBonsaiTree.treeName), findsOneWidget);
     // expect the development level
     // expect the pot type
-    expect(
-        find.text(DateFormat.yMMMd().format(aTree.acquiredAt)), findsOneWidget);
-    expect(find.text(aTree.acquiredFrom), findsOneWidget);
+    expect(find.text(DateFormat.yMMMd().format(aBonsaiTree.acquiredAt)),
+        findsOneWidget);
+    expect(find.text(aBonsaiTree.acquiredFrom), findsOneWidget);
     expect(
         find.widgetWithIcon(FloatingActionButton, Icons.edit), findsOneWidget);
   });
 
   testWidgets('screen can enter and cancel edit mode',
       (WidgetTester tester) async {
-    var collection = await TestBonsaiRepository([aTree]).loadCollection();
-    await tester.pumpWidget(testAppWith(BonsaiTreeView(aTree.id), collection));
-    expect(find.text(aTree.treeName), findsOneWidget);
+    var collection = await TestBonsaiRepository([aBonsaiTree]).loadCollection();
+    await tester
+        .pumpWidget(testAppWith(BonsaiTreeView(aBonsaiTree.id), collection));
+    expect(find.text(aBonsaiTree.treeName), findsOneWidget);
 
     await tester
         .tap(find.widgetWithIcon(FloatingActionButton, Icons.edit))
@@ -59,14 +49,14 @@ main() {
         .ensureVisible(cancelButton)
         .then((value) => tester.tap(cancelButton))
         .then((value) => tester.pump());
-    expect(collection.trees[0].treeName, aTree.treeName);
-    expect(find.text(aTree.treeName), findsOneWidget);
+    expect(collection.trees[0].treeName, aBonsaiTree.treeName);
+    expect(find.text(aBonsaiTree.treeName), findsOneWidget);
   });
 
   testWidgets('screen can edit and save tree', (WidgetTester tester) async {
-    var collection = await TestBonsaiRepository([aTree]).loadCollection();
+    var collection = await TestBonsaiRepository([aBonsaiTree]).loadCollection();
     await tester
-        .pumpWidget(testAppWith(BonsaiTreeView(aTree.id), collection))
+        .pumpWidget(testAppWith(BonsaiTreeView(aBonsaiTree.id), collection))
         .then((value) =>
             tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.edit)))
         .then((value) => tester.pump());

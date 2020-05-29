@@ -16,6 +16,17 @@ final SpeciesRepository testSpecies = TestSpeciesRepository([
       latinName: 'Pinus Mugo', informalName: 'Mountain Pine')
 ]);
 
+final BonsaiTree aBonsaiTree = (BonsaiTreeBuilder()
+      ..species = Species(TreeType.conifer,
+          latinName: 'Pinus Mugo', informalName: 'Mountain Pine')
+      ..treeName = 'My Tree'
+      ..speciesOrdinal = 1
+      ..developmentLevel = DevelopmentLevel.refinement
+      ..potType = PotType.bonsai_pot
+      ..acquiredAt = DateTime(2020, 5, 20)
+      ..acquiredFrom = 'Bonsai Shop')
+    .build();
+
 class TestSpeciesRepository extends SpeciesRepository {
   final List<Species> species;
   TestSpeciesRepository(this.species);

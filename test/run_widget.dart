@@ -12,27 +12,11 @@ import 'package:provider/provider.dart';
 
 /// Helper to run a widget in a scaffold for visual checking purposes
 
-ImageGalleryModel model = ImageGalleryModel(
-    primary: ImageDescriptor(
-        'https://www.bonsaipflege.ch/images/bilder/Bonsai%20-%20Nadel/E-H/Picea_.jpg'),
-    images: [
-      ImageDescriptor(
-          'https://www.gartenjournal.net/wp-content/uploads/fichte-bonsai.jpg'),
-      ImageDescriptor(
-          'https://www.bonsaipflege.ch/images/bilder/Bonsai%20-%20Nadel/E-H/Picea_.jpg'),
-      ImageDescriptor(
-          'https://www.gartenjournal.net/wp-content/uploads/fichte-bonsai.jpg'),
-      ImageDescriptor(
-          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
-      ImageDescriptor(
-          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-      ImageDescriptor(
-          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
-    ]);
-
+ImageGalleryModel empty =
+    ImageGalleryModel();
 void main() {
   runApp(WidgetRunner(ChangeNotifierProvider<ImageGalleryModel>.value(
-      value: model, builder: (context, _) => ImageGallery())));
+      value: empty, builder: (context, _) => ImageGallery())));
 }
 
 class WidgetRunner extends StatelessWidget {
