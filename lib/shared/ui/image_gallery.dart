@@ -26,12 +26,15 @@ class ImageGalleryModel with ChangeNotifier {
 
   List<ImageDescriptor> get images => _images;
 
-  void addImage(ImageDescriptor image) {
+  ImageDescriptor addImage(File image) {
+    ImageDescriptor descriptor =
+        ImageDescriptor(parent: this, path: image.path);
     if (_images.isEmpty) {
-      _primary = image;
+      _primary = descriptor;
     }
-    _images.insert(0, image);
+    _images.insert(0, descriptor);
     notifyListeners();
+    return descriptor;
   }
 
   void removeImage(ImageDescriptor image) {
@@ -42,12 +45,7 @@ class ImageGalleryModel with ChangeNotifier {
 
   ImageDescriptor get primaryImage => _primary;
 
-  set primaryImage(ImageDescriptor image) {
-    _primary = image;
-    notifyListeners();
-  }
-
-  bool toggleIsPrimary(ImageDescriptor image) {
+  bool _toggleIsPrimary(ImageDescriptor image) {
     final bool wasPrimary = image == _primary;
     if (_primary == image) {
       if (_primary == images[0] && images.length > 1) {
@@ -65,12 +63,22 @@ class ImageGalleryModel with ChangeNotifier {
 }
 
 class ImageDescriptor {
+  final ImageGalleryModel parent;
   final String path;
 
-  ImageDescriptor({@required this.path}) : assert(path != null);
+  ImageDescriptor({@required this.parent, @required this.path})
+      : assert(parent != null && path != null);
+
+  File toFile() {
+    return File(path);
+  }
+
+  bool get isMainImage => parent._primary == this;
+  bool toggleIsMainImage() => parent._toggleIsPrimary(this);
+  void remove() => parent.removeImage(this);
 }
 
-typedef void ImageSelectedCallback(ImageDescriptor image);
+typedef void ImageSelectedCallback(File imageFile);
 
 class ImageGallery extends StatelessWidget {
   @override
@@ -105,8 +113,7 @@ class MainImageTile extends StatelessWidget {
 
   Widget _buildImageOrHint(BuildContext context, ImageGalleryModel model) {
     if (model.primaryImage != null)
-      return _buildTapableImage(context, model.primaryImage, true,
-          () => model.toggleIsPrimary(model.primaryImage));
+      return _buildTapableImage(context, model.primaryImage);
     return Center(child: Text("Add your first image".i18n));
   }
 }
@@ -125,15 +132,9 @@ class ImagesPanel extends StatelessWidget {
                     child: Container(
                         padding: EdgeInsets.only(bottom: 5),
                         child: ListView.builder(
-                          itemCount: imageGalleryModel?.images?.length ?? 0,
+                          itemCount: imageGalleryModel.images.length,
                           itemBuilder: (context, index) {
-                            ImageDescriptor image =
-                                imageGalleryModel.images[index];
-                            return ImageTile(
-                              image,
-                              image == imageGalleryModel.primaryImage,
-                              () => imageGalleryModel.toggleIsPrimary(image),
-                            );
+                            return ImageTile(imageGalleryModel.images[index]);
                           },
                         )))
               ],
@@ -143,9 +144,7 @@ class ImagesPanel extends StatelessWidget {
 
 class ImageTile extends StatelessWidget {
   final ImageDescriptor imageDescriptor;
-  final bool isMainImage;
-  final bool Function() onToggleFavorite;
-  ImageTile(this.imageDescriptor, this.isMainImage, this.onToggleFavorite);
+  ImageTile(this.imageDescriptor);
 
   @override
   Widget build(BuildContext context) {
@@ -153,8 +152,7 @@ class ImageTile extends StatelessWidget {
         padding: EdgeInsets.all(5),
         child: ClipRRect(
             borderRadius: BorderRadius.circular(5.0),
-            child: _buildTapableImage(
-                context, imageDescriptor, isMainImage, onToggleFavorite)));
+            child: _buildTapableImage(context, imageDescriptor)));
   }
 }
 
@@ -240,18 +238,14 @@ class _ImagesPanelMenuTileState extends State<ImagesPanelMenuTile>
     setState(() {
       _showSelector = false;
     });
-    widget.onImageSelected(ImageDescriptor(path: image.path));
+    widget.onImageSelected(image);
   }
 }
 
 class ImagePopup extends StatefulWidget {
-  final Image image;
-  final bool isMainImage;
-  final bool Function() onToggleFavorite;
-  ImagePopup(
-      {@required this.image,
-      @required this.isMainImage,
-      @required this.onToggleFavorite});
+  final ImageDescriptor image;
+
+  ImagePopup(this.image);
 
   @override
   _ImagePopupState createState() => _ImagePopupState();
@@ -263,13 +257,13 @@ class _ImagePopupState extends State<ImagePopup> {
   @override
   void initState() {
     super.initState();
-    isMainImage = widget.isMainImage;
+    isMainImage = widget.image.isMainImage;
   }
 
   @override
   void didUpdateWidget(ImagePopup oldWidget) {
     super.didUpdateWidget(oldWidget);
-    isMainImage = widget.isMainImage;
+    isMainImage = widget.image.isMainImage;
   }
 
   @override
@@ -281,24 +275,25 @@ class _ImagePopupState extends State<ImagePopup> {
             Center(
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(5.0),
-                  child: widget.image),
+                  child: Image.file(
+                    widget.image.toFile(),
+                    fit: BoxFit.contain,
+                    errorBuilder: _defaultImageNotFound,
+                  )),
             ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               IconButton(
-                icon: Icon(
-                  Icons.delete,
-                ),
+                icon: Icon(Icons.delete),
                 onPressed: () {
+                  // TODO implement
                   print("deleted");
                 },
               ),
               IconButton(
-                icon: Icon(
-                  isMainImage ? Icons.favorite : Icons.favorite_border,
-                  //color: Colors.amberAccent,
-                ),
+                icon:
+                    Icon(isMainImage ? Icons.favorite : Icons.favorite_border),
                 onPressed: () {
-                  if (widget.onToggleFavorite()) {
+                  if (widget.image.toggleIsMainImage()) {
                     setState(() {
                       isMainImage = !isMainImage;
                     });
@@ -311,28 +306,20 @@ class _ImagePopupState extends State<ImagePopup> {
       ));
 }
 
-GestureDetector _buildTapableImage(BuildContext context, ImageDescriptor image,
-    bool isMainImage, bool Function() onToggleFavorite) {
-  final File file = File(image.path);
+GestureDetector _buildTapableImage(
+    BuildContext context, ImageDescriptor image) {
   return GestureDetector(
-      onTap: () async {
-        await showDialog(
-            context: context,
-            builder: (context) => ImagePopup(
-                isMainImage: isMainImage,
-                onToggleFavorite: onToggleFavorite,
-                image: Image.file(
-                  file,
-                  fit: BoxFit.contain,
-                  errorBuilder: _defaultImageNotFound,
-                )));
-      },
-      child: Image.file(
-        file,
-        fit: BoxFit.cover,
-        errorBuilder: _defaultImageNotFound,
-      ));
+    onTap: () async {
+      await showDialog(
+          context: context, builder: (context) => ImagePopup(image));
+    },
+    child: Image.file(
+      image.toFile(),
+      fit: BoxFit.cover,
+      errorBuilder: _defaultImageNotFound,
+    ),
+  );
 }
 
 Widget _defaultImageNotFound(BuildContext c, Object o, StackTrace s) =>
-    Icon(Icons.report_problem);
+    Column(children: [Icon(Icons.report_problem), Text('not found')]);

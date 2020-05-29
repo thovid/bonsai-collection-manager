@@ -1,6 +1,8 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
+import 'dart:io';
+
 import 'package:bonsaicollectionmanager/shared/ui/image_gallery.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,9 +49,9 @@ main() async {
   });
 
   testWidgets('shows tiles for images in gallery', (WidgetTester tester) async {
-    var someImage = ImageDescriptor(path: 'some_path.jpg');
-    var model =
-        ImageGalleryModel(primary: someImage, images: [someImage, someImage]);
+    var model = ImageGalleryModel()
+      ..addImage(File('some_path.jpg'))
+      ..addImage(File('some__other_path.jpg'));
     await _startViewWith(model, tester);
     expect(find.byType(ImageTile), findsNWidgets(2));
   });
@@ -89,7 +91,7 @@ main() async {
   });
 
   testWidgets(
-      'main image does not show add image hint after first image was selected',
+      'main image does no longer show add image hint after first image was selected',
       (WidgetTester tester) async {
     pathToReturn = image_path;
     var model = ImageGalleryModel();
@@ -102,8 +104,7 @@ main() async {
   // TODO test is skipped because due to some unknown reason the tap does not work
   testWidgets('opens image from gallery on tap onto gallery image',
       (WidgetTester tester) async {
-    var someImage = ImageDescriptor(path: 'some_path.jpg');
-    var model = ImageGalleryModel(primary: someImage, images: [someImage]);
+    var model = ImageGalleryModel()..addImage(File('some_image.jpg'));
     await _startViewWith(model, tester);
     await tester
         .tap(find.byType(ImageTile))
@@ -114,8 +115,7 @@ main() async {
 
   testWidgets('opens image from gallery on tap onto main image',
       (WidgetTester tester) async {
-    var someImage = ImageDescriptor(path: 'some_path.jpg');
-    var model = ImageGalleryModel(primary: someImage, images: [someImage]);
+    var model = ImageGalleryModel()..addImage(File('some_path.jpg'));
     await _startViewWith(model, tester)
         .then((_) => tester.tap(find.byType(MainImageTile)))
         .then((_) => tester.pumpAndSettle());
@@ -125,10 +125,8 @@ main() async {
 
   testWidgets('can toggle main image in image popup',
       (WidgetTester tester) async {
-    var someImage = ImageDescriptor(path: 'some_path.jpg');
-    var someOtherImage = ImageDescriptor(path: 'some__other_path.jpg');
-    var model = ImageGalleryModel(
-        primary: someOtherImage, images: [someImage, someOtherImage]);
+    var model = ImageGalleryModel()..addImage(File('firstImage.jpg'));
+    var secondImage = model.addImage(File('secondImage.jpg'));
 
     await _startViewWith(model, tester)
         .then((_) => tester.tap(find.byType(MainImageTile)))
@@ -139,7 +137,7 @@ main() async {
     await tester.tap(find.byIcon(Icons.favorite)).then((_) => tester.pump());
     expect(find.byIcon(Icons.favorite), findsNothing);
     expect(find.byIcon(Icons.favorite_border), findsOneWidget);
-    expect(model.primaryImage, equals(someImage));
+    expect(model.primaryImage, equals(secondImage));
   });
 }
 
