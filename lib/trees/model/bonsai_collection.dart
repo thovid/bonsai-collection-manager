@@ -10,7 +10,6 @@ import './species.dart';
 import './model_id.dart';
 
 abstract class BonsaiTreeRepository {
-
   Future<void> update(BonsaiTree tree);
 
   Future<BonsaiCollection> loadCollection();
@@ -35,21 +34,24 @@ class BonsaiCollection extends ChangeNotifier {
 
   List<BonsaiTree> get trees => List<BonsaiTree>.unmodifiable(_trees);
 
-  Future<BonsaiTree> add(BonsaiTree tree) async {
-    return update(tree);
-  }
-
   BonsaiTree findById(ModelID<BonsaiTree> id) {
     return _trees.firstWhere((element) => element.id == id, orElse: () => null);
+  }
+
+  Future<List<CollectionItemImage>> loadImages(ModelID<BonsaiTree> treeId) =>
+      _repository.loadImages(treeId);
+
+  Future<BonsaiTree> add(BonsaiTree tree) async {
+    return update(tree);
   }
 
   Future<BonsaiTree> update(BonsaiTree tree) async {
     final int index = _trees.indexWhere((element) => element.id == tree.id);
     if (index < 0) return _insert(tree);
-    return _update(index, tree);
+    return _updateAt(index, tree);
   }
 
-  BonsaiTree _update(int index, BonsaiTree tree) {
+  BonsaiTree _updateAt(int index, BonsaiTree tree) {
     final BonsaiTree oldVersion = _trees[index];
     if (oldVersion.species.latinName != tree.species.latinName) {
       tree = _updateSpeciesOrdinal(tree);
@@ -68,24 +70,19 @@ class BonsaiCollection extends ChangeNotifier {
     return tree;
   }
 
-  BonsaiTree _updateSpeciesOrdinal(BonsaiTree tree) {
-    return (BonsaiTreeBuilder(fromTree: tree)
-          ..speciesOrdinal = _nextOrdinalFor(tree.species))
-        .build();
-  }
+  BonsaiTree _updateSpeciesOrdinal(BonsaiTree tree) =>
+      (BonsaiTreeBuilder(fromTree: tree)
+            ..speciesOrdinal = _nextOrdinalFor(tree.species))
+          .build();
 
-  List<BonsaiTree> _findAll(Species species) {
-    return _trees.fold(<BonsaiTree>[], (previousValue, element) {
-      if (element.species == species) previousValue.add(element);
-      return previousValue;
-    });
-  }
+  List<BonsaiTree> _findAll(Species species) =>
+      _trees.fold(<BonsaiTree>[], (result, element) {
+        if (element.species == species) result.add(element);
+        return result;
+      });
 
-  int _nextOrdinalFor(Species species) {
-    return _findAll(species).fold(
-        1,
-        (previousValue, element) => element.speciesOrdinal >= previousValue
-            ? element.speciesOrdinal + 1
-            : previousValue);
-  }
+  int _nextOrdinalFor(Species species) => _findAll(species).fold(
+      1,
+      (result, tree) =>
+          tree.speciesOrdinal >= result ? tree.speciesOrdinal + 1 : result);
 }
