@@ -1,19 +1,18 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
-import 'dart:io';
-
-import 'package:bonsaicollectionmanager/trees/infrastructure/collection_item_image_table.dart';
-import 'package:bonsaicollectionmanager/trees/model/collection_item_image.dart';
-import 'package:bonsaicollectionmanager/trees/model/model_id.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-import './bonsai_tree_table.dart';
+import '../model/collection_item_image.dart';
+import '../model/model_id.dart';
 import '../model/species.dart';
 import '../model/bonsai_collection.dart';
 import '../model/bonsai_tree.dart';
+
+import './collection_item_image_table.dart';
+import './bonsai_tree_table.dart';
 
 class SQLBonsaiTreeRepository extends BonsaiTreeRepository {
   static const String db_name = 'bonsaiCollectionManager.db';
@@ -25,50 +24,37 @@ class SQLBonsaiTreeRepository extends BonsaiTreeRepository {
   Database _database;
 
   @override
-  Future<BonsaiCollection> loadCollection() async {
-    await init();
-    return BonsaiCollection.withTrees(
-        await BonsaiTreeTable.readAll(speciesRepository, _database),
-        repository: this);
-  }
+  Future<BonsaiCollection> loadCollection() =>
+      init().then((_) async => BonsaiCollection.withTrees(
+          await BonsaiTreeTable.readAll(speciesRepository, _database),
+          repository: this));
 
   @override
-  Future<void> update(BonsaiTree tree) async {
-    await init();
-    return BonsaiTreeTable.write(tree, _database);
-  }
-
+  Future<void> update(BonsaiTree tree) async =>
+      init().then((_) => BonsaiTreeTable.write(tree, _database));
 
   @override
-  Future<List<CollectionItemImage>> loadImages(ModelID<BonsaiTree> treeId) async {
-    await init();
-    return CollectionItemImageTable.readForItem(treeId, _database);
-  }
+  Future<List<CollectionItemImage>> loadImages(
+          ModelID<BonsaiTree> treeId) async =>
+      init()
+          .then((_) => CollectionItemImageTable.readForItem(treeId, _database));
 
-  init() async {
-    if (!initialized) {
-      await _init();
-      initialized = true;
+  Future init() async {
+    if (initialized) {
+      return;
     }
+
+    _database = await _dbPath(db_name).then((path) => openDatabase(
+          path,
+          version: 1,
+          onCreate: (Database db, int version) async {
+            await BonsaiTreeTable.createTable(db);
+            await CollectionItemImageTable.createTable(db);
+          },
+        ));
+    initialized = true;
   }
 
-  Future _init() async {
-    String path = await dbPath(db_name);
-
-    _database = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (Database db, int version) async
-      {
-        await BonsaiTreeTable.createTable(db);
-        await CollectionItemImageTable.createTable(db);
-      }
-    );
-  }
-
-  Future<String> dbPath(String dbName) async {
-    final Directory documentsDirectory =
-        await getApplicationDocumentsDirectory();
-    return join(documentsDirectory.path, dbName);
-  }
+  Future<String> _dbPath(String dbName) async =>
+      getApplicationDocumentsDirectory().then((dir) => join(dir.path, dbName));
 }
