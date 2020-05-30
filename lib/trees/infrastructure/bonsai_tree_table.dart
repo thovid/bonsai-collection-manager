@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/trees/model/collection_item_image.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../model/bonsai_tree.dart';
@@ -60,8 +61,8 @@ class BonsaiTreeTable {
       developmentLevel: tree.developmentLevel.toString(),
       acquiredFrom: tree.acquiredFrom,
       acquiredAt: tree.acquiredAt.toIso8601String(),
-      mainImageId: tree.mainImageId,
-      mainImageFileName: tree.mainImage
+      mainImageId: tree.mainImage?.id?.value,
+      mainImageFileName: tree.mainImage?.fileName
     };
 
     return db.insert(table_name, data,
@@ -103,7 +104,10 @@ class BonsaiTreeTable {
               values[developmentLevel], DevelopmentLevel.values)
           ..acquiredAt = DateTime.parse(values[acquiredAt])
           ..acquiredFrom = values[acquiredFrom]
-          ..mainImage = values[mainImageId])
+          ..mainImage = values[mainImageId] != null ? (CollectionItemImageBuilder(id: values[mainImageId])
+                ..fileName = values[mainImageFileName]
+                ..parentId = ModelID<BonsaiTree>.fromID(values[tree_id]))
+              .build() : null)
         .build();
   }
 

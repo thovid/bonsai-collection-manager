@@ -4,6 +4,7 @@
 
 import 'package:bonsaicollectionmanager/trees/infrastructure/bonsai_tree_table.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/trees/model/collection_item_image.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 
@@ -38,13 +39,7 @@ main() {
 
   test('can write, read and update tree', () async {
     var db = await openTestDatabase();
-    var aTree = (BonsaiTreeBuilder()
-          ..treeName = 'Test Tree'
-          ..species = await testSpecies.findOne(latinName: 'Pinus Mugo')
-          ..acquiredFrom = 'Test'
-          ..potType = PotType.bonsai_pot
-          ..developmentLevel = DevelopmentLevel.refinement)
-        .build();
+    var aTree = await _aTree();
 
     await BonsaiTreeTable.write(aTree, db);
 
@@ -70,6 +65,37 @@ main() {
     List<BonsaiTree> trees = await BonsaiTreeTable.readAll(testSpecies, db);
     expect(trees.length, equals(5));
   });
+
+  test('can manage main image for tree', () async {
+    var aTree = await _aTree();
+    var db = await openTestDatabase();
+    await BonsaiTreeTable.write(aTree, db);
+    var treeFromDB = await BonsaiTreeTable.read(aTree.id, testSpecies, db);
+    expect(treeFromDB.mainImage, isNull);
+
+    var image = (CollectionItemImageBuilder()
+          ..parentId = aTree.id
+          ..fileName = 'test_file.jpg')
+        .build();
+
+    var updatedTree =
+        (BonsaiTreeBuilder(fromTree: aTree)..mainImage = image).build();
+    await BonsaiTreeTable.write(updatedTree, db);
+    var updatedTreeFromDB = await BonsaiTreeTable.read(aTree.id, testSpecies, db);
+    expect(updatedTreeFromDB?.mainImage?.parentId, equals(aTree.id));
+    expect(updatedTreeFromDB?.mainImage?.fileName, equals('test_file.jpg'));
+    expect(updatedTreeFromDB?.mainImage?.id, equals(image.id));
+  });
+}
+
+Future<BonsaiTree> _aTree() async {
+  return (BonsaiTreeBuilder()
+        ..treeName = 'Test Tree'
+        ..species = await testSpecies.findOne(latinName: 'Pinus Mugo')
+        ..acquiredFrom = 'Test'
+        ..potType = PotType.bonsai_pot
+        ..developmentLevel = DevelopmentLevel.refinement)
+      .build();
 }
 
 Future _createTestTrees(Database db, {int count = 1}) async {
