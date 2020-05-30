@@ -7,9 +7,7 @@ import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
 import 'package:bonsaicollectionmanager/trees/model/collection_item_image.dart';
 import 'package:bonsaicollectionmanager/trees/model/model_id.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sqflite_common/sqlite_api.dart';
 
-import '../../utils/test_data.dart';
 import '../../utils/test_utils.dart';
 
 main() {
@@ -41,5 +39,29 @@ main() {
     var itemFromDB = await CollectionItemImageTable.read(anImage.id, db);
     expect(itemFromDB.parentId.value, equals(anImage.parentId.value));
     expect(itemFromDB.fileName, equals(anImage.fileName));
+  });
+
+  test('can read all images for a single item', () async {
+    var treeId = ModelID<BonsaiTree>.newId();
+    var firstImage = (CollectionItemImageBuilder()
+          ..fileName = 'first.jpg'
+          ..parentId = treeId)
+        .build();
+    var secondImage = (CollectionItemImageBuilder()
+          ..fileName = 'second.jpg'
+          ..parentId = treeId)
+        .build();
+    var otherImage = (CollectionItemImageBuilder()
+          ..fileName = 'third.jpg'
+          ..parentId = ModelID<BonsaiTree>.newId())
+        .build();
+
+    var db = await openTestDatabase();
+    await CollectionItemImageTable.write(firstImage, db)
+        .then((_) => CollectionItemImageTable.write(secondImage, db))
+        .then((value) => CollectionItemImageTable.write(otherImage, db));
+
+    var imagesForTree = await CollectionItemImageTable.readForItem(treeId, db);
+    expect(imagesForTree.length, equals(2));
   });
 }

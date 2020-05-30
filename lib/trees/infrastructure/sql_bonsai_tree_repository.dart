@@ -4,6 +4,8 @@
 import 'dart:io';
 
 import 'package:bonsaicollectionmanager/trees/infrastructure/collection_item_image_table.dart';
+import 'package:bonsaicollectionmanager/trees/model/collection_item_image.dart';
+import 'package:bonsaicollectionmanager/trees/model/model_id.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -34,6 +36,13 @@ class SQLBonsaiTreeRepository extends BonsaiTreeRepository {
   Future<void> update(BonsaiTree tree) async {
     await init();
     return BonsaiTreeTable.write(tree, _database);
+  }
+
+
+  @override
+  Future<List<CollectionItemImage>> loadImages(ModelID<BonsaiTree> treeId) async {
+    await init();
+    return CollectionItemImageTable.readForItem(treeId, _database);
   }
 
   init() async {
