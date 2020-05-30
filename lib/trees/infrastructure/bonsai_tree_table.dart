@@ -5,10 +5,12 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../model/bonsai_tree.dart';
+import '../model/model_id.dart';
 import '../model/species.dart';
 
 class BonsaiTreeTable {
   static const String table_name = 'bonsai';
+
   static const String tree_id = 'id';
   static const String treeName = 'name';
   static const String species = 'species';
@@ -17,6 +19,8 @@ class BonsaiTreeTable {
   static const String potType = 'pot_type';
   static const String acquiredAt = 'acquired_at';
   static const String acquiredFrom = 'acquired_from';
+  static const String mainImageId = 'main_image_id';
+  static const String mainImageFileName = 'main_image_file_name';
 
   static const List<String> columns = const [
     tree_id,
@@ -26,7 +30,9 @@ class BonsaiTreeTable {
     developmentLevel,
     potType,
     acquiredAt,
-    acquiredFrom
+    acquiredFrom,
+    mainImageId,
+    mainImageFileName
   ];
 
   static createTable(Database db) async {
@@ -38,8 +44,10 @@ class BonsaiTreeTable {
         "$potType TEXT," +
         "$developmentLevel TEXT," +
         "$acquiredAt TEXT," +
-        "$acquiredFrom TEXT" +
-        ")");
+        "$acquiredFrom TEXT," +
+        "$mainImageId TEXT," +
+        "$mainImageFileName TEXT"
+            ")");
   }
 
   static Future write(BonsaiTree tree, Database db) async {
@@ -51,15 +59,17 @@ class BonsaiTreeTable {
       potType: tree.potType.toString(),
       developmentLevel: tree.developmentLevel.toString(),
       acquiredFrom: tree.acquiredFrom,
-      acquiredAt: tree.acquiredAt.toIso8601String()
+      acquiredAt: tree.acquiredAt.toIso8601String(),
+      mainImageId: tree.mainImageId,
+      mainImageFileName: tree.mainImage
     };
 
     return db.insert(table_name, data,
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  static Future<BonsaiTree> read(
-      BonsaiTreeID id, SpeciesRepository speciesRepository, Database db) async {
+  static Future<BonsaiTree> read(ModelID<BonsaiTree> id,
+      SpeciesRepository speciesRepository, Database db) async {
     List<Map<String, dynamic>> data = await db.query(table_name,
         columns: columns, where: '$tree_id = ?', whereArgs: [id.value]);
     if (data.length == 0) {
@@ -92,7 +102,8 @@ class BonsaiTreeTable {
           ..developmentLevel = _enumValueFromString(
               values[developmentLevel], DevelopmentLevel.values)
           ..acquiredAt = DateTime.parse(values[acquiredAt])
-          ..acquiredFrom = values[acquiredFrom])
+          ..acquiredFrom = values[acquiredFrom]
+          ..mainImage = values[mainImageId])
         .build();
   }
 

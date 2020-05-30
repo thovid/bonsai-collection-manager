@@ -3,12 +3,13 @@
  */
 import 'dart:io';
 
-import 'package:bonsaicollectionmanager/trees/infrastructure/bonsai_tree_table.dart';
-import 'package:bonsaicollectionmanager/trees/model/species.dart';
+import 'package:bonsaicollectionmanager/trees/infrastructure/collection_item_image_table.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+import './bonsai_tree_table.dart';
+import '../model/species.dart';
 import '../model/bonsai_collection.dart';
 import '../model/bonsai_tree.dart';
 
@@ -48,8 +49,11 @@ class SQLBonsaiTreeRepository extends BonsaiTreeRepository {
     _database = await openDatabase(
       path,
       version: 1,
-      onCreate: (Database db, int version) async =>
-          await BonsaiTreeTable.createTable(db),
+      onCreate: (Database db, int version) async
+      {
+        await BonsaiTreeTable.createTable(db);
+        await CollectionItemImageTable.createTable(db);
+      }
     );
   }
 

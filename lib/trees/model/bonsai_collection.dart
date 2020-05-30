@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import './bonsai_tree.dart';
 import './species.dart';
+import './model_id.dart';
 
 abstract class BonsaiTreeRepository {
   Future<void> update(BonsaiTree tree);
@@ -33,7 +34,7 @@ class BonsaiCollection extends ChangeNotifier {
     return update(tree);
   }
 
-  BonsaiTree findById(BonsaiTreeID id) {
+  BonsaiTree findById(ModelID<BonsaiTree> id) {
     return _trees.firstWhere((element) => element.id == id, orElse: () => null);
   }
 

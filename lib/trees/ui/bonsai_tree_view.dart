@@ -5,12 +5,13 @@
 import 'package:bonsaicollectionmanager/shared/ui/image_gallery.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
 import '../../shared/state/app_context.dart';
+
 import '../../shared/ui/base_view.dart';
 import '../../shared/ui/spaces.dart';
 import '../../shared/ui/widget_factory.dart';
 
+import '../model/model_id.dart';
 import '../model/bonsai_collection.dart';
 import '../model/bonsai_tree.dart';
 import '../i18n/bonsai_tree_view.i18n.dart';
@@ -18,7 +19,7 @@ import '../i18n/bonsai_tree_view.i18n.dart';
 import './species_picker.dart';
 
 class BonsaiTreeView extends StatefulWidget {
-  final BonsaiTreeID id;
+  final ModelID<BonsaiTree> id;
   BonsaiTreeView(this.id);
 
   @override
@@ -30,7 +31,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isEdit;
-  BonsaiTreeID id;
+  ModelID<BonsaiTree> id;
   BonsaiTreeBuilder _treeBuilder;
 
   BonsaiTreeViewState(this.id);

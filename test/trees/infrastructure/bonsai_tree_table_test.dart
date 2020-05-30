@@ -21,6 +21,8 @@ main() {
     expect(BonsaiTreeTable.potType, equals('pot_type'));
     expect(BonsaiTreeTable.acquiredAt, equals('acquired_at'));
     expect(BonsaiTreeTable.acquiredFrom, equals('acquired_from'));
+    expect(BonsaiTreeTable.mainImageId, equals('main_image_id'));
+    expect(BonsaiTreeTable.mainImageFileName, equals('main_image_file_name'));
   });
 
   test('can create table', () async {
@@ -30,6 +32,7 @@ main() {
     var table = allTables.firstWhere((element) =>
         element['type'] == 'table' &&
         element['name'] == BonsaiTreeTable.table_name);
+    print(table);
     expect(table, isNotNull);
   });
 

@@ -2,8 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:uuid/uuid.dart';
-
+import './model_id.dart';
 import './species.dart';
 
 /// The development level of a tree.
@@ -12,32 +11,12 @@ enum DevelopmentLevel { raw, development, refinement }
 // The type of the pot the tree is potted in
 enum PotType { nursery_pot, training_pot, bonsai_pot }
 
-// ID type for a bonsai tree
-class BonsaiTreeID {
-  static final uuid = Uuid();
-  final String _id;
-
-  BonsaiTreeID._internal(this._id);
-  BonsaiTreeID.newId() : this._internal(uuid.v4());
-  factory BonsaiTreeID.fromID(String id) {
-    if (id == null) return null;
-    return BonsaiTreeID._internal(id);
-  }
-
-  String get value => _id;
-
-  @override
-  operator ==(other) => _id == other._id;
-  @override
-  int get hashCode => _id.hashCode;
-}
-
 /// A bonsai tree.
 ///
 /// Immutable. Instances should be created using the [BonsaiTreeBuilder].
 class BonsaiTree {
   // The id of this tree
-  final BonsaiTreeID id;
+  final ModelID<BonsaiTree> id;
 
   /// The (optional) special name of a tree.
   final String treeName;
@@ -63,6 +42,12 @@ class BonsaiTree {
   /// From whom or where the tree was acquired from.
   final String acquiredFrom;
 
+  /// Filename of the main image for the tree.
+  final String mainImage;
+
+  /// ID of the main image for the tree.
+  final String mainImageId;
+
   BonsaiTree._builder(BonsaiTreeBuilder builder)
       : id = builder._id,
         treeName = builder.treeName,
@@ -71,7 +56,9 @@ class BonsaiTree {
         developmentLevel = builder.developmentLevel,
         potType = builder.potType,
         acquiredAt = builder.acquiredAt,
-        acquiredFrom = builder.acquiredFrom;
+        acquiredFrom = builder.acquiredFrom,
+        mainImage = builder.mainImage,
+        mainImageId = builder.mainImageId;
 
   /// Gets a nice display name for the tree.
   String get displayName {
@@ -85,7 +72,7 @@ class BonsaiTree {
 
 /// Builds an immutable instance of a [BonsaiTree].
 class BonsaiTreeBuilder {
-  BonsaiTreeID _id;
+  ModelID<BonsaiTree> _id;
   String treeName;
   Species species;
   int speciesOrdinal;
@@ -93,18 +80,20 @@ class BonsaiTreeBuilder {
   PotType potType;
   DateTime acquiredAt;
   String acquiredFrom;
+  String mainImage;
+  String mainImageId;
 
   BonsaiTreeBuilder({BonsaiTree fromTree, String id})
-      : _id = BonsaiTreeID.fromID(id) ?? fromTree?.id ?? BonsaiTreeID.newId(),
+      : _id = ModelID<BonsaiTree>.fromID(id) ?? fromTree?.id ?? ModelID<BonsaiTree>.newId(),
         treeName = fromTree?.treeName ?? '',
         species = fromTree?.species ?? Species.unknown,
         speciesOrdinal = fromTree?.speciesOrdinal ?? 1,
         developmentLevel = fromTree?.developmentLevel ?? DevelopmentLevel.raw,
         potType = fromTree?.potType ?? PotType.nursery_pot,
         acquiredAt = fromTree?.acquiredAt ?? DateTime.now(),
-        acquiredFrom = fromTree?.acquiredFrom ?? '';
+        acquiredFrom = fromTree?.acquiredFrom ?? '',
+        mainImage = fromTree?.mainImage,
+        mainImageId = fromTree?.mainImageId;
 
-  BonsaiTree build() {
-    return BonsaiTree._builder(this);
-  }
+  BonsaiTree build() => BonsaiTree._builder(this);
 }
