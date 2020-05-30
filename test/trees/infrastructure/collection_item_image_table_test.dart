@@ -30,7 +30,7 @@ main() {
     expect(table, isNotNull);
   });
 
-  test('can write, read and update item', () async {
+  test('can write and read item image', () async {
     var db = await openTestDatabase();
     var anImage = (CollectionItemImageBuilder()
           ..fileName = 'test_file.jpg'
