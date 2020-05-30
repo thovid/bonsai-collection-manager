@@ -2,13 +2,17 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../shared/ui/base_view.dart';
 import '../../shared/state/app_context.dart';
 import '../model/bonsai_collection.dart';
 import '../i18n/bonsai_collection_view.i18n.dart';
-import './bonsai_tree_view.dart';
+import '../model/bonsai_tree.dart';
+import './edit_bonsai_view.dart';
+import './view_bonsai_view.dart';
 import './bonsai_tree_list_item.dart';
 
 class BonsaiCollectionView extends StatelessWidget
@@ -33,7 +37,10 @@ class BonsaiCollectionView extends StatelessWidget
                               onTap: () => Navigator.of(context).push(
                                       MaterialPageRoute<void>(
                                           builder: (BuildContext context) {
-                                    return BonsaiTreeView(tree.id);
+                                    return ChangeNotifierProvider<
+                                            BonsaiCollection>.value(
+                                        value: model,
+                                        child: ViewBonsaiView(tree));
                                   }))))
                           ?.toList() ??
                       const [])));
@@ -56,10 +63,13 @@ class BonsaiCollectionView extends StatelessWidget
         child: Icon(Icons.add),
       );
 
-  _addTree(BuildContext context, BonsaiCollection collection) {
-    Navigator.of(context)
-        .push(MaterialPageRoute<void>(builder: (BuildContext context) {
-      return BonsaiTreeView(null);
-    }));
+  _addTree(BuildContext context, BonsaiCollection collection) async {
+    BonsaiTree newTree = await Navigator.of(context).push(
+        MaterialPageRoute<BonsaiTree>(
+            fullscreenDialog: true,
+            builder: (BuildContext context) => EditBonsaiView()));
+    if (newTree != null) {
+      collection.add(newTree);
+    }
   }
 }

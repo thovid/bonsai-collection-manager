@@ -2,61 +2,61 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-
-import 'package:bonsaicollectionmanager/shared/ui/image_gallery.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../shared/state/app_context.dart';
-
-import '../../shared/ui/base_view.dart';
 import '../../shared/ui/spaces.dart';
 import '../../shared/ui/widget_factory.dart';
-
-import '../model/model_id.dart';
-import '../model/bonsai_collection.dart';
-import '../model/bonsai_tree.dart';
 import '../i18n/bonsai_tree_view.i18n.dart';
-
+import '../model/bonsai_tree.dart';
 import './species_picker.dart';
 
-class BonsaiTreeView extends StatefulWidget {
-  final ModelID<BonsaiTree> id;
-  BonsaiTreeView(this.id);
+class EditBonsaiView extends StatefulWidget {
+  final BonsaiTree initialTree;
+
+  EditBonsaiView({this.initialTree});
 
   @override
-  BonsaiTreeViewState createState() => BonsaiTreeViewState(id);
+  _EditBonsaiViewState createState() => _EditBonsaiViewState();
 }
 
-class BonsaiTreeViewState extends State<BonsaiTreeView>
-    with Screen<BonsaiCollection> {
+class _EditBonsaiViewState extends State<EditBonsaiView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  bool _isEdit;
-  ModelID<BonsaiTree> id;
   BonsaiTreeBuilder _treeBuilder;
-
-  BonsaiTreeViewState(this.id);
 
   @override
   void initState() {
     super.initState();
-    _isEdit = _isCreateNew();
+    _treeBuilder = BonsaiTreeBuilder(fromTree: widget.initialTree);
   }
 
   @override
-  BonsaiCollection initialModel(BuildContext context) =>
-      AppContext.of(context).collection;
-
-  @override
-  String title(BuildContext context, BonsaiCollection model) =>
-      model.findById(id)?.displayName ?? 'Add new tree'.i18n;
-
-  @override
-  Widget body(BuildContext context, BonsaiCollection model) {
-    _treeBuilder = BonsaiTreeBuilder(fromTree: _tree(model));
-    return _buildBody(context);
+  void didUpdateWidget(EditBonsaiView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _treeBuilder = BonsaiTreeBuilder(fromTree: widget.initialTree);
   }
+
+  @override
+  Widget build(BuildContext context) => SafeArea(
+          child: Scaffold(
+        appBar: AppBar(
+          title: _buildTitle(),
+          actions: [
+            FlatButton(
+              onPressed: _save,
+              child: Text('Save'.i18n,
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1
+                      .copyWith(color: Colors.white)),
+            ),
+          ],
+        ),
+        body: _buildBody(context),
+      ));
+
+  Text _buildTitle() => Text(widget.initialTree?.displayName ?? 'Add new tree'.i18n);
 
   Scrollbar _buildBody(BuildContext context) {
     return Scrollbar(
@@ -65,7 +65,6 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: <Widget>[
-          //if (!_isEdit) ImageGallery(),
           mediumSpace,
           Form(
               key: _formKey,
@@ -74,14 +73,14 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
                   children: [
                     speciesPicker(context,
                         initialValue: _treeBuilder.species,
-                        readOnly: !_isEdit,
+                        readOnly: false,
                         hint: "The species of the tree".i18n,
                         label: "Species".i18n,
                         onSaved: (value) => _treeBuilder.species = value),
                     mediumSpace,
                     formTextField(context,
                         initialValue: _treeBuilder.treeName,
-                        readOnly: !_isEdit,
+                        readOnly: false,
                         hint: "Name your tree (optional)".i18n,
                         label: "Name".i18n,
                         onSaved: (value) => _treeBuilder.treeName = value),
@@ -89,7 +88,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
                     formDropdownField(context,
                         label: "Development Level".i18n,
                         value: _treeBuilder.developmentLevel,
-                        readOnly: !_isEdit,
+                        readOnly: false,
                         values: DevelopmentLevel.values,
                         onSaved: (value) =>
                             _treeBuilder.developmentLevel = value,
@@ -98,7 +97,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
                     formDropdownField(context,
                         label: "Pot Type".i18n,
                         value: _treeBuilder.potType,
-                        readOnly: !_isEdit,
+                        readOnly: false,
                         values: PotType.values,
                         onSaved: (value) => _treeBuilder.potType = value,
                         translate: (value) => value.toString().i18n),
@@ -106,7 +105,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
                     formDatePickerField(
                       context,
                       initialValue: _treeBuilder.acquiredAt,
-                      readOnly: !_isEdit,
+                      readOnly: false,
                       label: "Acquired at".i18n,
                       onChanged: (value) => _treeBuilder.acquiredAt = value,
                     ),
@@ -114,7 +113,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
                     formTextField(
                       context,
                       initialValue: _treeBuilder.acquiredFrom,
-                      readOnly: !_isEdit,
+                      readOnly: false,
                       hint: "Where did you acquire the tree from?".i18n,
                       label: "Acquired from".i18n,
                       onSaved: (value) => _treeBuilder.acquiredFrom = value,
@@ -126,71 +125,9 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
     ));
   }
 
-  @override
-  Widget appBarLeading(BuildContext context, BonsaiCollection model) {
-    if (!_isEdit || _isCreateNew()) {
-      return null;
-    }
-
-    return BackButton(
-      onPressed: () => _cancel(model),
-    );
-  }
-
-  @override
-  List<Widget> appBarTrailing(BuildContext context, BonsaiCollection model) {
-    if (!_isEdit) {
-      return [];
-    }
-
-    return [
-      IconButton(
-        icon: Icon(Icons.done),
-        onPressed: () => _save(model),
-      )
-    ];
-  }
-
-  @override
-  Widget floatingActionButton(BuildContext context, BonsaiCollection model) =>
-      Visibility(
-        visible: !_isEdit,
-        child: FloatingActionButton(
-          onPressed: _startEdit,
-          tooltip: "Edit".i18n,
-          child: Icon(Icons.edit),
-        ),
-      );
-
-  bool _isCreateNew() => id == null;
-
-  BonsaiTree _tree(BonsaiCollection model) => model.findById(id);
-
-  _startEdit() {
-    setState(() {
-      _isEdit = true;
-    });
-  }
-
-  void _cancel(BonsaiCollection model) {
-    _formKey.currentState.reset();
-
-    setState(() {
-      _treeBuilder = BonsaiTreeBuilder(fromTree: _tree(model));
-      _isEdit = false;
-    });
-  }
-
-  void _save(BonsaiCollection model) {
+  void _save() {
     _formKey.currentState.save();
-
     BonsaiTree updatedTree = _treeBuilder.build();
-
-    model.update(updatedTree).then((value) => {
-          setState(() {
-            _isEdit = false;
-            id = value.id;
-          })
-        });
+    Navigator.of(context).pop(updatedTree);
   }
 }

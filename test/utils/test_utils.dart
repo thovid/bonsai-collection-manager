@@ -8,14 +8,21 @@ import 'package:bonsaicollectionmanager/trees/infrastructure/collection_item_ima
 import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'test_data.dart';
 
-Widget testAppWith(Widget widget, BonsaiCollection collection) =>
+Widget testAppWith(Widget widget, BonsaiCollection collection,
+        {NavigatorObserver navigationObserver}) =>
     WithAppContext(
-        child: MaterialApp(home: widget),
+        child: MaterialApp(
+          home: widget,
+          navigatorObservers: [
+            if (navigationObserver != null) navigationObserver
+          ],
+        ),
         testContext: AppContext(
           isInitialized: true,
           collection: collection,
@@ -39,3 +46,5 @@ Future<Database> openTestDatabase(
   }
   return database;
 }
+
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
