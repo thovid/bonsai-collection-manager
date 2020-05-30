@@ -85,10 +85,7 @@ typedef void ImageSelectedCallback(File imageFile);
 class ImageGallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(10),
-        height: MediaQuery.of(context).size.height * .5 - 20,
-        child: Card(
+    return  Card(
             child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -97,7 +94,7 @@ class ImageGallery extends StatelessWidget {
             Expanded(flex: 4, child: MainImageTile()),
             Expanded(child: ImagesPanel()),
           ],
-        )));
+        ));
   }
 }
 

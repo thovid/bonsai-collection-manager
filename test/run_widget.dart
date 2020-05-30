@@ -39,7 +39,12 @@ void runEditBonsaiView() {
 void runImageGallery() {
   runApp(WidgetRunner(ChangeNotifierProvider<ImageGalleryModel>.value(
       value: empty,
-      builder: (context, _) => Scaffold(body: Center(child: ImageGallery())))));
+      builder: (context, _) => Scaffold(
+          body: Center(
+              child: Container(
+                  padding: EdgeInsets.all(10),
+                  height: MediaQuery.of(context).size.height * .5 - 20,
+                  child: ImageGallery()))))));
 }
 
 class WidgetRunner extends StatelessWidget {
