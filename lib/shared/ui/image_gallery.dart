@@ -13,14 +13,14 @@ import './expanded_section.dart';
 
 class ImageGalleryModel with ChangeNotifier {
   final List<ImageDescriptor> _images = [];
-  ImageDescriptor _primary;
+  ImageDescriptor _mainImage;
 
   ImageGalleryModel(
-      {ImageDescriptor primary, List<ImageDescriptor> images = const []})
-      : _primary = primary {
+      {ImageDescriptor mainImage, List<ImageDescriptor> images = const []})
+      : _mainImage = mainImage {
     _images.addAll(images);
-    if (_primary == null && _images.length > 0) {
-      _primary = _images[0];
+    if (_mainImage == null && _images.length > 0) {
+      _mainImage = _images[0];
     }
   }
 
@@ -30,7 +30,7 @@ class ImageGalleryModel with ChangeNotifier {
     ImageDescriptor descriptor =
         ImageDescriptor(parent: this, path: image.path);
     if (_images.isEmpty) {
-      _primary = descriptor;
+      _mainImage = descriptor;
     }
     _images.insert(0, descriptor);
     notifyListeners();
@@ -39,28 +39,28 @@ class ImageGalleryModel with ChangeNotifier {
 
   void removeImage(ImageDescriptor image) {
     _images.remove(image);
-    if (image == _primary) {
-      _primary = _images.length > 0 ? _images[0] : null;
+    if (image == _mainImage) {
+      _mainImage = _images.length > 0 ? _images[0] : null;
     }
     notifyListeners();
   }
 
-  ImageDescriptor get primaryImage => _primary;
+  ImageDescriptor get mainImage => _mainImage;
 
-  bool _toggleIsPrimary(ImageDescriptor image) {
-    final bool wasPrimary = image == _primary;
-    if (_primary == image) {
-      if (_primary == images[0] && images.length > 1) {
-        _primary = images[1];
+  bool _toggleIsMain(ImageDescriptor image) {
+    final bool wasMain = image == _mainImage;
+    if (_mainImage == image) {
+      if (_mainImage == images[0] && images.length > 1) {
+        _mainImage = images[1];
       } else {
-        _primary = images[0];
+        _mainImage = images[0];
       }
     } else {
-      _primary = image;
+      _mainImage = image;
     }
-    final bool isPrimary = image == _primary;
+    final bool isMain = image == _mainImage;
     notifyListeners();
-    return wasPrimary != isPrimary;
+    return wasMain != isMain;
   }
 }
 
@@ -75,8 +75,8 @@ class ImageDescriptor {
     return File(path);
   }
 
-  bool get isMainImage => parent._primary == this;
-  bool toggleIsMainImage() => parent._toggleIsPrimary(this);
+  bool get isMainImage => parent._mainImage == this;
+  bool toggleIsMainImage() => parent._toggleIsMain(this);
   void remove() => parent.removeImage(this);
 }
 
@@ -111,8 +111,8 @@ class MainImageTile extends StatelessWidget {
   }
 
   Widget _buildImageOrHint(BuildContext context, ImageGalleryModel model) {
-    if (model.primaryImage != null)
-      return _buildTapableImage(context, model.primaryImage);
+    if (model.mainImage != null)
+      return _buildTapableImage(context, model.mainImage);
     return Center(child: Text("Add your first image".i18n));
   }
 }

@@ -137,7 +137,7 @@ main() async {
     await tester.tap(find.byIcon(Icons.favorite)).then((_) => tester.pump());
     expect(find.byIcon(Icons.favorite), findsNothing);
     expect(find.byIcon(Icons.favorite_border), findsOneWidget);
-    expect(model.primaryImage, equals(secondImage));
+    expect(model.mainImage, equals(secondImage));
   });
 
   testWidgets('can delete images', (WidgetTester tester) async {
@@ -150,7 +150,7 @@ main() async {
         .then((_) => tester.pump());
     expect(model.images.length, equals(1));
     expect(find.byType(ImageTile), findsNWidgets(1));
-    expect(model.primaryImage, equals(secondImage));
+    expect(model.mainImage, equals(secondImage));
 
     await tester.tap(find.byType(MainImageTile))
         .then((_) => tester.pumpAndSettle())
