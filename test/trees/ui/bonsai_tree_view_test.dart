@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/shared/ui/image_gallery.dart';
 import 'package:bonsaicollectionmanager/trees/ui/bonsai_tree_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,6 +28,7 @@ main() {
     expect(find.text(aBonsaiTree.acquiredFrom), findsOneWidget);
     expect(
         find.widgetWithIcon(FloatingActionButton, Icons.edit), findsOneWidget);
+    //expect(find.byType(ImageGallery), findsOneWidget);
   });
 
   testWidgets('screen can enter and cancel edit mode',

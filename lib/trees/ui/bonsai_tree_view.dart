@@ -2,9 +2,11 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+
 import 'package:bonsaicollectionmanager/shared/ui/image_gallery.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
 import '../../shared/state/app_context.dart';
 
 import '../../shared/ui/base_view.dart';
@@ -53,6 +55,10 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
   @override
   Widget body(BuildContext context, BonsaiCollection model) {
     _treeBuilder = BonsaiTreeBuilder(fromTree: _tree(model));
+    return _buildBody(context);
+  }
+
+  Scrollbar _buildBody(BuildContext context) {
     return Scrollbar(
         child: SingleChildScrollView(
       dragStartBehavior: DragStartBehavior.down,
@@ -102,10 +108,7 @@ class BonsaiTreeViewState extends State<BonsaiTreeView>
                       initialValue: _treeBuilder.acquiredAt,
                       readOnly: !_isEdit,
                       label: "Acquired at".i18n,
-                      onChanged: (value) => //setState(() {
-                          _treeBuilder.acquiredAt = value,
-                      //;
-                      //)                }),
+                      onChanged: (value) => _treeBuilder.acquiredAt = value,
                     ),
                     mediumSpace,
                     formTextField(
