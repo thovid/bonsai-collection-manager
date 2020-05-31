@@ -12,10 +12,12 @@ import '../../shared/model/model_id.dart';
 
 class SQLImageGalleryRepository extends BaseRepository with ImageRepository {
   @override
-  Future<CollectionItemImage> add(File imageFile, ModelID parentID) async {
+  Future<CollectionItemImage> add(
+      File imageFile, bool isMainImage, ModelID parentID) async {
     CollectionItemImage image = (CollectionItemImageBuilder()
           ..parentId = parentID
-          ..fileName = imageFile.path)
+          ..fileName = imageFile.path
+          ..isMainImage = isMainImage)
         .build();
     await init().then((db) => CollectionItemImageTable.write(image, db));
     return image;
@@ -31,8 +33,10 @@ class SQLImageGalleryRepository extends BaseRepository with ImageRepository {
       {ModelID<CollectionItemImage> newMainImageId,
       ModelID<CollectionItemImage> oldMainImageId}) async {
     return init().then((value) => value.transaction((transaction) async {
-          CollectionItemImageTable.setMainImageFlag(
-              oldMainImageId, false, transaction);
+          if (oldMainImageId != null) {
+            CollectionItemImageTable.setMainImageFlag(
+                oldMainImageId, false, transaction);
+          }
           CollectionItemImageTable.setMainImageFlag(
               newMainImageId, true, transaction);
         }));

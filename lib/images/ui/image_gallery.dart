@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-import '../i18n/image_gallery.i18n.dart';
 import '../../shared/ui/expanded_section.dart';
+import '../i18n/image_gallery.i18n.dart';
 import '../model/image_gallery_model.dart';
 
 typedef void ImageSelectedCallback(File imageFile);
@@ -80,10 +80,12 @@ class ImageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(5),
-        child: ClipRRect(
-            borderRadius: BorderRadius.circular(5.0),
-            child: _buildTapableImage(context, imageDescriptor)));
+      padding: EdgeInsets.all(5),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5.0),
+        child: _buildTapableImage(context, imageDescriptor),
+      ),
+    );
   }
 }
 
@@ -199,43 +201,44 @@ class _ImagePopupState extends State<ImagePopup> {
 
   @override
   Widget build(BuildContext context) => Dialog(
-          child: IntrinsicHeight(
-        child: Container(
-          padding: EdgeInsets.all(5),
-          child: Column(children: [
-            Center(
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5.0),
-                  child: Image.file(
-                    widget.image.toFile(),
-                    fit: BoxFit.contain,
-                    errorBuilder: _defaultImageNotFound,
-                  )),
-            ),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  widget.image.remove();
-                  Navigator.of(context).pop();
-                },
+        child: IntrinsicHeight(
+          child: Container(
+            padding: EdgeInsets.all(5),
+            child: Column(children: [
+              Center(
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(5.0),
+                    child: Image.file(
+                      widget.image.toFile(),
+                      fit: BoxFit.contain,
+                      errorBuilder: _defaultImageNotFound,
+                    )),
               ),
-              IconButton(
-                icon:
-                    Icon(isMainImage ? Icons.favorite : Icons.favorite_border),
-                onPressed: () async {
-                  bool hasToggled = await widget.image.toggleIsMainImage();
-                  if (hasToggled) {
-                    setState(() {
-                      isMainImage = !isMainImage;
-                    });
-                  }
-                },
-              ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    widget.image.remove();
+                    Navigator.of(context).pop();
+                  },
+                ),
+                IconButton(
+                  icon: Icon(
+                      isMainImage ? Icons.favorite : Icons.favorite_border),
+                  onPressed: () async {
+                    bool hasToggled = await widget.image.toggleIsMainImage();
+                    if (hasToggled) {
+                      setState(() {
+                        isMainImage = !isMainImage;
+                      });
+                    }
+                  },
+                ),
+              ]),
             ]),
-          ]),
+          ),
         ),
-      ));
+      );
 }
 
 GestureDetector _buildTapableImage(

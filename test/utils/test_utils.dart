@@ -61,10 +61,12 @@ class DummyImageRepository extends ImageRepository {
       : _images = (images == null ? [] : images);
 
   @override
-  Future<CollectionItemImage> add(File imageFile, ModelID parent) async {
+  Future<CollectionItemImage> add(
+      File imageFile, bool isMainImage, ModelID parent) async {
     var image = (CollectionItemImageBuilder()
           ..fileName = imageFile.path
-          ..parentId = parent)
+          ..parentId = parent
+          ..isMainImage = isMainImage)
         .build();
     _images.add(image);
     return image;

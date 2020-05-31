@@ -2,8 +2,13 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/images/model/image_gallery_model.dart';
+import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
+import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_view.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../shared/ui/spaces.dart';
 import '../../shared/ui/widget_factory.dart';
@@ -56,7 +61,8 @@ class _EditBonsaiViewState extends State<EditBonsaiView> {
         body: _buildBody(context),
       ));
 
-  Text _buildTitle() => Text(widget.initialTree?.displayName ?? 'Add new tree'.i18n);
+  Text _buildTitle() =>
+      Text(widget.initialTree?.displayName ?? 'Add new tree'.i18n);
 
   Scrollbar _buildBody(BuildContext context) {
     return Scrollbar(

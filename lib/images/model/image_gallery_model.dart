@@ -10,7 +10,7 @@ import './collection_item_image.dart';
 import '../../shared/model/model_id.dart';
 
 abstract class ImageRepository {
-  Future<CollectionItemImage> add(File imageFile, ModelID parent);
+  Future<CollectionItemImage> add(File imageFile, bool isMainImage, ModelID parent);
 
   Future<void> remove(ModelID<CollectionItemImage> id);
 
@@ -65,7 +65,7 @@ class ImageGalleryModel with ChangeNotifier {
 
   Future<ImageDescriptor> addImage(File image) async {
     final CollectionItemImage collectionImage =
-        await repository.add(image, parent);
+        await repository.add(image, _mainImage == null, parent);
     ImageDescriptor descriptor =
         ImageDescriptor(parent: this, path: image.path, id: collectionImage.id);
     if (_images.isEmpty) {
@@ -81,6 +81,9 @@ class ImageGalleryModel with ChangeNotifier {
     _images.remove(image);
     if (image == _mainImage) {
       _mainImage = _images.length > 0 ? _images[0] : null;
+      if(_mainImage != null) {
+        await repository.toggleIsMainImage(newMainImageId: _mainImage._id, oldMainImageId: null);
+      }
     }
     notifyListeners();
   }
