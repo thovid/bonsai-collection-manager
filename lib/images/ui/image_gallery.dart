@@ -9,92 +9,24 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../i18n/image_gallery.i18n.dart';
-import './expanded_section.dart';
-
-class ImageGalleryModel with ChangeNotifier {
-  final List<ImageDescriptor> _images = [];
-  ImageDescriptor _mainImage;
-
-  ImageGalleryModel(
-      {ImageDescriptor mainImage, List<ImageDescriptor> images = const []})
-      : _mainImage = mainImage {
-    _images.addAll(images);
-    if (_mainImage == null && _images.length > 0) {
-      _mainImage = _images[0];
-    }
-  }
-
-  List<ImageDescriptor> get images => _images;
-
-  ImageDescriptor addImage(File image) {
-    ImageDescriptor descriptor =
-        ImageDescriptor(parent: this, path: image.path);
-    if (_images.isEmpty) {
-      _mainImage = descriptor;
-    }
-    _images.insert(0, descriptor);
-    notifyListeners();
-    return descriptor;
-  }
-
-  void removeImage(ImageDescriptor image) {
-    _images.remove(image);
-    if (image == _mainImage) {
-      _mainImage = _images.length > 0 ? _images[0] : null;
-    }
-    notifyListeners();
-  }
-
-  ImageDescriptor get mainImage => _mainImage;
-
-  bool _toggleIsMain(ImageDescriptor image) {
-    final bool wasMain = image == _mainImage;
-    if (_mainImage == image) {
-      if (_mainImage == images[0] && images.length > 1) {
-        _mainImage = images[1];
-      } else {
-        _mainImage = images[0];
-      }
-    } else {
-      _mainImage = image;
-    }
-    final bool isMain = image == _mainImage;
-    notifyListeners();
-    return wasMain != isMain;
-  }
-}
-
-class ImageDescriptor {
-  final ImageGalleryModel parent;
-  final String path;
-
-  ImageDescriptor({@required this.parent, @required this.path})
-      : assert(parent != null && path != null);
-
-  File toFile() {
-    return File(path);
-  }
-
-  bool get isMainImage => parent._mainImage == this;
-  bool toggleIsMainImage() => parent._toggleIsMain(this);
-  void remove() => parent.removeImage(this);
-}
+import '../../shared/ui/expanded_section.dart';
+import '../model/image_gallery_model.dart';
 
 typedef void ImageSelectedCallback(File imageFile);
 
 class ImageGallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return  Card(
-            child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Expanded(flex: 4, child: MainImageTile()),
-            Expanded(child: ImagesPanel()),
-          ],
-        ));
+    return Card(
+        child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        Expanded(flex: 4, child: MainImageTile()),
+        Expanded(child: ImagesPanel()),
+      ],
+    ));
   }
 }
 
@@ -291,8 +223,9 @@ class _ImagePopupState extends State<ImagePopup> {
               IconButton(
                 icon:
                     Icon(isMainImage ? Icons.favorite : Icons.favorite_border),
-                onPressed: () {
-                  if (widget.image.toggleIsMainImage()) {
+                onPressed: () async {
+                  bool hasToggled = await widget.image.toggleIsMainImage();
+                  if (hasToggled) {
                     setState(() {
                       isMainImage = !isMainImage;
                     });

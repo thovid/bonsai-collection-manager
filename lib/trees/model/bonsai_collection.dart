@@ -4,17 +4,14 @@
 
 import 'package:flutter/material.dart';
 
-import './collection_item_image.dart';
 import './bonsai_tree.dart';
 import './species.dart';
-import './model_id.dart';
+import '../../shared/model/model_id.dart';
 
 abstract class BonsaiTreeRepository {
   Future<void> update(BonsaiTree tree);
 
   Future<BonsaiCollection> loadCollection();
-
-  Future<List<CollectionItemImage>> loadImages(ModelID<BonsaiTree> treeId);
 }
 
 class BonsaiCollection extends ChangeNotifier {
@@ -37,9 +34,6 @@ class BonsaiCollection extends ChangeNotifier {
   BonsaiTree findById(ModelID<BonsaiTree> id) {
     return _trees.firstWhere((element) => element.id == id, orElse: () => null);
   }
-
-  Future<List<CollectionItemImage>> loadImages(ModelID<BonsaiTree> treeId) =>
-      _repository.loadImages(treeId);
 
   Future<BonsaiTree> add(BonsaiTree tree) async {
     return update(tree);

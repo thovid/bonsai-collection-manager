@@ -4,8 +4,7 @@
 
 import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
-import 'package:bonsaicollectionmanager/trees/model/collection_item_image.dart';
-import 'package:bonsaicollectionmanager/trees/model/model_id.dart';
+import 'package:bonsaicollectionmanager/images/model/collection_item_image.dart';
 import 'package:bonsaicollectionmanager/trees/model/species.dart';
 
 final SpeciesRepository testSpecies = TestSpeciesRepository([
@@ -48,10 +47,5 @@ class TestBonsaiRepository extends BonsaiTreeRepository {
   @override
   Future<BonsaiTree> update(BonsaiTree tree) async {
     return lastUpdated = tree;
-  }
-
-  @override
-  Future<List<CollectionItemImage>> loadImages(ModelID<BonsaiTree> treeId) async{
-    return [];
   }
 }

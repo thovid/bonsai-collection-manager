@@ -5,13 +5,11 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../model/collection_item_image.dart';
-import '../model/model_id.dart';
 import '../model/species.dart';
 import '../model/bonsai_collection.dart';
 import '../model/bonsai_tree.dart';
 
-import './collection_item_image_table.dart';
+import '../../images/model/collection_item_image_table.dart';
 import './bonsai_tree_table.dart';
 
 class SQLBonsaiTreeRepository extends BonsaiTreeRepository {
@@ -32,12 +30,6 @@ class SQLBonsaiTreeRepository extends BonsaiTreeRepository {
   @override
   Future<void> update(BonsaiTree tree) async =>
       init().then((_) => BonsaiTreeTable.write(tree, _database));
-
-  @override
-  Future<List<CollectionItemImage>> loadImages(
-          ModelID<BonsaiTree> treeId) async =>
-      init()
-          .then((_) => CollectionItemImageTable.readForItem(treeId, _database));
 
   Future init() async {
     if (initialized) {

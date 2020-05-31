@@ -5,7 +5,7 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../model/bonsai_tree.dart';
-import '../model/model_id.dart';
+import '../../shared/model/model_id.dart';
 import '../model/species.dart';
 
 class BonsaiTreeTable {

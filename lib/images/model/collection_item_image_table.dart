@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
-import '../model/bonsai_tree.dart';
-import '../model/collection_item_image.dart';
-import '../model/model_id.dart';
+
 import 'package:sqflite_common/sqlite_api.dart';
+
+import './collection_item_image.dart';
+import '../../shared/model/model_id.dart';
 
 class CollectionItemImageTable {
   static const table_name = 'collection_item_image';
@@ -50,13 +51,13 @@ class CollectionItemImageTable {
 
   static Future<CollectionItemImage> _fromMap(Map<String, dynamic> data) async {
     return (CollectionItemImageBuilder(id: data[image_id])
-          ..parentId = ModelID<BonsaiTree>.fromID(data[parent_id])
+          ..parentId = ModelID.fromID(data[parent_id])
           ..fileName = data[file_name])
         .build();
   }
 
   static Future<List<CollectionItemImage>> readForItem(
-      ModelID<BonsaiTree> treeId, Database db) async {
+      ModelID treeId, Database db) async {
     List<Map<String, dynamic>> data = await db.query(table_name,
         columns: columns, where: '$parent_id = ?', whereArgs: [treeId.value]);
     List<CollectionItemImage> result = List(data.length);

@@ -2,7 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import './model_id.dart';
+import '../../shared/model/model_id.dart';
 import './species.dart';
 
 /// The development level of a tree.

@@ -3,7 +3,10 @@
  */
 import 'dart:io';
 
-import 'package:bonsaicollectionmanager/shared/ui/image_gallery.dart';
+import 'package:bonsaicollectionmanager/images/model/image_gallery_model.dart';
+import 'package:bonsaicollectionmanager/images/ui/image_gallery.dart';
+import 'package:bonsaicollectionmanager/images/model/collection_item_image.dart';
+import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -31,7 +34,7 @@ main() async {
   });
 
   testWidgets('can open view with empty gallery', (WidgetTester tester) async {
-    var model = ImageGalleryModel();
+    var model = imageGalleryModel();
     await _startViewWith(model, tester);
     expect(find.text("Add your first image"), findsOneWidget);
   });
@@ -39,7 +42,7 @@ main() async {
   testWidgets('can take photo from camera and add it to images',
       (WidgetTester tester) async {
     pathToReturn = image_path;
-    var model = ImageGalleryModel();
+    var model = imageGalleryModel();
 
     await _startViewWith(model, tester)
         .then((_) => _tapMenuButton(tester, _openCameraButton()));
@@ -49,7 +52,7 @@ main() async {
   });
 
   testWidgets('shows tiles for images in gallery', (WidgetTester tester) async {
-    var model = ImageGalleryModel()
+    var model = imageGalleryModel()
       ..addImage(File('some_path.jpg'))
       ..addImage(File('some__other_path.jpg'));
     await _startViewWith(model, tester);
@@ -59,7 +62,7 @@ main() async {
   testWidgets('can handle no photo taken via camera',
       (WidgetTester tester) async {
     pathToReturn = null;
-    var model = ImageGalleryModel();
+    var model = imageGalleryModel();
 
     await _startViewWith(model, tester)
         .then((_) => _tapMenuButton(tester, _openCameraButton()));
@@ -70,7 +73,7 @@ main() async {
   testWidgets('can take photo from gallery and add it to images',
       (WidgetTester tester) async {
     pathToReturn = image_path;
-    var model = ImageGalleryModel();
+    var model = imageGalleryModel();
 
     await _startViewWith(model, tester)
         .then((_) => _tapMenuButton(tester, _openGalleryButton()));
@@ -82,7 +85,7 @@ main() async {
   testWidgets('can handle no photo taken from gallery',
       (WidgetTester tester) async {
     pathToReturn = null;
-    var model = ImageGalleryModel();
+    var model = imageGalleryModel();
 
     await _startViewWith(model, tester)
         .then((_) => _tapMenuButton(tester, _openGalleryButton()));
@@ -94,7 +97,7 @@ main() async {
       'main image does no longer show add image hint after first image was selected',
       (WidgetTester tester) async {
     pathToReturn = image_path;
-    var model = ImageGalleryModel();
+    var model = imageGalleryModel();
 
     await _startViewWith(model, tester)
         .then((_) => _tapMenuButton(tester, _openGalleryButton()));
@@ -104,7 +107,7 @@ main() async {
   // TODO test is skipped because due to some unknown reason the tap does not work
   testWidgets('opens image from gallery on tap onto gallery image',
       (WidgetTester tester) async {
-    var model = ImageGalleryModel()..addImage(File('some_image.jpg'));
+    var model = imageGalleryModel()..addImage(File('some_image.jpg'));
     await _startViewWith(model, tester);
     await tester
         .tap(find.byType(ImageTile))
@@ -115,7 +118,7 @@ main() async {
 
   testWidgets('opens image from gallery on tap onto main image',
       (WidgetTester tester) async {
-    var model = ImageGalleryModel()..addImage(File('some_path.jpg'));
+    var model = imageGalleryModel()..addImage(File('some_path.jpg'));
     await _startViewWith(model, tester)
         .then((_) => tester.tap(find.byType(MainImageTile)))
         .then((_) => tester.pumpAndSettle());
@@ -125,8 +128,8 @@ main() async {
 
   testWidgets('can toggle main image in image popup',
       (WidgetTester tester) async {
-    var model = ImageGalleryModel()..addImage(File('firstImage.jpg'));
-    var secondImage = model.addImage(File('secondImage.jpg'));
+    var model = imageGalleryModel()..addImage(File('firstImage.jpg'));
+    var secondImage = await model.addImage(File('secondImage.jpg'));
 
     await _startViewWith(model, tester)
         .then((_) => tester.tap(find.byType(MainImageTile)))
@@ -141,8 +144,8 @@ main() async {
   });
 
   testWidgets('can delete images', (WidgetTester tester) async {
-    var model = ImageGalleryModel()..addImage(File('firstImage.jpg'));
-    var secondImage = model.addImage(File('secondImage.jpg'));
+    var model = imageGalleryModel()..addImage(File('firstImage.jpg'));
+    var secondImage =await  model.addImage(File('secondImage.jpg'));
     await _startViewWith(model, tester)
         .then((_) => tester.tap(find.byType(MainImageTile)))
         .then((_) => tester.pumpAndSettle())
@@ -162,6 +165,8 @@ main() async {
   });
 
 }
+
+ImageGalleryModel imageGalleryModel() => ImageGalleryModel(repository: DummyImageRepository());
 
 Future<dynamic> _tapMenuButton(WidgetTester tester, Finder button) async {
   return tester
@@ -190,4 +195,21 @@ Future _startViewWith(ImageGalleryModel model, WidgetTester tester) async {
       collection);
 
   await tester.pumpWidget(app);
+}
+
+class DummyImageRepository extends ImageRepository {
+  @override
+  Future<CollectionItemImage> add(File imageFile) async {
+    return (CollectionItemImageBuilder()).build();
+  }
+
+  @override
+  Future<void> remove(ModelID<CollectionItemImage> id) async {
+    return;
+  }
+
+  @override
+  Future<void> toggleIsMainImage(ModelID<CollectionItemImage> id) async {
+    return;
+  }
 }

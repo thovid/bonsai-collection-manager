@@ -2,12 +2,11 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import './bonsai_tree.dart';
-import './model_id.dart';
+import '../../shared/model/model_id.dart';
 
 class CollectionItemImage {
   final ModelID<CollectionItemImage> id;
-  final ModelID<BonsaiTree> parentId;
+  final ModelID parentId;
   final String fileName;
 
   CollectionItemImage._builder(CollectionItemImageBuilder builder)
@@ -18,7 +17,7 @@ class CollectionItemImage {
 
 class CollectionItemImageBuilder {
   ModelID<CollectionItemImage> _id;
-  ModelID<BonsaiTree> parentId;
+  ModelID parentId;
   String fileName;
 
   CollectionItemImageBuilder({CollectionItemImage fromImage, String id})

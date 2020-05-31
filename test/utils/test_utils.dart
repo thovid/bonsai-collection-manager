@@ -4,7 +4,7 @@
 
 import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
 import 'package:bonsaicollectionmanager/trees/infrastructure/bonsai_tree_table.dart';
-import 'package:bonsaicollectionmanager/trees/infrastructure/collection_item_image_table.dart';
+import 'package:bonsaicollectionmanager/images/model/collection_item_image_table.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

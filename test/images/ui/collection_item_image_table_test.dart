@@ -2,10 +2,10 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/trees/infrastructure/collection_item_image_table.dart';
+import 'package:bonsaicollectionmanager/images/model/collection_item_image_table.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
-import 'package:bonsaicollectionmanager/trees/model/collection_item_image.dart';
-import 'package:bonsaicollectionmanager/trees/model/model_id.dart';
+import 'package:bonsaicollectionmanager/images/model/collection_item_image.dart';
+import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../utils/test_utils.dart';
