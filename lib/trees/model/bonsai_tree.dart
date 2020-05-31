@@ -2,8 +2,6 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/trees/model/collection_item_image.dart';
-
 import './model_id.dart';
 import './species.dart';
 
@@ -44,9 +42,6 @@ class BonsaiTree {
   /// From whom or where the tree was acquired from.
   final String acquiredFrom;
 
-  /// The main image of the tree.
-  final CollectionItemImage mainImage;
-
   BonsaiTree._builder(BonsaiTreeBuilder builder)
       : id = builder._id,
         treeName = builder.treeName,
@@ -55,8 +50,7 @@ class BonsaiTree {
         developmentLevel = builder.developmentLevel,
         potType = builder.potType,
         acquiredAt = builder.acquiredAt,
-        acquiredFrom = builder.acquiredFrom,
-        mainImage = builder.mainImage;
+        acquiredFrom = builder.acquiredFrom;
 
   /// Gets a nice display name for the tree.
   String get displayName {
@@ -78,7 +72,6 @@ class BonsaiTreeBuilder {
   PotType potType;
   DateTime acquiredAt;
   String acquiredFrom;
-  CollectionItemImage mainImage;
 
   BonsaiTreeBuilder({BonsaiTree fromTree, String id})
       : _id = ModelID<BonsaiTree>.fromID(id) ?? fromTree?.id ?? ModelID<BonsaiTree>.newId(),
@@ -88,8 +81,7 @@ class BonsaiTreeBuilder {
         developmentLevel = fromTree?.developmentLevel ?? DevelopmentLevel.raw,
         potType = fromTree?.potType ?? PotType.nursery_pot,
         acquiredAt = fromTree?.acquiredAt ?? DateTime.now(),
-        acquiredFrom = fromTree?.acquiredFrom ?? '',
-        mainImage = fromTree?.mainImage;
+        acquiredFrom = fromTree?.acquiredFrom ?? '';
 
   BonsaiTree build() => BonsaiTree._builder(this);
 }

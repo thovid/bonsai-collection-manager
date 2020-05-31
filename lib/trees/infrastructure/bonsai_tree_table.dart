@@ -2,7 +2,6 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/trees/model/collection_item_image.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../model/bonsai_tree.dart';
@@ -20,8 +19,6 @@ class BonsaiTreeTable {
   static const String potType = 'pot_type';
   static const String acquiredAt = 'acquired_at';
   static const String acquiredFrom = 'acquired_from';
-  static const String mainImageId = 'main_image_id';
-  static const String mainImageFileName = 'main_image_file_name';
 
   static const List<String> columns = const [
     tree_id,
@@ -32,8 +29,6 @@ class BonsaiTreeTable {
     potType,
     acquiredAt,
     acquiredFrom,
-    mainImageId,
-    mainImageFileName
   ];
 
   static createTable(Database db) async {
@@ -45,10 +40,8 @@ class BonsaiTreeTable {
         "$potType TEXT," +
         "$developmentLevel TEXT," +
         "$acquiredAt TEXT," +
-        "$acquiredFrom TEXT," +
-        "$mainImageId TEXT," +
-        "$mainImageFileName TEXT"
-            ")");
+        "$acquiredFrom TEXT" +
+        ")");
   }
 
   static Future write(BonsaiTree tree, Database db) async {
@@ -61,8 +54,6 @@ class BonsaiTreeTable {
       developmentLevel: tree.developmentLevel.toString(),
       acquiredFrom: tree.acquiredFrom,
       acquiredAt: tree.acquiredAt.toIso8601String(),
-      mainImageId: tree.mainImage?.id?.value,
-      mainImageFileName: tree.mainImage?.fileName
     };
 
     return db.insert(table_name, data,
@@ -103,11 +94,7 @@ class BonsaiTreeTable {
           ..developmentLevel = _enumValueFromString(
               values[developmentLevel], DevelopmentLevel.values)
           ..acquiredAt = DateTime.parse(values[acquiredAt])
-          ..acquiredFrom = values[acquiredFrom]
-          ..mainImage = values[mainImageId] != null ? (CollectionItemImageBuilder(id: values[mainImageId])
-                ..fileName = values[mainImageFileName]
-                ..parentId = ModelID<BonsaiTree>.fromID(values[tree_id]))
-              .build() : null)
+          ..acquiredFrom = values[acquiredFrom])
         .build();
   }
 

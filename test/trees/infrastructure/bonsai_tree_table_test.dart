@@ -4,7 +4,6 @@
 
 import 'package:bonsaicollectionmanager/trees/infrastructure/bonsai_tree_table.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
-import 'package:bonsaicollectionmanager/trees/model/collection_item_image.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 
@@ -22,8 +21,6 @@ main() {
     expect(BonsaiTreeTable.potType, equals('pot_type'));
     expect(BonsaiTreeTable.acquiredAt, equals('acquired_at'));
     expect(BonsaiTreeTable.acquiredFrom, equals('acquired_from'));
-    expect(BonsaiTreeTable.mainImageId, equals('main_image_id'));
-    expect(BonsaiTreeTable.mainImageFileName, equals('main_image_file_name'));
   });
 
   test('can create table', () async {
@@ -64,27 +61,6 @@ main() {
     await _createTestTrees(db, count: 5);
     List<BonsaiTree> trees = await BonsaiTreeTable.readAll(testSpecies, db);
     expect(trees.length, equals(5));
-  });
-
-  test('can manage main image for tree', () async {
-    var aTree = await _aTree();
-    var db = await openTestDatabase();
-    await BonsaiTreeTable.write(aTree, db);
-    var treeFromDB = await BonsaiTreeTable.read(aTree.id, testSpecies, db);
-    expect(treeFromDB.mainImage, isNull);
-
-    var image = (CollectionItemImageBuilder()
-          ..parentId = aTree.id
-          ..fileName = 'test_file.jpg')
-        .build();
-
-    var updatedTree =
-        (BonsaiTreeBuilder(fromTree: aTree)..mainImage = image).build();
-    await BonsaiTreeTable.write(updatedTree, db);
-    var updatedTreeFromDB = await BonsaiTreeTable.read(aTree.id, testSpecies, db);
-    expect(updatedTreeFromDB?.mainImage?.parentId, equals(aTree.id));
-    expect(updatedTreeFromDB?.mainImage?.fileName, equals('test_file.jpg'));
-    expect(updatedTreeFromDB?.mainImage?.id, equals(image.id));
   });
 }
 
