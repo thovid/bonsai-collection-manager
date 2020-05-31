@@ -33,7 +33,7 @@ class TestSpeciesRepository extends SpeciesRepository {
   TestSpeciesRepository(this.species);
 }
 
-class TestBonsaiRepository extends BonsaiTreeRepository {
+class TestBonsaiRepository with BonsaiTreeRepository {
   List<BonsaiTree> trees;
   List<CollectionItemImage> images;
   static BonsaiTree lastUpdated;

@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:bonsaicollectionmanager/images/model/image_gallery_model.dart';
 import 'package:bonsaicollectionmanager/images/ui/image_gallery.dart';
-import 'package:bonsaicollectionmanager/images/model/collection_item_image.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -145,7 +144,7 @@ main() async {
 
   testWidgets('can delete images', (WidgetTester tester) async {
     var model = imageGalleryModel()..addImage(File('firstImage.jpg'));
-    var secondImage =await  model.addImage(File('secondImage.jpg'));
+    var secondImage = await model.addImage(File('secondImage.jpg'));
     await _startViewWith(model, tester)
         .then((_) => tester.tap(find.byType(MainImageTile)))
         .then((_) => tester.pumpAndSettle())
@@ -155,7 +154,8 @@ main() async {
     expect(find.byType(ImageTile), findsNWidgets(1));
     expect(model.mainImage, equals(secondImage));
 
-    await tester.tap(find.byType(MainImageTile))
+    await tester
+        .tap(find.byType(MainImageTile))
         .then((_) => tester.pumpAndSettle())
         .then((_) => tester.tap(find.byIcon(Icons.delete)))
         .then((_) => tester.pump());
@@ -163,10 +163,10 @@ main() async {
     expect(find.byType(ImageTile), findsNothing);
     expect(find.text("Add your first image"), findsOneWidget);
   });
-
 }
 
-ImageGalleryModel imageGalleryModel() => ImageGalleryModel(repository: DummyImageRepository());
+ImageGalleryModel imageGalleryModel() => ImageGalleryModel(
+    parent: ModelID.newId(), repository: DummyImageRepository());
 
 Future<dynamic> _tapMenuButton(WidgetTester tester, Finder button) async {
   return tester
@@ -195,21 +195,4 @@ Future _startViewWith(ImageGalleryModel model, WidgetTester tester) async {
       collection);
 
   await tester.pumpWidget(app);
-}
-
-class DummyImageRepository extends ImageRepository {
-  @override
-  Future<CollectionItemImage> add(File imageFile) async {
-    return (CollectionItemImageBuilder()).build();
-  }
-
-  @override
-  Future<void> remove(ModelID<CollectionItemImage> id) async {
-    return;
-  }
-
-  @override
-  Future<void> toggleIsMainImage(ModelID<CollectionItemImage> id) async {
-    return;
-  }
 }

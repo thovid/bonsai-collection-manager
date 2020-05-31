@@ -11,18 +11,6 @@ import '../../utils/test_data.dart';
 import '../../utils/test_utils.dart';
 
 main() {
-  test('knows db table spec for bonsai tree', () {
-    expect(BonsaiTreeTable.table_name, equals('bonsai'));
-    expect(BonsaiTreeTable.tree_id, equals('id'));
-    expect(BonsaiTreeTable.treeName, equals('name'));
-    expect(BonsaiTreeTable.species, equals('species'));
-    expect(BonsaiTreeTable.speciesOrdinal, equals('species_ordinal'));
-    expect(BonsaiTreeTable.developmentLevel, equals('development_level'));
-    expect(BonsaiTreeTable.potType, equals('pot_type'));
-    expect(BonsaiTreeTable.acquiredAt, equals('acquired_at'));
-    expect(BonsaiTreeTable.acquiredFrom, equals('acquired_from'));
-  });
-
   test('can create table', () async {
     var db = await openTestDatabase(createTables: false);
     await BonsaiTreeTable.createTable(db);

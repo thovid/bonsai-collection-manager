@@ -2,12 +2,13 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../shared/ui/base_view.dart';
 import '../../shared/state/app_context.dart';
+import '../../images/model/image_gallery_model.dart';
+import '../model/bonsai_tree_with_images.dart';
 import '../model/bonsai_collection.dart';
 import '../i18n/bonsai_collection_view.i18n.dart';
 import '../model/bonsai_tree.dart';
@@ -26,24 +27,49 @@ class BonsaiCollectionView extends StatelessWidget
       "My collection".i18n;
 
   @override
-  Widget body(BuildContext context, BonsaiCollection model) =>
-      withLoadingIndicator(
-          isLoading: !AppContext.of(context).isInitialized,
-          child: Center(
-              child: ListView(
-                  children: model?.trees
-                          ?.map((tree) => BonsaiTreeListItem(
-                              tree: tree,
-                              onTap: () => Navigator.of(context).push(
-                                      MaterialPageRoute<void>(
-                                          builder: (BuildContext context) {
-                                    return ChangeNotifierProvider<
-                                            BonsaiCollection>.value(
-                                        value: model,
-                                        child: ViewBonsaiView(tree));
-                                  }))))
-                          ?.toList() ??
-                      const [])));
+  Widget body(BuildContext context, BonsaiCollection model) {
+    final ImageRepository imageRepository =
+        AppContext.of(context).imageRepository;
+    return withLoadingIndicator(
+        isLoading: !AppContext.of(context).isInitialized,
+        child: Center(
+          child: ListView(
+            children: model?.trees
+                    ?.map(
+                      (tree) => BonsaiTreeListItem(
+                        tree: tree,
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                                builder: (BuildContext context) {
+                          return FutureBuilder(
+                            future:
+                                _loadWithImages(model, imageRepository, tree),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                return ChangeNotifierProvider<
+                                        BonsaiTreeWithImages>.value(
+                                    value: snapshot.data,
+                                    child: ViewBonsaiView());
+                              }
+                              return Center(child: CircularProgressIndicator());
+                            },
+                          );
+                        })),
+                      ),
+                    )
+                    ?.toList() ??
+                const [],
+          ),
+        ));
+  }
+/*
+  ChangeNotifierProvider<
+      BonsaiTreeWithImages>.value(
+  value:
+  _loadWithImages(model, imageRepository, tree),
+  child: ViewBonsaiView());
+*/
 
   Widget withLoadingIndicator({bool isLoading, Widget child}) {
     return Stack(
@@ -71,5 +97,12 @@ class BonsaiCollectionView extends StatelessWidget
     if (newTree != null) {
       collection.add(newTree);
     }
+  }
+
+  Future<BonsaiTreeWithImages> _loadWithImages(BonsaiCollection model,
+      ImageRepository imageRepository, BonsaiTree tree) async {
+    var images =
+        await ImageGalleryModel.fromRepository(imageRepository, tree.id);
+    return BonsaiTreeWithImages(tree: tree, images: images, collection: model);
   }
 }

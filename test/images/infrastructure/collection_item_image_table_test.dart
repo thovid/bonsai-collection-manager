@@ -2,7 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/images/model/collection_item_image_table.dart';
+import 'package:bonsaicollectionmanager/images/infrastructure/collection_item_image_table.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
 import 'package:bonsaicollectionmanager/images/model/collection_item_image.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
@@ -11,12 +11,6 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../utils/test_utils.dart';
 
 main() {
-  test('knows db table spec for collection item image', () {
-    expect(CollectionItemImageTable.image_id, equals('id'));
-    expect(CollectionItemImageTable.file_name, equals('file_name'));
-    expect(CollectionItemImageTable.parent_id, equals('parent_id'));
-  });
-
   test('can create table', () async {
     var db = await openTestDatabase(createTables: false);
     await CollectionItemImageTable.createTable(db);
@@ -32,13 +26,15 @@ main() {
     var db = await openTestDatabase();
     var anImage = (CollectionItemImageBuilder()
           ..fileName = 'test_file.jpg'
-          ..parentId = ModelID<BonsaiTree>.newId())
+          ..parentId = ModelID<BonsaiTree>.newId()
+          ..isMainImage = true)
         .build();
 
     await CollectionItemImageTable.write(anImage, db);
     var itemFromDB = await CollectionItemImageTable.read(anImage.id, db);
     expect(itemFromDB.parentId.value, equals(anImage.parentId.value));
     expect(itemFromDB.fileName, equals(anImage.fileName));
+    expect(itemFromDB.isMainImage, equals(true));
   });
 
   test('can read all images for a single item', () async {
@@ -63,5 +59,31 @@ main() {
 
     var imagesForTree = await CollectionItemImageTable.readForItem(treeId, db);
     expect(imagesForTree.length, equals(2));
+  });
+
+  test('can delete item', () async {
+    var db = await openTestDatabase();
+    var anImage = (CollectionItemImageBuilder()
+          ..fileName = 'test_file.jpg'
+          ..parentId = ModelID<BonsaiTree>.newId())
+        .build();
+
+    await CollectionItemImageTable.write(anImage, db);
+    await CollectionItemImageTable.delete(anImage.id, db);
+    var imageFromDB = await CollectionItemImageTable.read(anImage.id, db);
+    expect(imageFromDB, isNull);
+  });
+
+  test('can set main item flag to image', () async {
+    var db = await openTestDatabase();
+    var anImage = (CollectionItemImageBuilder()
+          ..fileName = 'test_file.jpg'
+          ..parentId = ModelID<BonsaiTree>.newId()
+          ..isMainImage = false)
+        .build();
+    await CollectionItemImageTable.write(anImage, db);
+    await CollectionItemImageTable.setMainImageFlag(anImage.id, true, db);
+    var itemFromDB = await CollectionItemImageTable.read(anImage.id, db);
+    expect(itemFromDB.isMainImage, equals(true));
   });
 }

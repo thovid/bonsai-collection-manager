@@ -4,9 +4,11 @@
 
 import 'package:bonsaicollectionmanager/images/model/image_gallery_model.dart';
 import 'package:bonsaicollectionmanager/shared/i18n/i18n.dart';
+import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
 import 'package:bonsaicollectionmanager/images/ui/image_gallery.dart';
-import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
 import 'package:bonsaicollectionmanager/trees/ui/edit_bonsai_view.dart';
 import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_view.dart';
 import 'package:flutter/material.dart';
@@ -14,24 +16,29 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:provider/provider.dart';
 
-import 'images/ui/image_gallery_test.dart';
 import 'utils/test_data.dart';
+import 'utils/test_utils.dart';
 
 /// Helper to run a widget in a scaffold for visual checking purposes
 
-
-ImageGalleryModel empty = ImageGalleryModel(repository: DummyImageRepository());
+ImageGalleryModel empty = ImageGalleryModel(
+    parent: ModelID.newId(), repository: DummyImageRepository());
 void main() {
-  runImageGallery();
+  //runImageGallery();
   //runEditBonsaiView();
-  //runViewBonsaiView();
+  runViewBonsaiView();
 }
 
-void runViewBonsaiView() {
-  BonsaiCollection collection = BonsaiCollection.withTrees([aBonsaiTree]);
+Future runViewBonsaiView() async {
+  BonsaiTree tree = aBonsaiTree;
+  BonsaiTreeWithImages treeWithImages = BonsaiTreeWithImages(
+    tree: tree,
+    images: empty,
+    collection: await TestBonsaiRepository([tree]).loadCollection(),
+  );
   runApp(WidgetRunner(ChangeNotifierProvider.value(
-    value: collection,
-    builder: (context, child) => ViewBonsaiView(aBonsaiTree),
+    value: treeWithImages,
+    builder: (context, child) => ViewBonsaiView(),
   )));
 }
 

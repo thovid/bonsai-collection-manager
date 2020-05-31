@@ -8,7 +8,7 @@ import './bonsai_tree.dart';
 import './species.dart';
 import '../../shared/model/model_id.dart';
 
-abstract class BonsaiTreeRepository {
+mixin BonsaiTreeRepository {
   Future<void> update(BonsaiTree tree);
 
   Future<BonsaiCollection> loadCollection();

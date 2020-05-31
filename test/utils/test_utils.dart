@@ -2,9 +2,14 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'dart:io';
+
+import 'package:bonsaicollectionmanager/images/model/collection_item_image.dart';
+import 'package:bonsaicollectionmanager/images/model/image_gallery_model.dart';
+import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
 import 'package:bonsaicollectionmanager/trees/infrastructure/bonsai_tree_table.dart';
-import 'package:bonsaicollectionmanager/images/model/collection_item_image_table.dart';
+import 'package:bonsaicollectionmanager/images/infrastructure/collection_item_image_table.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,10 +29,10 @@ Widget testAppWith(Widget widget, BonsaiCollection collection,
           ],
         ),
         testContext: AppContext(
-          isInitialized: true,
-          collection: collection,
-          speciesRepository: testSpecies,
-        ));
+            isInitialized: true,
+            collection: collection,
+            speciesRepository: testSpecies,
+            imageRepository: DummyImageRepository()));
 
 Future<Database> openTestDatabase(
     {bool createTables = true, bool dropAll = true}) async {
@@ -48,3 +53,35 @@ Future<Database> openTestDatabase(
 }
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
+class DummyImageRepository extends ImageRepository {
+  List<CollectionItemImage> _images;
+
+  DummyImageRepository({List<CollectionItemImage> images})
+      : _images = (images == null ? [] : images);
+
+  @override
+  Future<CollectionItemImage> add(File imageFile, ModelID parent) async {
+    var image = (CollectionItemImageBuilder()
+          ..fileName = imageFile.path
+          ..parentId = parent)
+        .build();
+    _images.add(image);
+    return image;
+  }
+
+  @override
+  Future<void> remove(ModelID<CollectionItemImage> id) async {
+    return;
+  }
+
+  @override
+  Future<void> toggleIsMainImage(
+      {ModelID<CollectionItemImage> newMainImageId,
+      ModelID<CollectionItemImage> oldMainImageId}) async {}
+
+  @override
+  Future<List<CollectionItemImage>> loadImages(ModelID parent) async {
+    return _images;
+  }
+}

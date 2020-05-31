@@ -2,8 +2,11 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/images/model/image_gallery_model.dart';
 import 'package:bonsaicollectionmanager/images/ui/image_gallery.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
 import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -30,7 +33,7 @@ main() {
     expect(find.text(aBonsaiTree.acquiredFrom), findsOneWidget);
     expect(
         find.widgetWithIcon(FloatingActionButton, Icons.edit), findsOneWidget);
-    //expect(find.byType(ImageGallery), findsOneWidget);
+    expect(find.byType(ImageGallery), findsOneWidget);
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
@@ -41,8 +44,14 @@ main() {
 }
 
 Future<void> _openView(WidgetTester tester, BonsaiCollection collection) {
+  final BonsaiTree tree = aBonsaiTree;
+  final BonsaiTreeWithImages treeWithImages = BonsaiTreeWithImages(
+      tree: tree,
+      images: ImageGalleryModel(
+          parent: tree.id, repository: DummyImageRepository()),
+      collection: collection);
   return tester.pumpWidget(testAppWith(
       ChangeNotifierProvider.value(
-          value: collection, child: ViewBonsaiView(aBonsaiTree)),
+          value: treeWithImages, child: ViewBonsaiView()),
       collection));
 }

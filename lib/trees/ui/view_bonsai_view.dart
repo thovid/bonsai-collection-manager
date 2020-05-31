@@ -2,83 +2,65 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/images/model/image_gallery_model.dart';
+import 'package:bonsaicollectionmanager/images/ui/image_gallery.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../shared/ui/spaces.dart';
+import '../model/bonsai_tree_with_images.dart';
 import '../model/bonsai_tree.dart';
-import '../model/bonsai_collection.dart';
 import '../i18n/bonsai_tree_view.i18n.dart';
 import './edit_bonsai_view.dart';
 
-class ViewBonsaiView extends StatefulWidget {
-  final BonsaiTree initialTree;
-  const ViewBonsaiView(this.initialTree);
-
-  @override
-  _ViewBonsaiViewState createState() => _ViewBonsaiViewState();
-}
-
-class _ViewBonsaiViewState extends State<ViewBonsaiView> {
-  BonsaiTree _tree;
-  @override
-  void initState() {
-    super.initState();
-    _tree = widget.initialTree;
-  }
-
-  @override
-  void didUpdateWidget(ViewBonsaiView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _tree = widget.initialTree;
-  }
-
+class ViewBonsaiView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SafeArea(
-      child: Consumer<BonsaiCollection>(
-          builder: (BuildContext context, BonsaiCollection collection,
-                  Widget child) =>
-              Scaffold(
-                appBar: AppBar(
-                  title: _buildTitle(),
-                ),
-                body: _buildBody(),
-                floatingActionButton: FloatingActionButton(
-                  onPressed: () => _startEdit(collection),
-                  tooltip: "Edit".i18n,
-                  child: Icon(Icons.edit),
-                ),
-              )));
+      child: Consumer<BonsaiTreeWithImages>(
+          builder:
+              (BuildContext context, BonsaiTreeWithImages tree, Widget child) =>
+                  Scaffold(
+                    appBar: AppBar(
+                      title: _buildTitle(tree),
+                    ),
+                    body: _buildBody(context, tree),
+                    floatingActionButton: FloatingActionButton(
+                      onPressed: () => _startEdit(context, tree),
+                      tooltip: "Edit".i18n,
+                      child: Icon(Icons.edit),
+                    ),
+                  )));
 
-  Text _buildTitle() => Text(_tree.displayName);
+  Text _buildTitle(BonsaiTreeWithImages tree) => Text(tree.tree.displayName);
 
-  void _startEdit(BonsaiCollection collection) async {
+  void _startEdit(BuildContext context, BonsaiTreeWithImages tree) async {
     BonsaiTree updatedTree =
         await Navigator.of(context).push(MaterialPageRoute<BonsaiTree>(
             fullscreenDialog: true,
             builder: (BuildContext context) => EditBonsaiView(
-                  initialTree: _tree,
+                  initialTree: tree.tree,
                 )));
     if (updatedTree != null) {
-      collection.add(updatedTree);
-      setState(() {
-        _tree = updatedTree;
-      });
+      tree.updateTree(updatedTree);
     }
   }
 
-  Widget _buildBody() => Column(
+  Widget _buildBody(BuildContext context, BonsaiTreeWithImages tree) => Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            padding: EdgeInsets.all(10),
-            height: MediaQuery.of(context).size.height * .5 - 20,
+          ChangeNotifierProvider<ImageGalleryModel>.value(
+            value: tree.images,
+            child: Container(
+              padding: EdgeInsets.all(10),
+              height: MediaQuery.of(context).size.height * .5 - 20,
+              child: ImageGallery(),
+            ),
           ),
           mediumSpace,
           Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
             child: Card(
               child: Container(
                 padding: EdgeInsets.only(left: 10, bottom: 10),
@@ -86,15 +68,16 @@ class _ViewBonsaiViewState extends State<ViewBonsaiView> {
                   columnWidths: {0: FractionColumnWidth(.4)},
                   children: [
                     _tableRow('Species',
-                        "${_tree.species.latinName} - ${_tree.species.informalName}"),
-                    if (_tree.treeName != null && _tree.treeName.isNotEmpty)
-                      _tableRow('Name', _tree.treeName),
+                        "${tree.tree.species.latinName} - ${tree.tree.species.informalName}"),
+                    if (tree.tree.treeName != null &&
+                        tree.tree.treeName.isNotEmpty)
+                      _tableRow('Name', tree.tree.treeName),
                     _tableRow('Development Level',
-                        _tree.developmentLevel.toString().i18n),
-                    _tableRow('Pot Type', _tree.potType.toString().i18n),
+                        tree.tree.developmentLevel.toString().i18n),
+                    _tableRow('Pot Type', tree.tree.potType.toString().i18n),
                     _tableRow('Acquired at',
-                        DateFormat.yMMMd().format(_tree.acquiredAt)),
-                    _tableRow('Acquired from', _tree.acquiredFrom),
+                        DateFormat.yMMMd().format(tree.tree.acquiredAt)),
+                    _tableRow('Acquired from', tree.tree.acquiredFrom),
                   ],
                 ),
               ),

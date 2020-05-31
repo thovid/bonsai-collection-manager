@@ -2,9 +2,11 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/images/infrastructure/sql_image_gallery_repository.dart';
 import 'package:flutter/material.dart';
 
 import '../i18n/i18n.dart';
+import '../../images/model/image_gallery_model.dart';
 import '../../trees/infrastructure/sql_bonsai_tree_repository.dart';
 import '../../trees/infrastructure/tree_species_loader.dart';
 import '../../trees/model/bonsai_collection.dart';
@@ -14,8 +16,12 @@ class AppContext {
   final isInitialized;
   final BonsaiCollection collection;
   final SpeciesRepository speciesRepository;
+  final ImageRepository imageRepository;
   AppContext(
-      {@required this.isInitialized, this.collection, this.speciesRepository});
+      {@required this.isInitialized,
+      this.collection,
+      this.speciesRepository,
+      this.imageRepository});
 
   static AppContext of(BuildContext context) => context
       .dependOnInheritedWidgetOfExactType<_InheritedAppContext>()
@@ -62,12 +68,14 @@ class _WithAppContextState extends State<WithAppContext> {
     SpeciesRepository species = await fetchSpecies(locale);
     BonsaiCollection collection =
         await SQLBonsaiTreeRepository(species).loadCollection();
+    ImageRepository imageRepository = SQLImageGalleryRepository();
 
     setState(() {
       _appContext = AppContext(
           isInitialized: true,
           collection: collection,
-          speciesRepository: species);
+          speciesRepository: species,
+          imageRepository: imageRepository);
     });
   }
 }

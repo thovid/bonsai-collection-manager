@@ -31,7 +31,7 @@ class BonsaiTreeTable {
     acquiredFrom,
   ];
 
-  static createTable(Database db) async {
+  static createTable(DatabaseExecutor db) async {
     await db.execute("CREATE TABLE $table_name (" +
         "$tree_id STRING PRIMARY KEY," +
         "$treeName TEXT," +
@@ -44,7 +44,7 @@ class BonsaiTreeTable {
         ")");
   }
 
-  static Future write(BonsaiTree tree, Database db) async {
+  static Future write(BonsaiTree tree, DatabaseExecutor db) async {
     Map<String, dynamic> data = {
       tree_id: tree.id.value,
       treeName: tree.treeName,
@@ -61,7 +61,7 @@ class BonsaiTreeTable {
   }
 
   static Future<BonsaiTree> read(ModelID<BonsaiTree> id,
-      SpeciesRepository speciesRepository, Database db) async {
+      SpeciesRepository speciesRepository, DatabaseExecutor db) async {
     List<Map<String, dynamic>> data = await db.query(table_name,
         columns: columns, where: '$tree_id = ?', whereArgs: [id.value]);
     if (data.length == 0) {
@@ -72,7 +72,7 @@ class BonsaiTreeTable {
   }
 
   static Future<List<BonsaiTree>> readAll(
-      SpeciesRepository speciesRepository, Database db) async {
+      SpeciesRepository speciesRepository, DatabaseExecutor db) async {
     List<Map<String, dynamic>> data =
         await db.query(table_name, columns: columns);
     List<BonsaiTree> result = List(data.length);
