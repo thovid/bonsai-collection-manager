@@ -2,12 +2,12 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/images/model/image_gallery_model.dart';
-import 'package:bonsaicollectionmanager/images/ui/image_gallery.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../images/model/image_gallery_model.dart';
+import '../../images/ui/image_gallery.dart';
 import '../../shared/ui/spaces.dart';
 import '../model/bonsai_tree_with_images.dart';
 import '../model/bonsai_tree.dart';
@@ -15,32 +15,37 @@ import '../i18n/bonsai_tree_view.i18n.dart';
 import './edit_bonsai_view.dart';
 
 class ViewBonsaiView extends StatelessWidget {
+  static const route_name = '/view-tree';
   @override
   Widget build(BuildContext context) => SafeArea(
-      child: Consumer<BonsaiTreeWithImages>(
+        child: Consumer<BonsaiTreeWithImages>(
           builder:
               (BuildContext context, BonsaiTreeWithImages tree, Widget child) =>
                   Scaffold(
-                    appBar: AppBar(
-                      title: _buildTitle(tree),
-                    ),
-                    body: _buildBody(context, tree),
-                    floatingActionButton: FloatingActionButton(
-                      onPressed: () => _startEdit(context, tree),
-                      tooltip: "Edit".i18n,
-                      child: Icon(Icons.edit),
-                    ),
-                  )));
+            appBar: AppBar(
+              title: _buildTitle(tree),
+            ),
+            body: _buildBody(context, tree),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => _startEdit(context, tree),
+              tooltip: "Edit".i18n,
+              child: Icon(Icons.edit),
+            ),
+          ),
+        ),
+      );
 
   Text _buildTitle(BonsaiTreeWithImages tree) => Text(tree.tree.displayName);
 
   void _startEdit(BuildContext context, BonsaiTreeWithImages tree) async {
-    BonsaiTree updatedTree =
-        await Navigator.of(context).push(MaterialPageRoute<BonsaiTree>(
-            fullscreenDialog: true,
-            builder: (BuildContext context) => EditBonsaiView(
-                  initialTree: tree.tree,
-                )));
+    BonsaiTree updatedTree = await Navigator.of(context).push(
+      MaterialPageRoute<BonsaiTree>(
+        fullscreenDialog: true,
+        builder: (BuildContext context) => EditBonsaiView(
+          initialTree: tree.tree,
+        ),
+      ),
+    );
     if (updatedTree != null) {
       tree.updateTree(updatedTree);
     }

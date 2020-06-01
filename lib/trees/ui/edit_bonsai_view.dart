@@ -2,14 +2,10 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/images/model/image_gallery_model.dart';
-import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
-import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_view.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
+import '../../shared/state/app_context.dart';
 import '../../shared/ui/spaces.dart';
 import '../../shared/ui/widget_factory.dart';
 import '../i18n/bonsai_tree_view.i18n.dart';
@@ -17,6 +13,8 @@ import '../model/bonsai_tree.dart';
 import './species_picker.dart';
 
 class EditBonsaiView extends StatefulWidget {
+  static const route_name = '/edit-tree';
+
   final BonsaiTree initialTree;
 
   EditBonsaiView({this.initialTree});
@@ -134,6 +132,13 @@ class _EditBonsaiViewState extends State<EditBonsaiView> {
   void _save() {
     _formKey.currentState.save();
     BonsaiTree updatedTree = _treeBuilder.build();
-    Navigator.of(context).pop(updatedTree);
+    AppContext.of(context).collection.add(updatedTree);
+
+    if (widget.initialTree != null) {
+      Navigator.of(context).pop(updatedTree);
+      return;
+    }
+    Navigator.of(context)
+        .pushReplacementNamed('/view-tree', arguments: updatedTree);
   }
 }

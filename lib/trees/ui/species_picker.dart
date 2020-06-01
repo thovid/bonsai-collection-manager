@@ -57,7 +57,7 @@ class SpeciesPicker extends StatefulWidget {
 
 class SpeciesPickerState extends State<SpeciesPicker> {
   // List to store created controllers so that they can be disposed when the
-  // widget is disposed
+  // widget is disposed - there sure is a better way to do this
   final List<TextEditingController> _controllerList = [];
   Species _selectedValue;
 
