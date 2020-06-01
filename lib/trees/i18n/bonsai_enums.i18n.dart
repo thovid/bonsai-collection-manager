@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:i18n_extension/i18n_extension.dart';
 
 class BonsaiEnumTranslations {

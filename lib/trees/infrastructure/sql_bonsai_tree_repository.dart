@@ -4,7 +4,7 @@
 
 import '../model/species.dart';
 import '../model/bonsai_collection.dart';
-import '../model/bonsai_tree.dart';
+import '../model/bonsai_tree_data.dart';
 
 import '../../shared/infrastructure/base_repository.dart';
 import './bonsai_tree_table.dart';
@@ -21,7 +21,7 @@ class SQLBonsaiTreeRepository extends BaseRepository with BonsaiTreeRepository {
           repository: this));
 
   @override
-  Future<void> update(BonsaiTree tree) async =>
+  Future<void> update(BonsaiTreeData tree) async =>
       init().then((db) => BonsaiTreeTable.write(tree, db));
 
 }

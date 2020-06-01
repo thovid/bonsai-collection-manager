@@ -13,10 +13,10 @@ enum PotType { nursery_pot, training_pot, bonsai_pot }
 
 /// A bonsai tree.
 ///
-/// Immutable. Instances should be created using the [BonsaiTreeBuilder].
-class BonsaiTree {
+/// Immutable. Instances should be created using the [BonsaiTreeDataBuilder].
+class BonsaiTreeData {
   // The id of this tree
-  final ModelID<BonsaiTree> id;
+  final ModelID<BonsaiTreeData> id;
 
   /// The (optional) special name of a tree.
   final String treeName;
@@ -42,7 +42,7 @@ class BonsaiTree {
   /// From whom or where the tree was acquired from.
   final String acquiredFrom;
 
-  BonsaiTree._builder(BonsaiTreeBuilder builder)
+  BonsaiTreeData._builder(BonsaiTreeDataBuilder builder)
       : id = builder._id,
         treeName = builder.treeName,
         species = builder.species,
@@ -62,9 +62,9 @@ class BonsaiTree {
   }
 }
 
-/// Builds an immutable instance of a [BonsaiTree].
-class BonsaiTreeBuilder {
-  ModelID<BonsaiTree> _id;
+/// Builds an immutable instance of a [BonsaiTreeData].
+class BonsaiTreeDataBuilder {
+  ModelID<BonsaiTreeData> _id;
   String treeName;
   Species species;
   int speciesOrdinal;
@@ -73,8 +73,8 @@ class BonsaiTreeBuilder {
   DateTime acquiredAt;
   String acquiredFrom;
 
-  BonsaiTreeBuilder({BonsaiTree fromTree, String id})
-      : _id = ModelID<BonsaiTree>.fromID(id) ?? fromTree?.id ?? ModelID<BonsaiTree>.newId(),
+  BonsaiTreeDataBuilder({BonsaiTreeData fromTree, String id})
+      : _id = ModelID<BonsaiTreeData>.fromID(id) ?? fromTree?.id ?? ModelID<BonsaiTreeData>.newId(),
         treeName = fromTree?.treeName ?? '',
         species = fromTree?.species ?? Species.unknown,
         speciesOrdinal = fromTree?.speciesOrdinal ?? 1,
@@ -83,5 +83,5 @@ class BonsaiTreeBuilder {
         acquiredAt = fromTree?.acquiredAt ?? DateTime.now(),
         acquiredFrom = fromTree?.acquiredFrom ?? '';
 
-  BonsaiTree build() => BonsaiTree._builder(this);
+  BonsaiTreeData build() => BonsaiTreeData._builder(this);
 }

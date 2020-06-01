@@ -6,7 +6,7 @@ import 'package:bonsaicollectionmanager/images/infrastructure/sql_image_gallery_
 import 'package:flutter/material.dart';
 
 import '../i18n/i18n.dart';
-import '../../images/model/image_gallery_model.dart';
+import '../../images/model/images.dart';
 import '../../trees/infrastructure/sql_bonsai_tree_repository.dart';
 import '../../trees/infrastructure/tree_species_loader.dart';
 import '../../trees/model/bonsai_collection.dart';

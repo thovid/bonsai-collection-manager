@@ -3,7 +3,7 @@
  */
 import 'dart:io';
 
-import 'package:bonsaicollectionmanager/images/model/image_gallery_model.dart';
+import 'package:bonsaicollectionmanager/images/model/images.dart';
 import 'package:bonsaicollectionmanager/images/ui/image_gallery.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:flutter/material.dart';
@@ -165,7 +165,7 @@ main() async {
   });
 }
 
-ImageGalleryModel imageGalleryModel() => ImageGalleryModel(
+Images imageGalleryModel() => Images(
     parent: ModelID.newId(), repository: DummyImageRepository());
 
 Future<dynamic> _tapMenuButton(WidgetTester tester, Finder button) async {
@@ -185,10 +185,10 @@ Finder _openMenuButton() {
       (widget) => (widget is FlatButton && widget.child is AnimatedIcon));
 }
 
-Future _startViewWith(ImageGalleryModel model, WidgetTester tester) async {
+Future _startViewWith(Images model, WidgetTester tester) async {
   var collection = await TestBonsaiRepository([aBonsaiTree]).loadCollection();
   var app = testAppWith(
-      ChangeNotifierProvider<ImageGalleryModel>.value(
+      ChangeNotifierProvider<Images>.value(
         value: model,
         builder: (context, child) => ImageGallery(),
       ),

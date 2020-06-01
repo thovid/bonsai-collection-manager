@@ -3,11 +3,11 @@
  */
 import 'package:flutter/material.dart';
 
-import '../model/bonsai_tree.dart';
+import '../model/bonsai_tree_data.dart';
 import './species_picker.dart';
 
 class BonsaiTreeListItem extends StatelessWidget {
-  final BonsaiTree tree;
+  final BonsaiTreeData tree;
   final Function onTap;
   BonsaiTreeListItem({this.tree, this.onTap});
 

@@ -5,7 +5,7 @@
 import 'dart:io';
 
 import 'package:bonsaicollectionmanager/images/model/collection_item_image.dart';
-import 'package:bonsaicollectionmanager/images/model/image_gallery_model.dart';
+import 'package:bonsaicollectionmanager/images/model/images.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
 import 'package:bonsaicollectionmanager/trees/infrastructure/bonsai_tree_table.dart';

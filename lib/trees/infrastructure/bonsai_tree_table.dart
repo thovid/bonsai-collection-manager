@@ -4,7 +4,7 @@
 
 import 'package:sqflite/sqflite.dart';
 
-import '../model/bonsai_tree.dart';
+import '../model/bonsai_tree_data.dart';
 import '../../shared/model/model_id.dart';
 import '../model/species.dart';
 
@@ -44,7 +44,7 @@ class BonsaiTreeTable {
         ")");
   }
 
-  static Future write(BonsaiTree tree, DatabaseExecutor db) async {
+  static Future write(BonsaiTreeData tree, DatabaseExecutor db) async {
     Map<String, dynamic> data = {
       tree_id: tree.id.value,
       treeName: tree.treeName,
@@ -60,7 +60,7 @@ class BonsaiTreeTable {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  static Future<BonsaiTree> read(ModelID<BonsaiTree> id,
+  static Future<BonsaiTreeData> read(ModelID<BonsaiTreeData> id,
       SpeciesRepository speciesRepository, DatabaseExecutor db) async {
     List<Map<String, dynamic>> data = await db.query(table_name,
         columns: columns, where: '$tree_id = ?', whereArgs: [id.value]);
@@ -71,21 +71,21 @@ class BonsaiTreeTable {
     return await _fromMap(data[0], speciesRepository);
   }
 
-  static Future<List<BonsaiTree>> readAll(
+  static Future<List<BonsaiTreeData>> readAll(
       SpeciesRepository speciesRepository, DatabaseExecutor db) async {
     List<Map<String, dynamic>> data =
         await db.query(table_name, columns: columns);
-    List<BonsaiTree> result = List(data.length);
+    List<BonsaiTreeData> result = List(data.length);
     for (var i = 0; i < data.length; i++) {
-      BonsaiTree t = await _fromMap(data[i], speciesRepository);
+      BonsaiTreeData t = await _fromMap(data[i], speciesRepository);
       result[i] = t;
     }
     return result;
   }
 
-  static Future<BonsaiTree> _fromMap(
+  static Future<BonsaiTreeData> _fromMap(
       Map<String, dynamic> values, SpeciesRepository speciesRepository) async {
-    return (BonsaiTreeBuilder(id: values[tree_id])
+    return (BonsaiTreeDataBuilder(id: values[tree_id])
           ..treeName = values[treeName]
           ..species =
               await speciesRepository.findOne(latinName: values[species])

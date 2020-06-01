@@ -9,13 +9,13 @@ import '../../shared/state/app_context.dart';
 import '../../shared/ui/spaces.dart';
 import '../../shared/ui/widget_factory.dart';
 import '../i18n/bonsai_tree_view.i18n.dart';
-import '../model/bonsai_tree.dart';
+import '../model/bonsai_tree_data.dart';
 import './species_picker.dart';
 
 class EditBonsaiView extends StatefulWidget {
   static const route_name = '/edit-tree';
 
-  final BonsaiTree initialTree;
+  final BonsaiTreeData initialTree;
 
   EditBonsaiView({this.initialTree});
 
@@ -26,18 +26,18 @@ class EditBonsaiView extends StatefulWidget {
 class _EditBonsaiViewState extends State<EditBonsaiView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  BonsaiTreeBuilder _treeBuilder;
+  BonsaiTreeDataBuilder _treeBuilder;
 
   @override
   void initState() {
     super.initState();
-    _treeBuilder = BonsaiTreeBuilder(fromTree: widget.initialTree);
+    _treeBuilder = BonsaiTreeDataBuilder(fromTree: widget.initialTree);
   }
 
   @override
   void didUpdateWidget(EditBonsaiView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _treeBuilder = BonsaiTreeBuilder(fromTree: widget.initialTree);
+    _treeBuilder = BonsaiTreeDataBuilder(fromTree: widget.initialTree);
   }
 
   @override
@@ -131,7 +131,7 @@ class _EditBonsaiViewState extends State<EditBonsaiView> {
 
   void _save() {
     _formKey.currentState.save();
-    BonsaiTree updatedTree = _treeBuilder.build();
+    BonsaiTreeData updatedTree = _treeBuilder.build();
     AppContext.of(context).collection.add(updatedTree);
 
     if (widget.initialTree != null) {

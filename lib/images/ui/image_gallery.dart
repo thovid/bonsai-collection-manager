@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../shared/ui/expanded_section.dart';
 import '../i18n/image_gallery.i18n.dart';
-import '../model/image_gallery_model.dart';
+import '../model/images.dart';
 
 typedef void ImageSelectedCallback(File imageFile);
 
@@ -33,7 +33,7 @@ class ImageGallery extends StatelessWidget {
 class MainImageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ImageGalleryModel>(
+    return Consumer<Images>(
         builder: (context, imageGalleryModel, _) => Container(
               padding: EdgeInsets.all(5),
               child: ClipRRect(
@@ -42,7 +42,7 @@ class MainImageTile extends StatelessWidget {
             ));
   }
 
-  Widget _buildImageOrHint(BuildContext context, ImageGalleryModel model) {
+  Widget _buildImageOrHint(BuildContext context, Images model) {
     if (model.mainImage != null)
       return _buildTapableImage(context, model.mainImage);
     return Center(child: Text("Add your first image".i18n));
@@ -52,7 +52,7 @@ class MainImageTile extends StatelessWidget {
 class ImagesPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ImageGalleryModel>(
+    return Consumer<Images>(
         builder: (context, imageGalleryModel, _) => Column(
               children: <Widget>[
                 ImagesPanelMenuTile(

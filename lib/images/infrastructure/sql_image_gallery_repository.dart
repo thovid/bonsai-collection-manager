@@ -6,7 +6,7 @@ import 'dart:io';
 
 import './collection_item_image_table.dart';
 import '../model/collection_item_image.dart';
-import '../model/image_gallery_model.dart';
+import '../model/images.dart';
 import '../../shared/infrastructure/base_repository.dart';
 import '../../shared/model/model_id.dart';
 

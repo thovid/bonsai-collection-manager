@@ -3,7 +3,7 @@
  */
 
 import 'package:bonsaicollectionmanager/images/infrastructure/collection_item_image_table.dart';
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/images/model/collection_item_image.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,7 +26,7 @@ main() {
     var db = await openTestDatabase();
     var anImage = (CollectionItemImageBuilder()
           ..fileName = 'test_file.jpg'
-          ..parentId = ModelID<BonsaiTree>.newId()
+          ..parentId = ModelID<BonsaiTreeData>.newId()
           ..isMainImage = true)
         .build();
 
@@ -38,7 +38,7 @@ main() {
   });
 
   test('can read all images for a single item', () async {
-    var treeId = ModelID<BonsaiTree>.newId();
+    var treeId = ModelID<BonsaiTreeData>.newId();
     var firstImage = (CollectionItemImageBuilder()
           ..fileName = 'first.jpg'
           ..parentId = treeId)
@@ -49,7 +49,7 @@ main() {
         .build();
     var otherImage = (CollectionItemImageBuilder()
           ..fileName = 'third.jpg'
-          ..parentId = ModelID<BonsaiTree>.newId())
+          ..parentId = ModelID<BonsaiTreeData>.newId())
         .build();
 
     var db = await openTestDatabase();
@@ -65,7 +65,7 @@ main() {
     var db = await openTestDatabase();
     var anImage = (CollectionItemImageBuilder()
           ..fileName = 'test_file.jpg'
-          ..parentId = ModelID<BonsaiTree>.newId())
+          ..parentId = ModelID<BonsaiTreeData>.newId())
         .build();
 
     await CollectionItemImageTable.write(anImage, db);
@@ -78,7 +78,7 @@ main() {
     var db = await openTestDatabase();
     var anImage = (CollectionItemImageBuilder()
           ..fileName = 'test_file.jpg'
-          ..parentId = ModelID<BonsaiTree>.newId()
+          ..parentId = ModelID<BonsaiTreeData>.newId()
           ..isMainImage = false)
         .build();
     await CollectionItemImageTable.write(anImage, db);

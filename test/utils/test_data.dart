@@ -3,7 +3,7 @@
  */
 
 import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/images/model/collection_item_image.dart';
 import 'package:bonsaicollectionmanager/trees/model/species.dart';
 
@@ -17,7 +17,7 @@ final SpeciesRepository testSpecies = TestSpeciesRepository([
       latinName: 'Pinus Mugo', informalName: 'Mountain Pine')
 ]);
 
-final BonsaiTree aBonsaiTree = (BonsaiTreeBuilder()
+final BonsaiTreeData aBonsaiTree = (BonsaiTreeDataBuilder()
       ..species = Species(TreeType.conifer,
           latinName: 'Pinus Mugo', informalName: 'Mountain Pine')
       ..treeName = 'My Tree'
@@ -34,9 +34,9 @@ class TestSpeciesRepository extends SpeciesRepository {
 }
 
 class TestBonsaiRepository with BonsaiTreeRepository {
-  List<BonsaiTree> trees;
+  List<BonsaiTreeData> trees;
   List<CollectionItemImage> images;
-  static BonsaiTree lastUpdated;
+  static BonsaiTreeData lastUpdated;
   TestBonsaiRepository(this.trees, {this.images});
 
   @override
@@ -45,7 +45,7 @@ class TestBonsaiRepository with BonsaiTreeRepository {
   }
 
   @override
-  Future<BonsaiTree> update(BonsaiTree tree) async {
+  Future<BonsaiTreeData> update(BonsaiTreeData tree) async {
     return lastUpdated = tree;
   }
 }

@@ -3,7 +3,7 @@
  */
 
 import 'package:bonsaicollectionmanager/trees/infrastructure/bonsai_tree_table.dart';
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 
@@ -35,7 +35,7 @@ main() {
     expect(treeFromDB.developmentLevel, equals(DevelopmentLevel.refinement));
     expect(treeFromDB.potType, equals(PotType.bonsai_pot));
 
-    var updatedTree = (BonsaiTreeBuilder(fromTree: treeFromDB)
+    var updatedTree = (BonsaiTreeDataBuilder(fromTree: treeFromDB)
           ..treeName = 'Updated tree')
         .build();
 
@@ -47,13 +47,13 @@ main() {
   test('can read all trees', () async {
     var db = await openTestDatabase();
     await _createTestTrees(db, count: 5);
-    List<BonsaiTree> trees = await BonsaiTreeTable.readAll(testSpecies, db);
+    List<BonsaiTreeData> trees = await BonsaiTreeTable.readAll(testSpecies, db);
     expect(trees.length, equals(5));
   });
 }
 
-Future<BonsaiTree> _aTree() async {
-  return (BonsaiTreeBuilder()
+Future<BonsaiTreeData> _aTree() async {
+  return (BonsaiTreeDataBuilder()
         ..treeName = 'Test Tree'
         ..species = await testSpecies.findOne(latinName: 'Pinus Mugo')
         ..acquiredFrom = 'Test'
@@ -64,7 +64,7 @@ Future<BonsaiTree> _aTree() async {
 
 Future _createTestTrees(Database db, {int count = 1}) async {
   for (var i = 0; i < count; i++) {
-    var tree = (BonsaiTreeBuilder()
+    var tree = (BonsaiTreeDataBuilder()
           ..species = await testSpecies.findOne(latinName: 'Pinus Mugo')
           ..speciesOrdinal = i + 1)
         .build();

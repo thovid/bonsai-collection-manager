@@ -2,7 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/trees/model/species.dart';
 import 'package:test/test.dart';
 
@@ -11,12 +11,12 @@ import '../../utils/test_data.dart';
 main() {
   final Species mugo = Species(TreeType.conifer, latinName: "Pinus Mugo");
 
-  final BonsaiTree firstMugo = (BonsaiTreeBuilder()
+  final BonsaiTreeData firstMugo = (BonsaiTreeDataBuilder()
         ..species = mugo
         ..speciesOrdinal = 1)
       .build();
 
-  final BonsaiTree secondMugo = (BonsaiTreeBuilder()
+  final BonsaiTreeData secondMugo = (BonsaiTreeDataBuilder()
         ..species = mugo
         ..speciesOrdinal = 2)
       .build();
@@ -28,7 +28,7 @@ main() {
 
   test('can add a tree to the collection', () async {
     var collection = await TestBonsaiRepository([]).loadCollection();
-    var aTree = (BonsaiTreeBuilder()..treeName = "Test Tree").build();
+    var aTree = (BonsaiTreeDataBuilder()..treeName = "Test Tree").build();
     var savedTree = await collection.add(aTree);
     expect(collection.size, equals(1));
     expect(TestBonsaiRepository.lastUpdated, savedTree);
@@ -36,7 +36,7 @@ main() {
 
   test('calculates next ordinal for added tree', () async {
     var collection = await TestBonsaiRepository([firstMugo, secondMugo]).loadCollection();
-    var aTree = (BonsaiTreeBuilder()
+    var aTree = (BonsaiTreeDataBuilder()
           ..treeName = "Test Tree"
           ..species = mugo)
         .build();
@@ -53,7 +53,7 @@ main() {
   test('can update a tree with new data', () async {
     var collection = await TestBonsaiRepository([firstMugo, secondMugo]).loadCollection();
     var id = secondMugo.id;
-    var updated = (BonsaiTreeBuilder(fromTree: secondMugo)
+    var updated = (BonsaiTreeDataBuilder(fromTree: secondMugo)
           ..treeName = "Updated Tree Name")
         .build();
     await collection.update(updated);

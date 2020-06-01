@@ -2,10 +2,10 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/images/model/image_gallery_model.dart';
+import 'package:bonsaicollectionmanager/images/model/images.dart';
 import 'package:bonsaicollectionmanager/images/ui/image_gallery.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
 import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_view.dart';
 import 'package:flutter/material.dart';
@@ -44,10 +44,10 @@ main() {
 }
 
 Future<void> _openView(WidgetTester tester, BonsaiCollection collection) {
-  final BonsaiTree tree = aBonsaiTree;
+  final BonsaiTreeData tree = aBonsaiTree;
   final BonsaiTreeWithImages treeWithImages = BonsaiTreeWithImages(
       tree: tree,
-      images: ImageGalleryModel(
+      images: Images(
           parent: tree.id, repository: DummyImageRepository()),
       collection: collection);
   return tester.pumpWidget(testAppWith(

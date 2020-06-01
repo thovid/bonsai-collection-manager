@@ -10,7 +10,8 @@ import './collection_item_image.dart';
 import '../../shared/model/model_id.dart';
 
 abstract class ImageRepository {
-  Future<CollectionItemImage> add(File imageFile, bool isMainImage, ModelID parent);
+  Future<CollectionItemImage> add(
+      File imageFile, bool isMainImage, ModelID parent);
 
   Future<void> remove(ModelID<CollectionItemImage> id);
 
@@ -21,45 +22,13 @@ abstract class ImageRepository {
   Future<List<CollectionItemImage>> loadImages(ModelID parent);
 }
 
-class ImageGalleryModel with ChangeNotifier {
+class Images with ChangeNotifier {
   final ModelID parent;
   final ImageRepository repository;
   final List<ImageDescriptor> _images = [];
   ImageDescriptor _mainImage;
 
-  ImageGalleryModel(
-      {CollectionItemImage mainImage,
-      List<CollectionItemImage> images = const [],
-      @required this.parent,
-      @required this.repository}) {
-    if (images != null) {
-      _images.addAll(images
-          ?.map(
-              (e) => ImageDescriptor(parent: this, id: e.id, path: e.fileName))
-          ?.toList());
-    }
-    _mainImage = mainImage != null
-        ? ImageDescriptor(
-            parent: this, id: mainImage.id, path: mainImage.fileName)
-        : null;
-
-    // TODO call toggleIsMainImage for initial image to make the first one the main image
-    if (_mainImage == null && _images.length > 0) {
-      _mainImage = _images[0];
-    }
-  }
-
-  static Future<ImageGalleryModel> fromRepository(
-      ImageRepository imageRepository, ModelID id) async {
-    List<CollectionItemImage> loaded = await imageRepository.loadImages(id);
-    CollectionItemImage mainImage = loaded
-        ?.firstWhere((element) => element.isMainImage, orElse: () => null);
-    return ImageGalleryModel(
-        parent: id,
-        repository: imageRepository,
-        mainImage: mainImage,
-        images: loaded);
-  }
+  Images({@required this.parent, @required this.repository});
 
   List<ImageDescriptor> get images => _images;
 
@@ -81,8 +50,9 @@ class ImageGalleryModel with ChangeNotifier {
     _images.remove(image);
     if (image == _mainImage) {
       _mainImage = _images.length > 0 ? _images[0] : null;
-      if(_mainImage != null) {
-        await repository.toggleIsMainImage(newMainImageId: _mainImage._id, oldMainImageId: null);
+      if (_mainImage != null) {
+        await repository.toggleIsMainImage(
+            newMainImageId: _mainImage._id, oldMainImageId: null);
       }
     }
     notifyListeners();
@@ -111,10 +81,33 @@ class ImageGalleryModel with ChangeNotifier {
     }
     return hasToggled;
   }
+
+  Future<void> fetchImages() async {
+    List<CollectionItemImage> loaded = await repository.loadImages(parent);
+
+    if (loaded != null) {
+      _images.addAll(loaded
+          ?.map(
+              (e) => ImageDescriptor(parent: this, id: e.id, path: e.fileName))
+          ?.toList());
+      CollectionItemImage mainImage = loaded
+          ?.firstWhere((element) => element.isMainImage, orElse: () => null);
+      _mainImage = mainImage != null
+          ? ImageDescriptor(
+              parent: this, id: mainImage.id, path: mainImage.fileName)
+          : null;
+    }
+
+    if (_mainImage == null && _images.length > 0) {
+      _mainImage = _images[0];
+    }
+
+    notifyListeners();
+  }
 }
 
 class ImageDescriptor {
-  final ImageGalleryModel parent;
+  final Images parent;
   final String path;
   final ModelID<CollectionItemImage> _id;
 
@@ -124,8 +117,7 @@ class ImageDescriptor {
       @required ModelID<CollectionItemImage> id})
       : assert(parent != null && path != null && id != null),
         _id = id;
-  factory ImageDescriptor.fromImage(
-      CollectionItemImage image, ImageGalleryModel model) {
+  factory ImageDescriptor.fromImage(CollectionItemImage image, Images model) {
     if (image == null) return null;
     return ImageDescriptor(parent: model, path: image.fileName, id: image.id);
   }

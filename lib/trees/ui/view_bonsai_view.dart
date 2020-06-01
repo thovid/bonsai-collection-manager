@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../images/model/image_gallery_model.dart';
+import '../../images/model/images.dart';
 import '../../images/ui/image_gallery.dart';
 import '../../shared/ui/spaces.dart';
 import '../model/bonsai_tree_with_images.dart';
-import '../model/bonsai_tree.dart';
+import '../model/bonsai_tree_data.dart';
 import '../i18n/bonsai_tree_view.i18n.dart';
 import './edit_bonsai_view.dart';
 
@@ -38,8 +38,8 @@ class ViewBonsaiView extends StatelessWidget {
   Text _buildTitle(BonsaiTreeWithImages tree) => Text(tree.tree.displayName);
 
   void _startEdit(BuildContext context, BonsaiTreeWithImages tree) async {
-    BonsaiTree updatedTree = await Navigator.of(context).push(
-      MaterialPageRoute<BonsaiTree>(
+    BonsaiTreeData updatedTree = await Navigator.of(context).push(
+      MaterialPageRoute<BonsaiTreeData>(
         fullscreenDialog: true,
         builder: (BuildContext context) => EditBonsaiView(
           initialTree: tree.tree,
@@ -55,7 +55,7 @@ class ViewBonsaiView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ChangeNotifierProvider<ImageGalleryModel>.value(
+          ChangeNotifierProvider<Images>.value(
             value: tree.images,
             child: Container(
               padding: EdgeInsets.all(10),

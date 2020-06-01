@@ -2,12 +2,12 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/images/model/image_gallery_model.dart';
+import 'package:bonsaicollectionmanager/images/model/images.dart';
 import 'package:bonsaicollectionmanager/shared/i18n/i18n.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
 import 'package:bonsaicollectionmanager/images/ui/image_gallery.dart';
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
 import 'package:bonsaicollectionmanager/trees/ui/edit_bonsai_view.dart';
 import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_view.dart';
@@ -21,7 +21,7 @@ import 'utils/test_utils.dart';
 
 /// Helper to run a widget in a scaffold for visual checking purposes
 
-ImageGalleryModel empty = ImageGalleryModel(
+Images empty = Images(
     parent: ModelID.newId(), repository: DummyImageRepository());
 void main() {
   //runImageGallery();
@@ -30,7 +30,7 @@ void main() {
 }
 
 Future runViewBonsaiView() async {
-  BonsaiTree tree = aBonsaiTree;
+  BonsaiTreeData tree = aBonsaiTree;
   BonsaiTreeWithImages treeWithImages = BonsaiTreeWithImages(
     tree: tree,
     images: empty,
@@ -47,7 +47,7 @@ void runEditBonsaiView() {
 }
 
 void runImageGallery() {
-  runApp(WidgetRunner(ChangeNotifierProvider<ImageGalleryModel>.value(
+  runApp(WidgetRunner(ChangeNotifierProvider<Images>.value(
       value: empty,
       builder: (context, _) => Scaffold(
           body: Center(

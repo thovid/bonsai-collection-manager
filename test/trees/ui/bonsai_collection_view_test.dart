@@ -3,7 +3,7 @@
  */
 
 import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/trees/model/species.dart';
 import 'package:bonsaicollectionmanager/trees/ui/bonsai_collection_view.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,7 +15,7 @@ import '../../utils/test_utils.dart';
 void main() {
   testWidgets('Shows tree from collection', (WidgetTester tester) async {
     BonsaiCollection collection = await TestBonsaiRepository([
-      (BonsaiTreeBuilder()
+      (BonsaiTreeDataBuilder()
             ..treeName = "My Tree"
             ..species = Species(TreeType.conifer, latinName: "Testus Treeus"))
           .build()

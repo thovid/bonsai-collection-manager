@@ -4,24 +4,24 @@
 
 import 'package:flutter/material.dart';
 
-import './bonsai_tree.dart';
+import './bonsai_tree_data.dart';
 import './species.dart';
 import '../../shared/model/model_id.dart';
 
 mixin BonsaiTreeRepository {
-  Future<void> update(BonsaiTree tree);
+  Future<void> update(BonsaiTreeData tree);
 
   Future<BonsaiCollection> loadCollection();
 }
 
 class BonsaiCollection extends ChangeNotifier {
-  final List<BonsaiTree> _trees = <BonsaiTree>[];
+  final List<BonsaiTreeData> _trees = <BonsaiTreeData>[];
   final BonsaiTreeRepository _repository;
 
   BonsaiCollection({repository: BonsaiTreeRepository})
       : this.withTrees([], repository: repository);
 
-  BonsaiCollection.withTrees(List<BonsaiTree> trees,
+  BonsaiCollection.withTrees(List<BonsaiTreeData> trees,
       {BonsaiTreeRepository repository})
       : _repository = repository {
     _trees.addAll(trees);
@@ -29,24 +29,24 @@ class BonsaiCollection extends ChangeNotifier {
 
   int get size => _trees.length;
 
-  List<BonsaiTree> get trees => List<BonsaiTree>.unmodifiable(_trees);
+  List<BonsaiTreeData> get trees => List<BonsaiTreeData>.unmodifiable(_trees);
 
-  BonsaiTree findById(ModelID<BonsaiTree> id) {
+  BonsaiTreeData findById(ModelID<BonsaiTreeData> id) {
     return _trees.firstWhere((element) => element.id == id, orElse: () => null);
   }
 
-  Future<BonsaiTree> add(BonsaiTree tree) async {
+  Future<BonsaiTreeData> add(BonsaiTreeData tree) async {
     return update(tree);
   }
 
-  Future<BonsaiTree> update(BonsaiTree tree) async {
+  Future<BonsaiTreeData> update(BonsaiTreeData tree) async {
     final int index = _trees.indexWhere((element) => element.id == tree.id);
     if (index < 0) return _insert(tree);
     return _updateAt(index, tree);
   }
 
-  BonsaiTree _updateAt(int index, BonsaiTree tree) {
-    final BonsaiTree oldVersion = _trees[index];
+  BonsaiTreeData _updateAt(int index, BonsaiTreeData tree) {
+    final BonsaiTreeData oldVersion = _trees[index];
     if (oldVersion.species.latinName != tree.species.latinName) {
       tree = _updateSpeciesOrdinal(tree);
     }
@@ -56,7 +56,7 @@ class BonsaiCollection extends ChangeNotifier {
     return tree;
   }
 
-  BonsaiTree _insert(BonsaiTree tree) {
+  BonsaiTreeData _insert(BonsaiTreeData tree) {
     tree = _updateSpeciesOrdinal(tree);
     _trees.add(tree);
     _repository.update(tree);
@@ -64,13 +64,13 @@ class BonsaiCollection extends ChangeNotifier {
     return tree;
   }
 
-  BonsaiTree _updateSpeciesOrdinal(BonsaiTree tree) =>
-      (BonsaiTreeBuilder(fromTree: tree)
+  BonsaiTreeData _updateSpeciesOrdinal(BonsaiTreeData tree) =>
+      (BonsaiTreeDataBuilder(fromTree: tree)
             ..speciesOrdinal = _nextOrdinalFor(tree.species))
           .build();
 
-  List<BonsaiTree> _findAll(Species species) =>
-      _trees.fold(<BonsaiTree>[], (result, element) {
+  List<BonsaiTreeData> _findAll(Species species) =>
+      _trees.fold(<BonsaiTreeData>[], (result, element) {
         if (element.species == species) result.add(element);
         return result;
       });
