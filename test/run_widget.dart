@@ -34,7 +34,6 @@ Future runViewBonsaiView() async {
   BonsaiTreeWithImages treeWithImages = BonsaiTreeWithImages(
     treeData: tree,
     images: empty,
-    collection: await TestBonsaiRepository([tree]).loadCollection(),
   );
   runApp(WidgetRunner(ChangeNotifierProvider.value(
     value: treeWithImages,

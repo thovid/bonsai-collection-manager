@@ -46,10 +46,9 @@ main() {
 Future<void> _openView(WidgetTester tester, BonsaiCollection collection) {
   final BonsaiTreeData tree = aBonsaiTree;
   final BonsaiTreeWithImages treeWithImages = BonsaiTreeWithImages(
-      treeData: tree,
-      images: Images(
-          parent: tree.id, repository: DummyImageRepository()),
-      collection: collection);
+    treeData: tree,
+    images: Images(parent: tree.id, repository: DummyImageRepository()),
+  );
   return tester.pumpWidget(testAppWith(
       ChangeNotifierProvider.value(
           value: treeWithImages, child: ViewBonsaiView()),

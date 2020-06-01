@@ -132,12 +132,14 @@ class _EditBonsaiViewState extends State<EditBonsaiView> {
   void _save() {
     _formKey.currentState.save();
     BonsaiTreeData updatedTree = _treeBuilder.build();
-    AppContext.of(context).collection.add(updatedTree);
 
     if (widget.initialTree != null) {
+      AppContext.of(context).collection.update(updatedTree);
       Navigator.of(context).pop(updatedTree);
       return;
     }
+
+    AppContext.of(context).collection.add(updatedTree);
     Navigator.of(context)
         .pushReplacementNamed('/view-tree', arguments: updatedTree);
   }
