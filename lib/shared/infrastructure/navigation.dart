@@ -45,11 +45,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
 Future<BonsaiTreeWithImages> _fetchTreeWithImages(
     BuildContext context, BonsaiTreeData tree) async {
-  final collection = AppContext.of(context).collection;
+  final collection = AppContext.of(context).collection; // TODO remove
   final imageRepo = AppContext.of(context).imageRepository;
   var images = Images(repository: imageRepo, parent: tree.id);
   await images.fetchImages();
 
   return BonsaiTreeWithImages(
-      tree: tree, images: images, collection: collection);
+      treeData: tree, images: images);
 }

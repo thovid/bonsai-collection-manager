@@ -46,7 +46,7 @@ main() {
 Future<void> _openView(WidgetTester tester, BonsaiCollection collection) {
   final BonsaiTreeData tree = aBonsaiTree;
   final BonsaiTreeWithImages treeWithImages = BonsaiTreeWithImages(
-      tree: tree,
+      treeData: tree,
       images: Images(
           parent: tree.id, repository: DummyImageRepository()),
       collection: collection);

@@ -35,19 +35,20 @@ class ViewBonsaiView extends StatelessWidget {
         ),
       );
 
-  Text _buildTitle(BonsaiTreeWithImages tree) => Text(tree.tree.displayName);
+  Text _buildTitle(BonsaiTreeWithImages tree) =>
+      Text(tree.treeData.displayName);
 
   void _startEdit(BuildContext context, BonsaiTreeWithImages tree) async {
     BonsaiTreeData updatedTree = await Navigator.of(context).push(
       MaterialPageRoute<BonsaiTreeData>(
         fullscreenDialog: true,
         builder: (BuildContext context) => EditBonsaiView(
-          initialTree: tree.tree,
+          initialTree: tree.treeData,
         ),
       ),
     );
     if (updatedTree != null) {
-      tree.updateTree(updatedTree);
+      tree.treeData = updatedTree;
     }
   }
 
@@ -73,16 +74,17 @@ class ViewBonsaiView extends StatelessWidget {
                   columnWidths: {0: FractionColumnWidth(.4)},
                   children: [
                     _tableRow('Species',
-                        "${tree.tree.species.latinName} - ${tree.tree.species.informalName}"),
-                    if (tree.tree.treeName != null &&
-                        tree.tree.treeName.isNotEmpty)
-                      _tableRow('Name', tree.tree.treeName),
+                        "${tree.treeData.species.latinName} - ${tree.treeData.species.informalName}"),
+                    if (tree.treeData.treeName != null &&
+                        tree.treeData.treeName.isNotEmpty)
+                      _tableRow('Name', tree.treeData.treeName),
                     _tableRow('Development Level',
-                        tree.tree.developmentLevel.toString().i18n),
-                    _tableRow('Pot Type', tree.tree.potType.toString().i18n),
+                        tree.treeData.developmentLevel.toString().i18n),
+                    _tableRow(
+                        'Pot Type', tree.treeData.potType.toString().i18n),
                     _tableRow('Acquired at',
-                        DateFormat.yMMMd().format(tree.tree.acquiredAt)),
-                    _tableRow('Acquired from', tree.tree.acquiredFrom),
+                        DateFormat.yMMMd().format(tree.treeData.acquiredAt)),
+                    _tableRow('Acquired from', tree.treeData.acquiredFrom),
                   ],
                 ),
               ),

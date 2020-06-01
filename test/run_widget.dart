@@ -32,7 +32,7 @@ void main() {
 Future runViewBonsaiView() async {
   BonsaiTreeData tree = aBonsaiTree;
   BonsaiTreeWithImages treeWithImages = BonsaiTreeWithImages(
-    tree: tree,
+    treeData: tree,
     images: empty,
     collection: await TestBonsaiRepository([tree]).loadCollection(),
   );

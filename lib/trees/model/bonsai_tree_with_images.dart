@@ -9,20 +9,16 @@ import 'package:flutter/widgets.dart';
 import 'bonsai_tree_data.dart';
 
 class BonsaiTreeWithImages with ChangeNotifier {
-  final BonsaiCollection _collection;
-  BonsaiTreeData tree;
+  BonsaiTreeData _treeData;
   Images images;
 
-  BonsaiTreeWithImages({@required this.tree, this.images, @required BonsaiCollection collection})
-      : _collection = collection;
+  BonsaiTreeWithImages({@required BonsaiTreeData treeData, this.images})
+      : _treeData = treeData;
 
-  Future<BonsaiTreeData> updateTree(BonsaiTreeData tree) async {
-    return _collection
-        .update(tree)
-        .then((updatedTree) => this.tree = updatedTree)
-        .then((updatedTree) {
-      notifyListeners();
-      return updatedTree;
-    });
+  set treeData(BonsaiTreeData data) {
+    treeData = data;
+    notifyListeners();
   }
+
+  BonsaiTreeData get treeData => _treeData;
 }

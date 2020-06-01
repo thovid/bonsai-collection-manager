@@ -71,7 +71,7 @@ class ViewCollectionView extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.all(4.0),
                         child: Text(
-                          value.tree.displayName,
+                          value.treeData.displayName,
                           style: Theme.of(context)
                               .textTheme
                               .bodyText1
@@ -98,13 +98,13 @@ class ViewCollectionView extends StatelessWidget {
   Future<BonsaiTreeWithImages> _loadTreeWithMainImage(
       BuildContext context,
       BonsaiTreeData tree,
-      BonsaiCollection collection,
+      BonsaiCollection collection, // TODO remove
       ImageRepository imageRepository) async {
     print("Load tree with main image for ${tree.displayName}");
 
     final Images images = Images(repository: imageRepository, parent: tree.id);
     await images.fetchImages();
-    return BonsaiTreeWithImages(tree: tree, images: images, collection: collection);
+    return BonsaiTreeWithImages(treeData: tree, images: images);
   }
 
   Widget _withLoadingIndicator({bool isLoading, Widget Function() builder}) {
