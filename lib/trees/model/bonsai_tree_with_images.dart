@@ -2,11 +2,11 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/images/model/images.dart';
-import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
 import 'package:flutter/widgets.dart';
 
-import 'bonsai_tree_data.dart';
+import '../../images/model/images.dart';
+import '../../shared/model/model_id.dart';
+import './bonsai_tree_data.dart';
 
 class BonsaiTreeWithImages with ChangeNotifier {
   BonsaiTreeData _treeData;
@@ -21,4 +21,6 @@ class BonsaiTreeWithImages with ChangeNotifier {
   }
 
   BonsaiTreeData get treeData => _treeData;
+
+  ModelID<BonsaiTreeData> get id => _treeData.id;
 }

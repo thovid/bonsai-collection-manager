@@ -48,4 +48,9 @@ class TestBonsaiRepository with BonsaiTreeRepository {
   Future<BonsaiTreeData> update(BonsaiTreeData tree) async {
     return lastUpdated = tree;
   }
+
+  @override
+  Future<List<BonsaiTreeData>> loadBonsaiCollection() async {
+    return trees;
+  }
 }

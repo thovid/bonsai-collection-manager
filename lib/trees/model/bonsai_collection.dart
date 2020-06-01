@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:flutter/material.dart';
 
 import './bonsai_tree_data.dart';
@@ -12,6 +13,8 @@ mixin BonsaiTreeRepository {
   Future<void> update(BonsaiTreeData tree);
 
   Future<BonsaiCollection> loadCollection();
+
+  Future<List<BonsaiTreeData>> loadBonsaiCollection();
 }
 
 class BonsaiCollection extends ChangeNotifier {
