@@ -24,7 +24,10 @@ class BonsaiTreeWithImages with ChangeNotifier {
 
   ModelID<BonsaiTreeData> get id => _treeData.id;
 
-  Future<void> fetchImages() async {
-    return images.fetchImages();
+  String get displayName => _treeData.displayName;
+
+  Future<BonsaiTreeWithImages> fetchImages() async {
+    await images.fetchImages();
+    return this;
   }
 }
