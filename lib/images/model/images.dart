@@ -83,7 +83,9 @@ class Images with ChangeNotifier {
   }
 
   Future<void> fetchImages() async {
-    List<CollectionItemImage> loaded = await repository.loadImages(parent);
+    _images.clear();
+    _mainImage = null;
+    final List<CollectionItemImage> loaded = await repository.loadImages(parent);
 
     if (loaded != null) {
       _images.addAll(loaded
