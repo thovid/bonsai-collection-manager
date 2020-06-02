@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:bonsaicollectionmanager/images/model/images.dart';
 import 'package:bonsaicollectionmanager/images/ui/image_gallery.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -165,8 +166,8 @@ main() async {
   });
 }
 
-Images imageGalleryModel() => Images(
-    parent: ModelID.newId(), repository: DummyImageRepository());
+Images imageGalleryModel() =>
+    Images(parent: ModelID.newId(), repository: DummyImageRepository());
 
 Future<dynamic> _tapMenuButton(WidgetTester tester, Finder button) async {
   return tester
@@ -186,13 +187,15 @@ Finder _openMenuButton() {
 }
 
 Future _startViewWith(Images model, WidgetTester tester) async {
-  var collection = await TestBonsaiRepository([aBonsaiTree]).loadCollection();
+  var collection = await BonsaiTreeCollection.load(
+      treeRepository: TestBonsaiRepository([aBonsaiTree]),
+      imageRepository: model.repository);
   var app = testAppWith(
       ChangeNotifierProvider<Images>.value(
         value: model,
         builder: (context, child) => ImageGallery(),
       ),
-      collection);
+      bonsaiCollection: collection);
 
   await tester.pumpWidget(app);
 }

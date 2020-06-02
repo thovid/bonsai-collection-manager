@@ -1,13 +1,20 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
+
 import 'package:flutter/widgets.dart';
 
+import '../../shared/model/model_id.dart';
 import '../../images/model/images.dart';
 import './bonsai_tree_with_images.dart';
 import './species.dart';
-import 'bonsai_collection.dart';
-import 'bonsai_tree_data.dart';
+import './bonsai_tree_data.dart';
+
+mixin BonsaiTreeRepository {
+  Future<void> update(BonsaiTreeData tree);
+
+  Future<List<BonsaiTreeData>> loadBonsaiCollection();
+}
 
 class BonsaiTreeCollection with ChangeNotifier {
   static Future<BonsaiTreeCollection> load(
@@ -52,6 +59,10 @@ class BonsaiTreeCollection with ChangeNotifier {
     final int index = _trees.indexWhere((element) => element.id == tree.id);
     if (index < 0) return _insert(tree);
     return _updateAt(index, tree);
+  }
+
+  BonsaiTreeWithImages findById(ModelID<BonsaiTreeData> id) {
+    return _trees.firstWhere((element) => element.id == id, orElse: () => null);
   }
 
   Future<BonsaiTreeWithImages> _insert(BonsaiTreeWithImages newTree) async {

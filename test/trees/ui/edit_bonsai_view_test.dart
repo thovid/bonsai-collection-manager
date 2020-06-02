@@ -16,7 +16,7 @@ main() {
   testWidgets('screen shows tree data', (WidgetTester tester) async {
     var collection = await createTestBonsaiCollection([aBonsaiTree]);
     await tester.pumpWidget(testAppWith(
-        EditBonsaiView(tree: aBonsaiTreeWithImages), null,
+        EditBonsaiView(tree: aBonsaiTreeWithImages),
         bonsaiCollection: collection));
 
     expect(find.text(aBonsaiTree.displayName), findsOneWidget);
@@ -31,8 +31,7 @@ main() {
     final mockNavigationObserver = MockNavigatorObserver();
     var collection = await createTestBonsaiCollection([aBonsaiTree]);
     await tester
-        .pumpWidget(testAppWith(
-            EditBonsaiView(tree: aBonsaiTreeWithImages), null,
+        .pumpWidget(testAppWith(EditBonsaiView(tree: aBonsaiTreeWithImages),
             navigationObserver: mockNavigationObserver,
             bonsaiCollection: collection))
         .then((_) =>
@@ -44,7 +43,7 @@ main() {
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
-    await tester.pumpWidget(testAppWith(EditBonsaiView(), null,
+    await tester.pumpWidget(testAppWith(EditBonsaiView(),
         bonsaiCollection: await createTestBonsaiCollection([aBonsaiTree])));
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);

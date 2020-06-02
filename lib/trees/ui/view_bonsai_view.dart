@@ -10,7 +10,6 @@ import '../../images/model/images.dart';
 import '../../images/ui/image_gallery.dart';
 import '../../shared/ui/spaces.dart';
 import '../model/bonsai_tree_with_images.dart';
-import '../model/bonsai_tree_data.dart';
 import '../i18n/bonsai_tree_view.i18n.dart';
 import './edit_bonsai_view.dart';
 

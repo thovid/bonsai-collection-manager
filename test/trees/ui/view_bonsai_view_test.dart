@@ -4,7 +4,7 @@
 
 import 'package:bonsaicollectionmanager/images/model/images.dart';
 import 'package:bonsaicollectionmanager/images/ui/image_gallery.dart';
-import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
 import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_view.dart';
@@ -19,7 +19,9 @@ import '../../utils/test_utils.dart';
 
 main() {
   testWidgets('screen shows tree data', (WidgetTester tester) async {
-    var collection = await TestBonsaiRepository([aBonsaiTree]).loadCollection();
+    var collection = await BonsaiTreeCollection.load(
+        treeRepository: TestBonsaiRepository([aBonsaiTree]),
+        imageRepository: DummyImageRepository());
     await _openView(tester, collection);
 
     expect(find.text(aBonsaiTree.displayName), findsOneWidget);
@@ -37,13 +39,17 @@ main() {
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
-    await _openView(tester, await TestBonsaiRepository([]).loadCollection());
+    await _openView(
+        tester,
+        await BonsaiTreeCollection.load(
+            treeRepository: TestBonsaiRepository([]),
+            imageRepository: DummyImageRepository()));
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);
   });
 }
 
-Future<void> _openView(WidgetTester tester, BonsaiCollection collection) {
+Future<void> _openView(WidgetTester tester, BonsaiTreeCollection collection) {
   final BonsaiTreeData tree = aBonsaiTree;
   final BonsaiTreeWithImages treeWithImages = BonsaiTreeWithImages(
     treeData: tree,
@@ -52,5 +58,5 @@ Future<void> _openView(WidgetTester tester, BonsaiCollection collection) {
   return tester.pumpWidget(testAppWith(
       ChangeNotifierProvider.value(
           value: treeWithImages, child: ViewBonsaiView()),
-      collection));
+      bonsaiCollection: collection));
 }

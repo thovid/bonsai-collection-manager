@@ -3,7 +3,7 @@
  */
 
 import 'package:bonsaicollectionmanager/images/model/images.dart';
-import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/images/model/collection_item_image.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
@@ -48,11 +48,6 @@ class TestBonsaiRepository with BonsaiTreeRepository {
   List<CollectionItemImage> images;
   static BonsaiTreeData lastUpdated;
   TestBonsaiRepository(this.trees, {this.images});
-
-  @override
-  Future<BonsaiCollection> loadCollection() async {
-    return BonsaiCollection.withTrees(trees, repository: this);
-  }
 
   @override
   Future<BonsaiTreeData> update(BonsaiTreeData tree) async {

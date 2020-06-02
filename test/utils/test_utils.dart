@@ -10,30 +10,32 @@ import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
 import 'package:bonsaicollectionmanager/trees/infrastructure/bonsai_tree_table.dart';
 import 'package:bonsaicollectionmanager/images/infrastructure/collection_item_image_table.dart';
-import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'test_data.dart';
 
-Widget testAppWith(Widget widget, BonsaiCollection collection,
+Widget testAppWith(Widget widget,
         {BonsaiTreeCollection bonsaiCollection,
         NavigatorObserver navigationObserver}) =>
     WithAppContext(
         child: MaterialApp(
-          home: widget,
+          home: ChangeNotifierProvider<BonsaiTreeCollection>.value(
+            value: bonsaiCollection,
+            builder: (context, child) => widget,
+          ),
           navigatorObservers: [
             if (navigationObserver != null) navigationObserver
           ],
         ),
         testContext: AppContext(
             isInitialized: true,
-            collection: collection,
             bonsaiCollection: bonsaiCollection,
             speciesRepository: testSpecies,
             imageRepository: DummyImageRepository()));

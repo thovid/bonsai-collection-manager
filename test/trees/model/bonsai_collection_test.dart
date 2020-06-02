@@ -2,11 +2,13 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/trees/model/species.dart';
 import 'package:test/test.dart';
 
 import '../../utils/test_data.dart';
+import '../../utils/test_utils.dart';
 
 main() {
   final Species mugo = Species(TreeType.conifer, latinName: "Pinus Mugo");
@@ -22,44 +24,50 @@ main() {
       .build();
 
   test('a new collection is empty', () async {
-    var collection = await TestBonsaiRepository([]).loadCollection();
+    var collection = await _loadCollectionWith(<BonsaiTreeData>[]);
     expect(collection.size, equals(0));
   });
 
   test('can add a tree to the collection', () async {
-    var collection = await TestBonsaiRepository([]).loadCollection();
+    var collection = await _loadCollectionWith(<BonsaiTreeData>[]);
     var aTree = (BonsaiTreeDataBuilder()..treeName = "Test Tree").build();
     var savedTree = await collection.add(aTree);
     expect(collection.size, equals(1));
-    expect(TestBonsaiRepository.lastUpdated, savedTree);
+    expect(TestBonsaiRepository.lastUpdated, savedTree.treeData);
   });
 
   test('calculates next ordinal for added tree', () async {
-    var collection = await TestBonsaiRepository([firstMugo, secondMugo]).loadCollection();
+    var collection = await _loadCollectionWith([firstMugo, secondMugo]);
     var aTree = (BonsaiTreeDataBuilder()
           ..treeName = "Test Tree"
           ..species = mugo)
         .build();
     var addedTree = await collection.add(aTree);
-    expect(addedTree.speciesOrdinal, equals(3));
+    expect(addedTree.treeData.speciesOrdinal, equals(3));
   });
 
   test('can get a tree with a given id', () async {
-    var collection = await TestBonsaiRepository([firstMugo, secondMugo]).loadCollection();
+    var collection = await _loadCollectionWith([firstMugo, secondMugo]);
     var found = collection.findById(secondMugo.id);
-    expect(found, equals(secondMugo));
+    expect(found.treeData, equals(secondMugo));
   });
 
   test('can update a tree with new data', () async {
-    var collection = await TestBonsaiRepository([firstMugo, secondMugo]).loadCollection();
+    var collection = await _loadCollectionWith([firstMugo, secondMugo]);
     var id = secondMugo.id;
     var updated = (BonsaiTreeDataBuilder(fromTree: secondMugo)
           ..treeName = "Updated Tree Name")
         .build();
-    await collection.update(updated);
+    var toUpdate =  collection.findById(id);
+    toUpdate.treeData = updated;
+    await collection.update(toUpdate);
     var found = collection.findById(id);
-    expect(found.treeName, equals(updated.treeName));
-    expect(found.speciesOrdinal, equals(2)); // ordinal should not change
-    expect(TestBonsaiRepository.lastUpdated, equals(found));
+    expect(found.treeData.treeName, equals(updated.treeName));
+    expect(found.treeData.speciesOrdinal, equals(2)); // ordinal should not change
+    expect(TestBonsaiRepository.lastUpdated, equals(found.treeData));
   });
 }
+
+Future<BonsaiTreeCollection> _loadCollectionWith(List<BonsaiTreeData> trees) async => await BonsaiTreeCollection.load(
+    treeRepository: TestBonsaiRepository(trees),
+    imageRepository: DummyImageRepository());

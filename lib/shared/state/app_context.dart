@@ -10,19 +10,16 @@ import '../i18n/i18n.dart';
 import '../../images/model/images.dart';
 import '../../trees/infrastructure/sql_bonsai_tree_repository.dart';
 import '../../trees/infrastructure/tree_species_loader.dart';
-import '../../trees/model/bonsai_collection.dart';
 import '../../trees/model/species.dart';
 
 class AppContext {
   final isInitialized;
-  final BonsaiCollection collection; // TODO remove
   final BonsaiTreeCollection bonsaiCollection;
   final SpeciesRepository speciesRepository;
   final ImageRepository imageRepository;
   AppContext(
       {@required this.isInitialized,
       this.bonsaiCollection,
-      this.collection,
       this.speciesRepository,
       this.imageRepository});
 
@@ -70,7 +67,6 @@ class _WithAppContextState extends State<WithAppContext> {
     Locale locale = await fetchLocale();
     SpeciesRepository species = await fetchSpecies(locale);
     BonsaiTreeRepository treeRepository = SQLBonsaiTreeRepository(species);
-    BonsaiCollection collection = await treeRepository.loadCollection();
     ImageRepository imageRepository = SQLImageGalleryRepository();
     BonsaiTreeCollection bonsaiCollection = await BonsaiTreeCollection.load(
         treeRepository: treeRepository, imageRepository: imageRepository);
@@ -78,7 +74,6 @@ class _WithAppContextState extends State<WithAppContext> {
     setState(() {
       _appContext = AppContext(
           isInitialized: true,
-          collection: collection,
           bonsaiCollection: bonsaiCollection,
           speciesRepository: species,
           imageRepository: imageRepository);

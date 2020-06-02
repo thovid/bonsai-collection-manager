@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../../images/model/images.dart';
-import '../../trees/model/bonsai_tree_data.dart';
 import '../../trees/model/bonsai_tree_with_images.dart';
 import '../../trees/ui/view_bonsai_collection.dart';
 import '../../trees/model/bonsai_tree_collection.dart';
@@ -23,7 +21,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return MaterialPageRoute(
         builder: (context) {
           final collection = AppContext.of(context).bonsaiCollection;
-
           return ChangeNotifierProvider<BonsaiTreeCollection>.value(
             value: collection,
             child: I18n(
