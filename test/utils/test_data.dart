@@ -2,10 +2,14 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/images/model/images.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/images/model/collection_item_image.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
 import 'package:bonsaicollectionmanager/trees/model/species.dart';
+
+import 'test_utils.dart';
 
 final SpeciesRepository testSpecies = TestSpeciesRepository([
   Species(TreeType.tropical, latinName: 'test', informalName: 'tset'),
@@ -17,6 +21,7 @@ final SpeciesRepository testSpecies = TestSpeciesRepository([
       latinName: 'Pinus Mugo', informalName: 'Mountain Pine')
 ]);
 
+// TODO make this a function!!!!!
 final BonsaiTreeData aBonsaiTree = (BonsaiTreeDataBuilder()
       ..species = Species(TreeType.conifer,
           latinName: 'Pinus Mugo', informalName: 'Mountain Pine')
@@ -27,6 +32,11 @@ final BonsaiTreeData aBonsaiTree = (BonsaiTreeDataBuilder()
       ..acquiredAt = DateTime(2020, 5, 20)
       ..acquiredFrom = 'Bonsai Shop')
     .build();
+
+// TODO make this a function!!!!!
+final BonsaiTreeWithImages aBonsaiTreeWithImages = BonsaiTreeWithImages(
+    treeData: aBonsaiTree,
+    images: Images(repository: DummyImageRepository(), parent: aBonsaiTree.id));
 
 class TestSpeciesRepository extends SpeciesRepository {
   final List<Species> species;

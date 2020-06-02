@@ -4,6 +4,7 @@
 
 import 'dart:io';
 
+import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +13,7 @@ import '../model/bonsai_tree_with_images.dart';
 import '../i18n/bonsai_collection_view.i18n.dart';
 import './edit_bonsai_view.dart';
 
-class ViewCollectionView extends StatelessWidget {
+class ViewBonsaiCollectionView extends StatelessWidget {
   static const route_name = '/collection';
 
   @override
@@ -64,6 +65,7 @@ class ViewCollectionView extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: Image.file(
+                  // TODO pull error builder up to prevent File('')
                   File(tree.images.mainImage?.path ?? ''),
                   fit: BoxFit.cover,
                   errorBuilder: (_, __, ___) => Column(
@@ -86,7 +88,10 @@ class ViewCollectionView extends StatelessWidget {
               )
             ],
           ),
-          onTap: () {/* TODO open tree */},
+          onTap: () {
+            Navigator.of(context)
+                .pushNamed(ViewBonsaiView.route_name, arguments: tree);
+          },
         ),
       ),
     );

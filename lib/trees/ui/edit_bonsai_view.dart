@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -9,15 +10,17 @@ import '../../shared/state/app_context.dart';
 import '../../shared/ui/spaces.dart';
 import '../../shared/ui/widget_factory.dart';
 import '../i18n/bonsai_tree_view.i18n.dart';
+import '../model/bonsai_tree_collection.dart';
+import '../model/bonsai_tree_with_images.dart';
 import '../model/bonsai_tree_data.dart';
 import './species_picker.dart';
 
 class EditBonsaiView extends StatefulWidget {
   static const route_name = '/edit-tree';
 
-  final BonsaiTreeData initialTree;
+  final BonsaiTreeWithImages tree;
 
-  EditBonsaiView({this.initialTree});
+  EditBonsaiView({this.tree});
 
   @override
   _EditBonsaiViewState createState() => _EditBonsaiViewState();
@@ -31,13 +34,13 @@ class _EditBonsaiViewState extends State<EditBonsaiView> {
   @override
   void initState() {
     super.initState();
-    _treeBuilder = BonsaiTreeDataBuilder(fromTree: widget.initialTree);
+    _treeBuilder = BonsaiTreeDataBuilder(fromTree: widget.tree?.treeData);
   }
 
   @override
   void didUpdateWidget(EditBonsaiView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _treeBuilder = BonsaiTreeDataBuilder(fromTree: widget.initialTree);
+    _treeBuilder = BonsaiTreeDataBuilder(fromTree: widget.tree?.treeData);
   }
 
   @override
@@ -59,8 +62,7 @@ class _EditBonsaiViewState extends State<EditBonsaiView> {
         body: _buildBody(context),
       ));
 
-  Text _buildTitle() =>
-      Text(widget.initialTree?.displayName ?? 'Add new tree'.i18n);
+  Text _buildTitle() => Text(widget.tree?.displayName ?? 'Add new tree'.i18n);
 
   Scrollbar _buildBody(BuildContext context) {
     return Scrollbar(
@@ -129,18 +131,22 @@ class _EditBonsaiViewState extends State<EditBonsaiView> {
     ));
   }
 
-  void _save() {
+  Future<void> _save() async {
     _formKey.currentState.save();
-    BonsaiTreeData updatedTree = _treeBuilder.build();
+    BonsaiTreeData treeData = _treeBuilder.build();
 
-    if (widget.initialTree != null) {
-      AppContext.of(context).collection.update(updatedTree);
-      Navigator.of(context).pop(updatedTree);
+    final BonsaiTreeCollection bonsaiCollection =
+        AppContext.of(context).bonsaiCollection;
+
+    if (widget.tree != null) {
+      widget.tree.treeData = treeData;
+      bonsaiCollection.update(widget.tree);
+      Navigator.of(context).pop(widget.tree);
       return;
     }
 
-    AppContext.of(context).collection.add(updatedTree);
+    final BonsaiTreeWithImages newTree = await bonsaiCollection.add(treeData);
     Navigator.of(context)
-        .pushReplacementNamed('/view-tree', arguments: updatedTree);
+        .pushReplacementNamed('/view-tree', arguments: newTree);
   }
 }

@@ -12,7 +12,7 @@ import './edit_bonsai_view.dart';
 import './view_bonsai_view.dart';
 import './bonsai_tree_list_item.dart';
 
-class BonsaiCollectionView extends StatelessWidget
+class OldBonsaiCollectionView extends StatelessWidget
     with Screen<BonsaiCollection> {
   @override
   BonsaiCollection initialModel(BuildContext context) =>

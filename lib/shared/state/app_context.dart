@@ -3,6 +3,7 @@
  */
 
 import 'package:bonsaicollectionmanager/images/infrastructure/sql_image_gallery_repository.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:flutter/material.dart';
 
 import '../i18n/i18n.dart';
@@ -14,11 +15,13 @@ import '../../trees/model/species.dart';
 
 class AppContext {
   final isInitialized;
-  final BonsaiCollection collection;
+  final BonsaiCollection collection; // TODO remove
+  final BonsaiTreeCollection bonsaiCollection;
   final SpeciesRepository speciesRepository;
   final ImageRepository imageRepository;
   AppContext(
       {@required this.isInitialized,
+      this.bonsaiCollection,
       this.collection,
       this.speciesRepository,
       this.imageRepository});
@@ -66,14 +69,17 @@ class _WithAppContextState extends State<WithAppContext> {
   Future<void> _loadAppContext() async {
     Locale locale = await fetchLocale();
     SpeciesRepository species = await fetchSpecies(locale);
-    BonsaiCollection collection =
-        await SQLBonsaiTreeRepository(species).loadCollection();
+    BonsaiTreeRepository treeRepository = SQLBonsaiTreeRepository(species);
+    BonsaiCollection collection = await treeRepository.loadCollection();
     ImageRepository imageRepository = SQLImageGalleryRepository();
+    BonsaiTreeCollection bonsaiCollection = await BonsaiTreeCollection.load(
+        treeRepository: treeRepository, imageRepository: imageRepository);
 
     setState(() {
       _appContext = AppContext(
           isInitialized: true,
           collection: collection,
+          bonsaiCollection: bonsaiCollection,
           speciesRepository: species,
           imageRepository: imageRepository);
     });

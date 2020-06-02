@@ -21,12 +21,12 @@ void main() {
           .build()
     ]).loadCollection();
 
-    await tester.pumpWidget(testAppWith(BonsaiCollectionView(), collection));
+    await tester.pumpWidget(testAppWith(OldBonsaiCollectionView(), collection));
     expect(find.text('Testus Treeus 1 \'My Tree\''), findsOneWidget);
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
-    await tester.pumpWidget(testAppWith(BonsaiCollectionView(),
+    await tester.pumpWidget(testAppWith(OldBonsaiCollectionView(),
         await TestBonsaiRepository([]).loadCollection()));
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);

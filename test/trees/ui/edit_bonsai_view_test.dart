@@ -14,9 +14,10 @@ import '../../utils/test_utils.dart';
 
 main() {
   testWidgets('screen shows tree data', (WidgetTester tester) async {
-    var collection = await TestBonsaiRepository([aBonsaiTree]).loadCollection();
-    await tester.pumpWidget(
-        testAppWith(EditBonsaiView(initialTree: aBonsaiTree), collection));
+    var collection = await createTestBonsaiCollection([aBonsaiTree]);
+    await tester.pumpWidget(testAppWith(
+        EditBonsaiView(tree: aBonsaiTreeWithImages), null,
+        bonsaiCollection: collection));
 
     expect(find.text(aBonsaiTree.displayName), findsOneWidget);
     expect(find.text(aBonsaiTree.species.latinName), findsOneWidget);
@@ -28,20 +29,23 @@ main() {
 
   testWidgets('screen pops to previous on saving', (WidgetTester tester) async {
     final mockNavigationObserver = MockNavigatorObserver();
-    var collection = await TestBonsaiRepository([aBonsaiTree]).loadCollection();
-    await tester.pumpWidget(testAppWith(
-        EditBonsaiView(initialTree: aBonsaiTree), collection,
-        navigationObserver: mockNavigationObserver))
-    .then((_) => tester.enterText(find.bySemanticsLabel('Name'), 'Other Name'))
-    .then((_) => tester.tap(find.byType(FlatButton)))
-    .then((_) => tester.pumpAndSettle());
+    var collection = await createTestBonsaiCollection([aBonsaiTree]);
+    await tester
+        .pumpWidget(testAppWith(
+            EditBonsaiView(tree: aBonsaiTreeWithImages), null,
+            navigationObserver: mockNavigationObserver,
+            bonsaiCollection: collection))
+        .then((_) =>
+            tester.enterText(find.bySemanticsLabel('Name'), 'Other Name'))
+        .then((_) => tester.tap(find.byType(FlatButton)))
+        .then((_) => tester.pump());
 
     verify(mockNavigationObserver.didPop(any, any));
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
-    await tester.pumpWidget(testAppWith(
-        EditBonsaiView(), await TestBonsaiRepository([]).loadCollection()));
+    await tester.pumpWidget(testAppWith(EditBonsaiView(), null,
+        bonsaiCollection: await createTestBonsaiCollection([aBonsaiTree])));
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);
   });

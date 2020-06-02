@@ -3,11 +3,14 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:i18n_extension/i18n_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../images/model/images.dart';
 import '../../trees/model/bonsai_tree_data.dart';
 import '../../trees/model/bonsai_tree_with_images.dart';
+import '../../trees/ui/view_bonsai_collection.dart';
+import '../../trees/model/bonsai_tree_collection.dart';
 import '../../trees/ui/view_bonsai_view.dart';
 import '../../trees/ui/edit_bonsai_view.dart';
 import '../state/app_context.dart';
@@ -16,17 +19,30 @@ import '../ui/route_not_found.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
+    case ViewBonsaiCollectionView.route_name:
+      return MaterialPageRoute(
+        builder: (context) {
+          final collection = AppContext.of(context).bonsaiCollection;
+
+          return ChangeNotifierProvider<BonsaiTreeCollection>.value(
+            value: collection,
+            child: I18n(
+              child: ViewBonsaiCollectionView(),
+            ),
+          );
+        },
+      );
     case EditBonsaiView.route_name:
-      final tree = settings.arguments as BonsaiTreeData;
+      final tree = settings.arguments as BonsaiTreeWithImages;
       return MaterialPageRoute(
           fullscreenDialog: true,
-          builder: (context) => EditBonsaiView(initialTree: tree));
+          builder: (context) => EditBonsaiView(tree: tree));
 
     case ViewBonsaiView.route_name:
       return MaterialPageRoute(builder: (context) {
-        final tree = settings.arguments as BonsaiTreeData;
+        final tree = settings.arguments as BonsaiTreeWithImages;
         return FutureBuilder(
-          future: _fetchTreeWithImages(context, tree),
+          future: tree.fetchImages(),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done)
               return LoadingScreen();
@@ -41,15 +57,4 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     default:
       return MaterialPageRoute(builder: (context) => RouteNotFound());
   }
-}
-
-Future<BonsaiTreeWithImages> _fetchTreeWithImages(
-    BuildContext context, BonsaiTreeData tree) async {
-  final collection = AppContext.of(context).collection; // TODO remove
-  final imageRepo = AppContext.of(context).imageRepository;
-  var images = Images(repository: imageRepo, parent: tree.id);
-  await images.fetchImages();
-
-  return BonsaiTreeWithImages(
-      treeData: tree, images: images);
 }

@@ -39,17 +39,14 @@ class ViewBonsaiView extends StatelessWidget {
       Text(tree.treeData.displayName);
 
   void _startEdit(BuildContext context, BonsaiTreeWithImages tree) async {
-    BonsaiTreeData updatedTree = await Navigator.of(context).push(
-      MaterialPageRoute<BonsaiTreeData>(
+    Navigator.of(context).push(
+      MaterialPageRoute<BonsaiTreeWithImages>(
         fullscreenDialog: true,
         builder: (BuildContext context) => EditBonsaiView(
-          initialTree: tree.treeData,
+          tree: tree,
         ),
       ),
     );
-    if (updatedTree != null) {
-      tree.treeData = updatedTree;
-    }
   }
 
   Widget _buildBody(BuildContext context, BonsaiTreeWithImages tree) => Column(
@@ -64,7 +61,7 @@ class ViewBonsaiView extends StatelessWidget {
               child: ImageGallery(),
             ),
           ),
-          mediumSpace,
+          smallSpace,
           Container(
             padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
             child: Card(

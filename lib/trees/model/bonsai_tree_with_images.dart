@@ -13,10 +13,14 @@ class BonsaiTreeWithImages with ChangeNotifier {
   Images images;
 
   BonsaiTreeWithImages({@required BonsaiTreeData treeData, this.images})
-      : _treeData = treeData;
+      : _treeData = treeData {
+    images.addListener(() {
+      this.notifyListeners();
+    });
+  }
 
   set treeData(BonsaiTreeData data) {
-    treeData = data;
+    _treeData = data;
     notifyListeners();
   }
 

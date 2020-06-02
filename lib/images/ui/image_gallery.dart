@@ -58,7 +58,6 @@ class ImagesPanel extends StatelessWidget {
                 ImagesPanelMenuTile(
                   onImageSelected: imageGalleryModel.addImage,
                 ),
-                //Row()
                 Expanded(
                     child: Container(
                         padding: EdgeInsets.only(bottom: 5),

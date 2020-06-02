@@ -4,11 +4,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:i18n_extension/i18n_widget.dart';
 
 import './shared/infrastructure/navigation.dart';
-
-import './trees/ui/bonsai_collection_view.dart';
+import './trees/ui/view_bonsai_collection.dart';
 import './shared/state/app_context.dart';
 import './shared/i18n/i18n.dart';
 
@@ -34,12 +32,9 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.lightGreen,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: I18n(
-          child: BonsaiCollectionView(),
-        ),
+        initialRoute: ViewBonsaiCollectionView.route_name,
         onGenerateRoute: generateRoute,
       ),
     );
   }
 }
-
