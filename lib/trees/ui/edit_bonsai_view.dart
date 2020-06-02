@@ -54,8 +54,7 @@ class _EditBonsaiViewState extends State<EditBonsaiView> {
               child: Text('Save'.i18n,
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1
-                      .copyWith(color: Colors.white)),
+                      .subtitle1),
             ),
           ],
         ),
