@@ -54,11 +54,11 @@ class ViewBonsaiView extends StatelessWidget {
         children: [
           ChangeNotifierProvider<Images>.value(
             value: tree.images,
-            child: Container(
+            child: Expanded(child:Container(
               padding: EdgeInsets.all(10),
               height: MediaQuery.of(context).size.height * .5 - 20,
               child: ImageGallery(),
-            ),
+            )),
           ),
           smallSpace,
           Container(

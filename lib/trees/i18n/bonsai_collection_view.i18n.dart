@@ -12,7 +12,14 @@ extension Localization on String {
             "en_us": "My collection",
             "de": "Meine Sammlung",
           } +
-          {"en_us": "Add tree", "de": "Baum hinzufügen"});
+          {
+            "en_us": "Add tree",
+            "de": "Baum hinzufügen",
+          } +
+          {
+            "en_us": "No image yet",
+            "de": "Noch kein Bild",
+          });
 
   String get i18n => localize(this, _t);
 }

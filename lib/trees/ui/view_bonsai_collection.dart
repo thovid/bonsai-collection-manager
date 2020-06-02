@@ -4,13 +4,14 @@
 
 import 'dart:io';
 
-import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_view.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../model/bonsai_tree_collection.dart';
 import '../model/bonsai_tree_with_images.dart';
 import '../i18n/bonsai_collection_view.i18n.dart';
+import './view_bonsai_view.dart';
 import './edit_bonsai_view.dart';
 
 class ViewBonsaiCollectionView extends StatelessWidget {

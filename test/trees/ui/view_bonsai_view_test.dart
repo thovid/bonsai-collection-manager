@@ -42,7 +42,7 @@ main() {
     await _openView(
         tester,
         await BonsaiTreeCollection.load(
-            treeRepository: TestBonsaiRepository([]),
+            treeRepository: TestBonsaiRepository([aBonsaiTree]),
             imageRepository: DummyImageRepository()));
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);

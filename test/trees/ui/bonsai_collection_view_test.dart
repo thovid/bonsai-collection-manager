@@ -34,7 +34,7 @@ void main() {
   testWidgets('All translations defined', (WidgetTester tester) async {
     await tester.pumpWidget(testAppWith(ViewBonsaiCollectionView(),
         bonsaiCollection: await BonsaiTreeCollection.load(
-            treeRepository: TestBonsaiRepository([]),
+            treeRepository: TestBonsaiRepository([aBonsaiTree]),
             imageRepository: DummyImageRepository())));
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);
