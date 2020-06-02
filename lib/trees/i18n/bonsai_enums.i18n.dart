@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:i18n_extension/i18n_extension.dart';
+
+import '../model/bonsai_tree_data.dart';
 
 class BonsaiEnumTranslations {
   static var t = Translations.byLocale("en_us") +

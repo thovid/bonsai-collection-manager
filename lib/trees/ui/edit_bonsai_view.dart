@@ -132,6 +132,10 @@ class _EditBonsaiViewState extends State<EditBonsaiView> {
   }
 
   Future<void> _save() async {
+    if(!_formKey.currentState.validate()) {
+      return;
+    }
+
     _formKey.currentState.save();
     BonsaiTreeData treeData = _treeBuilder.build();
 

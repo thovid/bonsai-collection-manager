@@ -10,6 +10,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../../shared/state/app_context.dart';
 import '../../shared/icons/tree_type_icons.dart';
 import '../../shared/ui/spaces.dart';
+import '../i18n/species_picker.i18n.dart';
 import '../model/species.dart';
 
 /// Creates a widget to pick a tree species.
@@ -129,6 +130,13 @@ class SpeciesPickerState extends State<SpeciesPicker> {
         });
       },
       onSaved: (_) => widget.onSaved(_selectedValue),
+      autovalidate: false,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please select a tree species".i18n;
+        }
+        return null;
+      },
     );
   }
 

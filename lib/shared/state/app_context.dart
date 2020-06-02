@@ -2,15 +2,15 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/images/infrastructure/sql_image_gallery_repository.dart';
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:flutter/material.dart';
 
 import '../i18n/i18n.dart';
+import '../../images/infrastructure/sql_image_gallery_repository.dart';
 import '../../images/model/images.dart';
+import '../../trees/model/species.dart';
+import '../../trees/model/bonsai_tree_collection.dart';
 import '../../trees/infrastructure/sql_bonsai_tree_repository.dart';
 import '../../trees/infrastructure/tree_species_loader.dart';
-import '../../trees/model/species.dart';
 
 class AppContext {
   final isInitialized;

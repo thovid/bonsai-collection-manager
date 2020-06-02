@@ -2,11 +2,11 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import '../../shared/infrastructure/base_repository.dart';
+
 import '../model/species.dart';
 import '../model/bonsai_tree_data.dart';
 import '../model/bonsai_tree_collection.dart';
-
-import '../../shared/infrastructure/base_repository.dart';
 import './bonsai_tree_table.dart';
 
 class SQLBonsaiTreeRepository extends BaseRepository with BonsaiTreeRepository {
