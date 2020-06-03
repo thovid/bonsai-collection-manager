@@ -2,7 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/trees/ui/edit_bonsai_view.dart';
+import 'package:bonsaicollectionmanager/trees/ui/edit_bonsai_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:i18n_extension/i18n_extension.dart';
@@ -16,7 +16,7 @@ main() {
   testWidgets('screen shows tree data', (WidgetTester tester) async {
     var collection = await createTestBonsaiCollection([aBonsaiTree]);
     await tester.pumpWidget(testAppWith(
-        EditBonsaiView(tree: aBonsaiTreeWithImages),
+        EditBonsaiPage(tree: aBonsaiTreeWithImages),
         bonsaiCollection: collection));
 
     expect(find.text(aBonsaiTree.displayName), findsOneWidget);
@@ -31,7 +31,7 @@ main() {
     final mockNavigationObserver = MockNavigatorObserver();
     var collection = await createTestBonsaiCollection([aBonsaiTree]);
     await tester
-        .pumpWidget(testAppWith(EditBonsaiView(tree: aBonsaiTreeWithImages),
+        .pumpWidget(testAppWith(EditBonsaiPage(tree: aBonsaiTreeWithImages),
             navigationObserver: mockNavigationObserver,
             bonsaiCollection: collection))
         .then((_) =>
@@ -43,7 +43,7 @@ main() {
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
-    await tester.pumpWidget(testAppWith(EditBonsaiView(),
+    await tester.pumpWidget(testAppWith(EditBonsaiPage(),
         bonsaiCollection: await createTestBonsaiCollection([aBonsaiTree])));
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);

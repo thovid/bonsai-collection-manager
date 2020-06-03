@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import './shared/infrastructure/navigation.dart';
-import './trees/ui/view_bonsai_collection.dart';
+import './trees/ui/view_bonsai_collection_page.dart';
 import './shared/state/app_context.dart';
 import './shared/i18n/i18n.dart';
 
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.lightGreen,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        initialRoute: ViewBonsaiCollectionView.route_name,
+        initialRoute: ViewBonsaiCollectionPage.route_name,
         onGenerateRoute: generateRoute,
       ),
     );

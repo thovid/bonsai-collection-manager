@@ -15,18 +15,18 @@ import '../model/bonsai_tree_with_images.dart';
 import '../model/bonsai_tree_data.dart';
 import './species_picker.dart';
 
-class EditBonsaiView extends StatefulWidget {
+class EditBonsaiPage extends StatefulWidget {
   static const route_name = '/edit-tree';
 
   final BonsaiTreeWithImages tree;
 
-  EditBonsaiView({this.tree});
+  EditBonsaiPage({this.tree});
 
   @override
-  _EditBonsaiViewState createState() => _EditBonsaiViewState();
+  _EditBonsaiPageState createState() => _EditBonsaiPageState();
 }
 
-class _EditBonsaiViewState extends State<EditBonsaiView> {
+class _EditBonsaiPageState extends State<EditBonsaiPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   BonsaiTreeDataBuilder _treeBuilder;
@@ -38,7 +38,7 @@ class _EditBonsaiViewState extends State<EditBonsaiView> {
   }
 
   @override
-  void didUpdateWidget(EditBonsaiView oldWidget) {
+  void didUpdateWidget(EditBonsaiPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     _treeBuilder = BonsaiTreeDataBuilder(fromTree: widget.tree?.treeData);
   }

@@ -11,10 +11,10 @@ import 'package:provider/provider.dart';
 import '../model/bonsai_tree_collection.dart';
 import '../model/bonsai_tree_with_images.dart';
 import '../i18n/bonsai_collection_view.i18n.dart';
-import './view_bonsai_view.dart';
-import './edit_bonsai_view.dart';
+import './view_bonsai_page.dart';
+import './edit_bonsai_page.dart';
 
-class ViewBonsaiCollectionView extends StatelessWidget {
+class ViewBonsaiCollectionPage extends StatelessWidget {
   static const route_name = '/';
 
   @override
@@ -91,7 +91,7 @@ class ViewBonsaiCollectionView extends StatelessWidget {
           ),
           onTap: () {
             Navigator.of(context)
-                .pushNamed(ViewBonsaiView.route_name, arguments: tree);
+                .pushNamed(ViewBonsaiPage.route_name, arguments: tree);
           },
         ),
       ),
@@ -99,7 +99,7 @@ class ViewBonsaiCollectionView extends StatelessWidget {
   }
 
   _addTree(BuildContext context) async {
-    Navigator.of(context).pushNamed(EditBonsaiView.route_name);
+    Navigator.of(context).pushNamed(EditBonsaiPage.route_name);
   }
 
   Widget _withLoadingIndicator({bool isLoading, Widget Function() builder}) {

@@ -7,7 +7,7 @@ import 'package:bonsaicollectionmanager/images/ui/image_gallery.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
-import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_view.dart';
+import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:i18n_extension/i18n_extension.dart';
@@ -57,6 +57,6 @@ Future<void> _openView(WidgetTester tester, BonsaiTreeCollection collection) {
   );
   return tester.pumpWidget(testAppWith(
       ChangeNotifierProvider.value(
-          value: treeWithImages, child: ViewBonsaiView()),
+          value: treeWithImages, child: ViewBonsaiPage()),
       bonsaiCollection: collection));
 }

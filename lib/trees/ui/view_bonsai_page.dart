@@ -11,9 +11,9 @@ import '../../images/ui/image_gallery.dart';
 import '../../shared/ui/spaces.dart';
 import '../model/bonsai_tree_with_images.dart';
 import '../i18n/bonsai_tree_view.i18n.dart';
-import './edit_bonsai_view.dart';
+import './edit_bonsai_page.dart';
 
-class ViewBonsaiView extends StatelessWidget {
+class ViewBonsaiPage extends StatelessWidget {
   static const route_name = '/view-tree';
   @override
   Widget build(BuildContext context) => SafeArea(
@@ -41,7 +41,7 @@ class ViewBonsaiView extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute<BonsaiTreeWithImages>(
         fullscreenDialog: true,
-        builder: (BuildContext context) => EditBonsaiView(
+        builder: (BuildContext context) => EditBonsaiPage(
           tree: tree,
         ),
       ),

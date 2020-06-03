@@ -5,7 +5,7 @@
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/trees/model/species.dart';
-import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_collection.dart';
+import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_collection_page.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:i18n_extension/i18n_extension.dart';
 
@@ -25,14 +25,14 @@ void main() {
         imageRepository: DummyImageRepository());
 
     await tester
-        .pumpWidget(testAppWith(ViewBonsaiCollectionView(),
+        .pumpWidget(testAppWith(ViewBonsaiCollectionPage(),
             bonsaiCollection: treeCollection))
         .then((value) => tester.pumpAndSettle());
     expect(find.text('Testus Treeus 1 \'My Tree\''), findsOneWidget);
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
-    await tester.pumpWidget(testAppWith(ViewBonsaiCollectionView(),
+    await tester.pumpWidget(testAppWith(ViewBonsaiCollectionPage(),
         bonsaiCollection: await BonsaiTreeCollection.load(
             treeRepository: TestBonsaiRepository([aBonsaiTree]),
             imageRepository: DummyImageRepository())));

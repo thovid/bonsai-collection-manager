@@ -9,8 +9,8 @@ import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
 import 'package:bonsaicollectionmanager/images/ui/image_gallery.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
-import 'package:bonsaicollectionmanager/trees/ui/edit_bonsai_view.dart';
-import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_view.dart';
+import 'package:bonsaicollectionmanager/trees/ui/edit_bonsai_page.dart';
+import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:i18n_extension/i18n_widget.dart';
@@ -37,12 +37,12 @@ Future runViewBonsaiView() async {
   );
   runApp(WidgetRunner(ChangeNotifierProvider.value(
     value: treeWithImages,
-    builder: (context, child) => ViewBonsaiView(),
+    builder: (context, child) => ViewBonsaiPage(),
   )));
 }
 
 void runEditBonsaiView() {
-  runApp(WidgetRunner(EditBonsaiView()));
+  runApp(WidgetRunner(EditBonsaiPage()));
 }
 
 void runImageGallery() {
