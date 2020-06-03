@@ -20,9 +20,7 @@ import '../../utils/test_utils.dart' as testUtils;
 
 main() {
   testWidgets('screen shows tree data', (WidgetTester tester) async {
-    var collection = await BonsaiTreeCollection.load(
-        treeRepository: TestBonsaiRepository([aBonsaiTree]),
-        imageRepository: DummyImageRepository());
+    var collection = await testUtils.loadCollectionWith([aBonsaiTree]);
     await _openView(tester, collection);
 
     expect(find.text(aBonsaiTree.displayName), findsOneWidget);
@@ -40,11 +38,7 @@ main() {
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
-    await _openView(
-        tester,
-        await BonsaiTreeCollection.load(
-            treeRepository: TestBonsaiRepository([aBonsaiTree]),
-            imageRepository: DummyImageRepository()));
+    await _openView(tester, await emptyCollection());
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);
   });

@@ -56,9 +56,8 @@ class TestSpeciesRepository extends SpeciesRepository {
 
 class TestBonsaiRepository with BonsaiTreeRepository {
   List<BonsaiTreeData> trees;
-  List<CollectionItemImage> images;
   static BonsaiTreeData lastUpdated;
-  TestBonsaiRepository(this.trees, {this.images});
+  TestBonsaiRepository(this.trees);
 
   @override
   Future<BonsaiTreeData> update(BonsaiTreeData tree) async {

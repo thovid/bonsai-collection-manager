@@ -11,29 +11,25 @@ import 'package:i18n_extension/i18n_extension.dart';
 
 import '../../utils/test_data.dart';
 import '../../utils/test_mocks.dart';
-import '../../utils/test_utils.dart';
+import '../../utils/test_utils.dart' as testUtils;
 
 void main() {
   testWidgets('Shows tree from collection', (WidgetTester tester) async {
-    var treeRepository = TestBonsaiRepository([
+    BonsaiTreeCollection treeCollection = await testUtils.loadCollectionWith([
       (BonsaiTreeDataBuilder()
             ..treeName = "My Tree"
             ..species = Species(TreeType.conifer, latinName: "Testus Treeus"))
           .build()
     ]);
-    BonsaiTreeCollection treeCollection = await BonsaiTreeCollection.load(
-        treeRepository: treeRepository,
-        imageRepository: DummyImageRepository());
-
     await tester
-        .pumpWidget(testAppWith(ViewBonsaiCollectionPage(),
+        .pumpWidget(testUtils.testAppWith(ViewBonsaiCollectionPage(),
             bonsaiCollection: treeCollection))
         .then((value) => tester.pumpAndSettle());
     expect(find.text('Testus Treeus 1 \'My Tree\''), findsOneWidget);
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
-    await tester.pumpWidget(testAppWith(ViewBonsaiCollectionPage(),
+    await tester.pumpWidget(testUtils.testAppWith(ViewBonsaiCollectionPage(),
         bonsaiCollection: await BonsaiTreeCollection.load(
             treeRepository: TestBonsaiRepository([aBonsaiTree]),
             imageRepository: DummyImageRepository())));

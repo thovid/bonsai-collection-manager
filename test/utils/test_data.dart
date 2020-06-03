@@ -3,6 +3,7 @@
  */
 
 import 'package:bonsaicollectionmanager/images/model/images.dart';
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
 import 'package:bonsaicollectionmanager/trees/model/species.dart';
@@ -34,3 +35,7 @@ final BonsaiTreeWithImages aBonsaiTreeWithImages = BonsaiTreeWithImages(
     treeData: aBonsaiTree,
     images: Images(repository: DummyImageRepository(), parent: aBonsaiTree.id));
 
+Future<BonsaiTreeCollection> emptyCollection() async =>
+    BonsaiTreeCollection.load(
+        treeRepository: TestBonsaiRepository([]),
+        imageRepository: DummyImageRepository());
