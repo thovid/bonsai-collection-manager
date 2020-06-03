@@ -54,16 +54,8 @@ class CollectionItemImageTable {
     return await _fromMap(data[0]);
   }
 
-  static Future<CollectionItemImage> _fromMap(Map<String, dynamic> data) async {
-    return (CollectionItemImageBuilder(id: data[image_id])
-          ..parentId = ModelID.fromID(data[parent_id])
-          ..fileName = data[file_name]
-          ..isMainImage = data[is_main_image] > 0)
-        .build();
-  }
-
   static Future<List<CollectionItemImage>> readForItem(
-      ModelID treeId, Database db) async {
+      ModelID treeId, DatabaseExecutor db) async {
     List<Map<String, dynamic>> data = await db.query(table_name,
         columns: columns, where: '$parent_id = ?', whereArgs: [treeId.value]);
     List<CollectionItemImage> result = List(data.length);
@@ -75,7 +67,7 @@ class CollectionItemImageTable {
   }
 
   static Future<void> delete(
-      ModelID<CollectionItemImage> id, Database db) async {
+      ModelID<CollectionItemImage> id, DatabaseExecutor db) async {
     return db.delete(table_name, where: '$image_id = ?', whereArgs: [id.value]);
   }
 
@@ -84,5 +76,13 @@ class CollectionItemImageTable {
     return db.rawUpdate(
         'UPDATE $table_name SET $is_main_image = ${flag ? 1 : 0} WHERE $image_id = ?',
         [id.value]);
+  }
+
+  static Future<CollectionItemImage> _fromMap(Map<String, dynamic> data) async {
+    return (CollectionItemImageBuilder(id: data[image_id])
+          ..parentId = ModelID.fromID(data[parent_id])
+          ..fileName = data[file_name]
+          ..isMainImage = data[is_main_image] > 0)
+        .build();
   }
 }

@@ -4,6 +4,9 @@
 
 import 'dart:io';
 
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+
 import './collection_item_image_table.dart';
 import '../model/collection_item_image.dart';
 import '../model/images.dart';
@@ -14,9 +17,10 @@ class SQLImageGalleryRepository extends BaseRepository with ImageRepository {
   @override
   Future<CollectionItemImage> add(
       File imageFile, bool isMainImage, ModelID parentID) async {
+    String path = await _copyToAppDirectory(imageFile);
     CollectionItemImage image = (CollectionItemImageBuilder()
           ..parentId = parentID
-          ..fileName = imageFile.path
+          ..fileName = path
           ..isMainImage = isMainImage)
         .build();
     await init().then((db) => CollectionItemImageTable.write(image, db));
@@ -25,14 +29,19 @@ class SQLImageGalleryRepository extends BaseRepository with ImageRepository {
 
   @override
   Future<void> remove(ModelID<CollectionItemImage> id) async {
-    return init().then((db) => CollectionItemImageTable.delete(id, db));
+    return init().then((db) => db.transaction((txn) async {
+          CollectionItemImageTable.read(id, txn).then((image) {
+            final File imageFile = File(image.fileName);
+            if (imageFile.existsSync()) imageFile.deleteSync();
+          }).then((_) => CollectionItemImageTable.delete(id, txn));
+        }));
   }
 
   @override
   Future<void> toggleIsMainImage(
       {ModelID<CollectionItemImage> newMainImageId,
       ModelID<CollectionItemImage> oldMainImageId}) async {
-    return init().then((value) => value.transaction((transaction) async {
+    return init().then((db) => db.transaction((transaction) async {
           if (oldMainImageId != null) {
             CollectionItemImageTable.setMainImageFlag(
                 oldMainImageId, false, transaction);
@@ -46,5 +55,13 @@ class SQLImageGalleryRepository extends BaseRepository with ImageRepository {
   Future<List<CollectionItemImage>> loadImages(ModelID parent) async {
     return init()
         .then((db) => CollectionItemImageTable.readForItem(parent, db));
+  }
+
+  Future<String> _copyToAppDirectory(File imageFile) async {
+    final String fileName = p.basename(imageFile.path);
+    return getApplicationDocumentsDirectory()
+        .then((appDir) => "${appDir.path}/$fileName")
+        .then((localPath) => imageFile.copy(localPath))
+        .then((copiedFile) => copiedFile.path);
   }
 }
