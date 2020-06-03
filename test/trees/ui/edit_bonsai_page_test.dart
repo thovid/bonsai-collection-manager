@@ -10,12 +10,13 @@ import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/test_data.dart';
-import '../../utils/test_utils.dart';
+import '../../utils/test_mocks.dart';
+import '../../utils/test_utils.dart' as testUtils;
 
 main() {
   testWidgets('screen shows tree data', (WidgetTester tester) async {
-    var collection = await createTestBonsaiCollection([aBonsaiTree]);
-    await tester.pumpWidget(testAppWith(
+    var collection = await testUtils.loadCollectionWith([aBonsaiTree]);
+    await tester.pumpWidget(testUtils.testAppWith(
         EditBonsaiPage(tree: aBonsaiTreeWithImages),
         bonsaiCollection: collection));
 
@@ -29,9 +30,10 @@ main() {
 
   testWidgets('screen pops to previous on saving', (WidgetTester tester) async {
     final mockNavigationObserver = MockNavigatorObserver();
-    var collection = await createTestBonsaiCollection([aBonsaiTree]);
+    var collection = await testUtils.loadCollectionWith([aBonsaiTree]);
     await tester
-        .pumpWidget(testAppWith(EditBonsaiPage(tree: aBonsaiTreeWithImages),
+        .pumpWidget(testUtils.testAppWith(
+            EditBonsaiPage(tree: aBonsaiTreeWithImages),
             navigationObserver: mockNavigationObserver,
             bonsaiCollection: collection))
         .then((_) =>
@@ -43,8 +45,8 @@ main() {
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
-    await tester.pumpWidget(testAppWith(EditBonsaiPage(),
-        bonsaiCollection: await createTestBonsaiCollection([aBonsaiTree])));
+    await tester.pumpWidget(testUtils.testAppWith(EditBonsaiPage(),
+        bonsaiCollection: await testUtils.loadCollectionWith([aBonsaiTree])));
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);
   });

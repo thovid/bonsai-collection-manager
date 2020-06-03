@@ -3,13 +3,11 @@
  */
 
 import 'package:bonsaicollectionmanager/images/model/images.dart';
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
-import 'package:bonsaicollectionmanager/images/model/collection_item_image.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
 import 'package:bonsaicollectionmanager/trees/model/species.dart';
 
-import 'test_utils.dart';
+import 'test_mocks.dart';
 
 final SpeciesRepository testSpecies = TestSpeciesRepository([
   Species(TreeType.tropical, latinName: 'test', informalName: 'tset'),
@@ -21,7 +19,6 @@ final SpeciesRepository testSpecies = TestSpeciesRepository([
       latinName: 'Pinus Mugo', informalName: 'Mountain Pine')
 ]);
 
-// TODO make this a function!!!!!
 final BonsaiTreeData aBonsaiTree = (BonsaiTreeDataBuilder()
       ..species = Species(TreeType.conifer,
           latinName: 'Pinus Mugo', informalName: 'Mountain Pine')
@@ -33,29 +30,7 @@ final BonsaiTreeData aBonsaiTree = (BonsaiTreeDataBuilder()
       ..acquiredFrom = 'Bonsai Shop')
     .build();
 
-// TODO make this a function!!!!!
 final BonsaiTreeWithImages aBonsaiTreeWithImages = BonsaiTreeWithImages(
     treeData: aBonsaiTree,
     images: Images(repository: DummyImageRepository(), parent: aBonsaiTree.id));
 
-class TestSpeciesRepository extends SpeciesRepository {
-  final List<Species> species;
-  TestSpeciesRepository(this.species);
-}
-
-class TestBonsaiRepository with BonsaiTreeRepository {
-  List<BonsaiTreeData> trees;
-  List<CollectionItemImage> images;
-  static BonsaiTreeData lastUpdated;
-  TestBonsaiRepository(this.trees, {this.images});
-
-  @override
-  Future<BonsaiTreeData> update(BonsaiTreeData tree) async {
-    return lastUpdated = tree;
-  }
-
-  @override
-  Future<List<BonsaiTreeData>> loadBonsaiCollection() async {
-    return trees;
-  }
-}

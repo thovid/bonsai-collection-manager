@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:i18n_extension/i18n_extension.dart';
 
 import '../../utils/test_data.dart';
+import '../../utils/test_mocks.dart';
 import '../../utils/test_utils.dart';
 
 void main() {

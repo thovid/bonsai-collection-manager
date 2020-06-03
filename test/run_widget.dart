@@ -17,7 +17,7 @@ import 'package:i18n_extension/i18n_widget.dart';
 import 'package:provider/provider.dart';
 
 import 'utils/test_data.dart';
-import 'utils/test_utils.dart';
+import 'utils/test_mocks.dart';
 
 /// Helper to run a widget in a scaffold for visual checking purposes
 

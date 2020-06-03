@@ -15,7 +15,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/test_data.dart';
-import '../../utils/test_utils.dart';
+import '../../utils/test_mocks.dart';
+import '../../utils/test_utils.dart' as testUtils;
 
 main() {
   testWidgets('screen shows tree data', (WidgetTester tester) async {
@@ -55,7 +56,7 @@ Future<void> _openView(WidgetTester tester, BonsaiTreeCollection collection) {
     treeData: tree,
     images: Images(parent: tree.id, repository: DummyImageRepository()),
   );
-  return tester.pumpWidget(testAppWith(
+  return tester.pumpWidget(testUtils.testAppWith(
       ChangeNotifierProvider.value(
           value: treeWithImages, child: ViewBonsaiPage()),
       bonsaiCollection: collection));

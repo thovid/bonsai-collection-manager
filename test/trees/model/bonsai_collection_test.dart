@@ -2,12 +2,11 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/trees/model/species.dart';
 import 'package:test/test.dart';
 
-import '../../utils/test_data.dart';
+import '../../utils/test_mocks.dart';
 import '../../utils/test_utils.dart';
 
 main() {
@@ -24,12 +23,12 @@ main() {
       .build();
 
   test('a new collection is empty', () async {
-    var collection = await _loadCollectionWith(<BonsaiTreeData>[]);
+    var collection = await loadCollectionWith(<BonsaiTreeData>[]);
     expect(collection.size, equals(0));
   });
 
   test('can add a tree to the collection', () async {
-    var collection = await _loadCollectionWith(<BonsaiTreeData>[]);
+    var collection = await loadCollectionWith(<BonsaiTreeData>[]);
     var aTree = (BonsaiTreeDataBuilder()..treeName = "Test Tree").build();
     var savedTree = await collection.add(aTree);
     expect(collection.size, equals(1));
@@ -37,7 +36,7 @@ main() {
   });
 
   test('calculates next ordinal for added tree', () async {
-    var collection = await _loadCollectionWith([firstMugo, secondMugo]);
+    var collection = await loadCollectionWith([firstMugo, secondMugo]);
     var aTree = (BonsaiTreeDataBuilder()
           ..treeName = "Test Tree"
           ..species = mugo)
@@ -47,13 +46,13 @@ main() {
   });
 
   test('can get a tree with a given id', () async {
-    var collection = await _loadCollectionWith([firstMugo, secondMugo]);
+    var collection = await loadCollectionWith([firstMugo, secondMugo]);
     var found = collection.findById(secondMugo.id);
     expect(found.treeData, equals(secondMugo));
   });
 
   test('can update a tree with new data', () async {
-    var collection = await _loadCollectionWith([firstMugo, secondMugo]);
+    var collection = await loadCollectionWith([firstMugo, secondMugo]);
     var id = secondMugo.id;
     var updated = (BonsaiTreeDataBuilder(fromTree: secondMugo)
           ..treeName = "Updated Tree Name")
@@ -68,6 +67,3 @@ main() {
   });
 }
 
-Future<BonsaiTreeCollection> _loadCollectionWith(List<BonsaiTreeData> trees) async => await BonsaiTreeCollection.load(
-    treeRepository: TestBonsaiRepository(trees),
-    imageRepository: DummyImageRepository());

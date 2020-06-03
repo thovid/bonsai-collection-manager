@@ -13,6 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/test_data.dart';
+import '../../utils/test_mocks.dart';
 import '../../utils/test_utils.dart';
 
 const String image_path = 'an_image_path.jpg';
