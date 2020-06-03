@@ -26,6 +26,7 @@ class ViewBonsaiCollectionPage extends StatelessWidget {
             builder: (context, collection, _) => _withLoadingIndicator(
                   isLoading: collection == null,
                   builder: () => GridView.builder(
+                    padding: EdgeInsets.all(5.0),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2),
                     itemCount: collection.size,
