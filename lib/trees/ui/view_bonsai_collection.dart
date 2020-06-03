@@ -15,7 +15,7 @@ import './view_bonsai_view.dart';
 import './edit_bonsai_view.dart';
 
 class ViewBonsaiCollectionView extends StatelessWidget {
-  static const route_name = '/collection';
+  static const route_name = '/';
 
   @override
   Widget build(BuildContext context) => Scaffold(

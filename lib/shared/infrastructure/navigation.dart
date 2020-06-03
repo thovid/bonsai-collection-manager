@@ -29,11 +29,12 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           );
         },
       );
+
     case EditBonsaiView.route_name:
       final tree = settings.arguments as BonsaiTreeWithImages;
       return MaterialPageRoute(
           fullscreenDialog: true,
-          builder: (context) => EditBonsaiView(tree: tree));
+          builder: (context) => I18n(child: EditBonsaiView(tree: tree)));
 
     case ViewBonsaiView.route_name:
       return MaterialPageRoute(builder: (context) {
