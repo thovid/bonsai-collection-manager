@@ -3,6 +3,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:i18n_extension/i18n_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -79,7 +80,7 @@ class ViewBonsaiPage extends StatelessWidget {
                     _tableRow(
                         'Pot Type', tree.treeData.potType.toString().i18n),
                     _tableRow('Acquired at',
-                        DateFormat.yMMMd().format(tree.treeData.acquiredAt)),
+                        DateFormat.yMMMd(I18n.locale?.toString()).format(tree.treeData.acquiredAt)),
                     _tableRow('Acquired from', tree.treeData.acquiredFrom),
                   ],
                 ),

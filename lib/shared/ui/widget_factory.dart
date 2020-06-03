@@ -3,6 +3,7 @@
  */
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:i18n_extension/i18n_widget.dart';
 import 'package:intl/intl.dart';
 
 /// Simple helper to create a text form field.
@@ -81,7 +82,7 @@ TextFormField formDatePickerField(context,
   );
 }
 
-String _formatDate(DateTime value) => DateFormat.yMMMd().format(value);
+String _formatDate(DateTime value) => DateFormat.yMMMd(I18n.locale?.toString()).format(value);
 
 Future<DateTime> _getDate(BuildContext context, DateTime initialDate) {
   return showDatePicker(
