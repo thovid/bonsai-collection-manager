@@ -4,7 +4,7 @@
 
 import 'dart:io';
 
-
+import 'package:bonsaicollectionmanager/shared/ui/app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +22,7 @@ class ViewBonsaiCollectionPage extends StatelessWidget {
         appBar: AppBar(
           title: Text("My collection".i18n),
         ),
+        drawer: buildAppDrawer(context: context, currentPage: route_name),
         body: Consumer<BonsaiTreeCollection>(
             builder: (context, collection, _) => _withLoadingIndicator(
                   isLoading: collection == null,

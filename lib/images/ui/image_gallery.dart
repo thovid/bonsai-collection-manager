@@ -12,7 +12,7 @@ import '../../shared/ui/expanded_section.dart';
 import '../i18n/image_gallery.i18n.dart';
 import '../model/images.dart';
 
-typedef void ImageSelectedCallback(File imageFile);
+typedef Future<void> ImageSelectedCallback(File imageFile);
 
 class ImageGallery extends StatelessWidget {
   @override
@@ -141,15 +141,15 @@ class _ImagesPanelMenuTileState extends State<ImagesPanelMenuTile>
               FlatButton(
                 child: Icon(Icons.add_a_photo),
                 onPressed: () async {
-                  _handleImagePicked(
-                      await _openImagePicker(ImageSource.camera));
+                  await _openImagePicker(ImageSource.camera)
+                      .then((image) => _handleImagePicked(image));
                 },
               ),
               FlatButton(
                 child: Icon(Icons.add_photo_alternate),
                 onPressed: () async {
-                  _handleImagePicked(
-                      await _openImagePicker(ImageSource.gallery));
+                  await _openImagePicker(ImageSource.gallery)
+                      .then((image) => _handleImagePicked(image));
                 },
               )
             ])),
@@ -161,7 +161,7 @@ class _ImagesPanelMenuTileState extends State<ImagesPanelMenuTile>
     return await ImagePicker.pickImage(source: source);
   }
 
-  void _handleImagePicked(File image) {
+  Future<void> _handleImagePicked(File image) async {
     if (image == null) {
       return;
     }
