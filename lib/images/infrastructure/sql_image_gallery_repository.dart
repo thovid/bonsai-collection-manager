@@ -17,8 +17,8 @@ class SQLImageGalleryRepository extends BaseRepository with ImageRepository {
   @override
   Future<CollectionItemImage> add(
       File imageFile, bool isMainImage, ModelID parentID) async {
-    String path = await _copyToAppDirectory(imageFile);
-    CollectionItemImage image = (CollectionItemImageBuilder()
+    final String path = await _copyToAppDirectory(imageFile);
+    final CollectionItemImage image = (CollectionItemImageBuilder()
           ..parentId = parentID
           ..fileName = path
           ..isMainImage = isMainImage)
