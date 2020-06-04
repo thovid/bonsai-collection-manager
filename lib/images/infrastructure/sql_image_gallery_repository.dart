@@ -17,7 +17,7 @@ class SQLImageGalleryRepository extends BaseRepository with ImageRepository {
   @override
   Future<CollectionItemImage> add(
       File imageFile, bool isMainImage, ModelID parentID) async {
-    final String path = await _copyToAppDirectory(imageFile);
+    final String path = await _copyToAppDirectory(imageFile, parentID);
     final CollectionItemImage image = (CollectionItemImageBuilder()
           ..parentId = parentID
           ..fileName = path
@@ -57,11 +57,24 @@ class SQLImageGalleryRepository extends BaseRepository with ImageRepository {
         .then((db) => CollectionItemImageTable.readForItem(parent, db));
   }
 
-  Future<String> _copyToAppDirectory(File imageFile) async {
+  @override
+  Future<void> removeAll(ModelID parent) {
+    return init().then((db) => _getItemDirectory(parent)
+        .then((dir) => dir.delete(recursive: true))
+        .then((_) => CollectionItemImageTable.deleteAll(parent, db)));
+  }
+
+  Future<String> _copyToAppDirectory(File imageFile, ModelID parent) async {
     final String fileName = p.basename(imageFile.path);
-    return getApplicationDocumentsDirectory()
-        .then((appDir) => "${appDir.path}/$fileName")
+
+    return _getItemDirectory(parent)
+        .then((dir) => "${dir.path}/$fileName")
         .then((localPath) => imageFile.copy(localPath))
         .then((copiedFile) => copiedFile.path);
+  }
+
+  Future<Directory> _getItemDirectory(ModelID parent) async {
+    final Directory appDir = await getApplicationDocumentsDirectory();
+    return Directory("${appDir.path}/$parent").create(recursive: true);
   }
 }

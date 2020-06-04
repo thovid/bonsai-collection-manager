@@ -14,6 +14,8 @@ mixin BonsaiTreeRepository {
   Future<void> update(BonsaiTreeData tree);
 
   Future<List<BonsaiTreeData>> loadBonsaiCollection();
+
+  Future<void> delete(ModelID<BonsaiTreeData> id);
 }
 
 class BonsaiTreeCollection with ChangeNotifier {
@@ -63,6 +65,14 @@ class BonsaiTreeCollection with ChangeNotifier {
 
   BonsaiTreeWithImages findById(ModelID<BonsaiTreeData> id) {
     return _trees.firstWhere((element) => element.id == id, orElse: () => null);
+  }
+
+  Future<void> delete(BonsaiTreeWithImages tree) async {
+    await tree.images
+        .deleteAll()
+        .then((_) => _treeRepository.delete(tree.id))
+        .then((_) => _trees.removeWhere((element) => element.id == tree.id));
+    notifyListeners();
   }
 
   Future<BonsaiTreeWithImages> _insert(BonsaiTreeWithImages newTree) async {

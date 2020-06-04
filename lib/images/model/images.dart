@@ -20,6 +20,8 @@ abstract class ImageRepository {
       ModelID<CollectionItemImage> oldMainImageId});
 
   Future<List<CollectionItemImage>> loadImages(ModelID parent);
+
+  Future<void> removeAll(ModelID parent);
 }
 
 class Images with ChangeNotifier {
@@ -105,6 +107,11 @@ class Images with ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+
+  Future<void> deleteAll() async {
+    return repository.removeAll(parent);
   }
 }
 

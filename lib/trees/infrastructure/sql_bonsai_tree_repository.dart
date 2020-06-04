@@ -2,6 +2,8 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
+
 import '../../shared/infrastructure/base_repository.dart';
 
 import '../model/species.dart';
@@ -20,4 +22,7 @@ class SQLBonsaiTreeRepository extends BaseRepository with BonsaiTreeRepository {
   @override
   Future<List<BonsaiTreeData>> loadBonsaiCollection() =>
       init().then((db) => BonsaiTreeTable.readAll(speciesRepository, db));
+
+  @override
+  Future<void> delete(ModelID<BonsaiTreeData> id) async => init().then((db) => BonsaiTreeTable.delete(id, db));
 }

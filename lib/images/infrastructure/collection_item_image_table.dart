@@ -2,6 +2,8 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'dart:async';
+
 import 'package:sqflite_common/sqlite_api.dart';
 
 import '../model/collection_item_image.dart';
@@ -69,6 +71,11 @@ class CollectionItemImageTable {
   static Future<void> delete(
       ModelID<CollectionItemImage> id, DatabaseExecutor db) async {
     return db.delete(table_name, where: '$image_id = ?', whereArgs: [id.value]);
+  }
+
+  static FutureOr<void> deleteAll(ModelID parent, DatabaseExecutor db) async {
+    return db
+        .delete(table_name, where: '$parent_id = ?', whereArgs: [parent.value]);
   }
 
   static Future<void> setMainImageFlag(

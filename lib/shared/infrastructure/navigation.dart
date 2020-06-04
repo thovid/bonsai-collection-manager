@@ -40,23 +40,29 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case ViewBonsaiPage.route_name:
       return MaterialPageRoute(builder: (context) {
         final tree = settings.arguments as BonsaiTreeWithImages;
+        final collection = AppContext.of(context).bonsaiCollection;
         return FutureBuilder(
           future: tree.fetchImages(),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done)
               return LoadingScreen();
-            return ChangeNotifierProvider<BonsaiTreeWithImages>.value(
-              value: snapshot.data,
-              builder: (context, _) =>  I18n(child: ViewBonsaiPage()),
+            return ChangeNotifierProvider<BonsaiTreeCollection>.value(
+              value: collection,
+              child: ChangeNotifierProvider<BonsaiTreeWithImages>.value(
+                value: snapshot.data,
+                builder: (context, _) => I18n(child: ViewBonsaiPage()),
+              ),
             );
           },
         );
       });
 
     case CreditsPage.route_name:
-      return MaterialPageRoute(builder: (context) =>  I18n(child: CreditsPage()));
+      return MaterialPageRoute(
+          builder: (context) => I18n(child: CreditsPage()));
 
     default:
-      return MaterialPageRoute(builder: (context) =>  I18n(child: RouteNotFound()));
+      return MaterialPageRoute(
+          builder: (context) => I18n(child: RouteNotFound()));
   }
 }

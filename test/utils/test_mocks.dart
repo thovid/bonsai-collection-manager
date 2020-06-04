@@ -47,6 +47,11 @@ class DummyImageRepository extends ImageRepository {
   Future<List<CollectionItemImage>> loadImages(ModelID parent) async {
     return _images;
   }
+
+  @override
+  Future<void> removeAll(ModelID parent) async {
+    return;
+  }
 }
 
 class TestSpeciesRepository extends SpeciesRepository {
@@ -67,5 +72,10 @@ class TestBonsaiRepository with BonsaiTreeRepository {
   @override
   Future<List<BonsaiTreeData>> loadBonsaiCollection() async {
     return trees;
+  }
+
+  @override
+  Future<void> delete(ModelID<BonsaiTreeData> id) async {
+    return;
   }
 }

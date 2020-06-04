@@ -83,6 +83,10 @@ class BonsaiTreeTable {
     return result;
   }
 
+  static Future<void> delete(ModelID<BonsaiTreeData> id, Database db) async {
+    return db.delete(table_name, where: '$tree_id = ?', whereArgs: [id.value]);
+  }
+
   static Future<BonsaiTreeData> _fromMap(
       Map<String, dynamic> values, SpeciesRepository speciesRepository) async {
     return (BonsaiTreeDataBuilder(id: values[tree_id])

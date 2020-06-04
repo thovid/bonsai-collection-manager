@@ -25,7 +25,13 @@ extension Localization on String {
           } +
           {"en_us": "Acquired from", "de": "Erworben von"} +
           {"en_us": "Cancel", "de": "Abbrechen"} +
-          {"en_us": "Save", "de": "Speichern"});
+          {"en_us": "Save", "de": "Speichern"} +
+          {"en_us": "Really delete tree?", "de": "Wirklich löschen?"} +
+          {
+            "en_us": "Deletion can not be made undone!",
+            "de": "Löschen kann nicht rückgängig gemacht werden!"
+          } +
+          {"en_us": "Delete", "de": "Löschen"});
 
   String get i18n => localize(this, _t);
 }

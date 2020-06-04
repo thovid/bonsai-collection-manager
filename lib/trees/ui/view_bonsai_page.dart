@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:intl/intl.dart';
@@ -18,12 +19,18 @@ class ViewBonsaiPage extends StatelessWidget {
   static const route_name = '/view-tree';
   @override
   Widget build(BuildContext context) => SafeArea(
-        child: Consumer<BonsaiTreeWithImages>(
-          builder:
-              (BuildContext context, BonsaiTreeWithImages tree, Widget child) =>
-                  Scaffold(
+        child: Consumer2<BonsaiTreeWithImages, BonsaiTreeCollection>(
+          builder: (BuildContext context, BonsaiTreeWithImages tree,
+                  BonsaiTreeCollection collection, Widget child) =>
+              Scaffold(
             appBar: AppBar(
               title: _buildTitle(tree),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () => _delete(context, tree, collection),
+                )
+              ],
             ),
             body: _buildBody(context, tree),
             floatingActionButton: FloatingActionButton(
@@ -55,7 +62,8 @@ class ViewBonsaiPage extends StatelessWidget {
         children: [
           ChangeNotifierProvider<Images>.value(
             value: tree.images,
-            child: Expanded(child:Container(
+            child: Expanded(
+                child: Container(
               padding: EdgeInsets.all(10),
               height: MediaQuery.of(context).size.height * .5 - 20,
               child: ImageGallery(),
@@ -79,8 +87,10 @@ class ViewBonsaiPage extends StatelessWidget {
                         tree.treeData.developmentLevel.toString().i18n),
                     _tableRow(
                         'Pot Type', tree.treeData.potType.toString().i18n),
-                    _tableRow('Acquired at',
-                        DateFormat.yMMMd(I18n.locale?.toString()).format(tree.treeData.acquiredAt)),
+                    _tableRow(
+                        'Acquired at',
+                        DateFormat.yMMMd(I18n.locale?.toString())
+                            .format(tree.treeData.acquiredAt)),
                     _tableRow('Acquired from', tree.treeData.acquiredFrom),
                   ],
                 ),
@@ -99,4 +109,29 @@ class ViewBonsaiPage extends StatelessWidget {
             child: Container(
                 padding: const EdgeInsets.only(top: 10.0), child: Text(value)))
       ]);
+
+  Future _delete(BuildContext context, BonsaiTreeWithImages tree,
+      BonsaiTreeCollection collection) async {
+    final bool shouldDelete = await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Really delete tree?".i18n),
+              content: Text("Deletion can not be made undone!".i18n),
+              actions: [
+                FlatButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text("Cancel".i18n),
+                ),
+                FlatButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text("Delete".i18n),
+                ),
+              ],
+            ));
+
+    if (shouldDelete) {
+      await collection.delete(tree);
+      Navigator.of(context).pop();
+    }
+  }
 }
