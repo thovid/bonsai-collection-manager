@@ -2,7 +2,6 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../images/model/images.dart';
 import '../../images/ui/image_gallery.dart';
 import '../../shared/ui/spaces.dart';
+import '../model/bonsai_tree_collection.dart';
 import '../model/bonsai_tree_with_images.dart';
 import '../i18n/bonsai_tree_view.i18n.dart';
 import './edit_bonsai_page.dart';
