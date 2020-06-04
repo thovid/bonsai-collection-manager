@@ -19,10 +19,6 @@ class BaseRepository {
     if (initialized) {
       return _database;
     }
-
-    // TODO remove after testing!!!!!!!
-    await _dbPath(db_name).then((path) => deleteDatabase(path));
-
     _database = await _dbPath(db_name).then((path) => openDatabase(
           path,
           version: 1,

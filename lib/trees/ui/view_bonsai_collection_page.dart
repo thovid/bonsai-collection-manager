@@ -67,17 +67,17 @@ class ViewBonsaiCollectionPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Expanded(
-                child: Image.file(
-                  // TODO pull error builder up to prevent File('')
-                  File(tree.images.mainImage?.path ?? ''),
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add_photo_alternate),
-                        Text('No image yet'.i18n)
-                      ]),
-                ),
+                child: tree.images.mainImage?.path == null
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                            Icon(Icons.add_photo_alternate),
+                            Text('No image yet'.i18n)
+                          ])
+                    : Image.file(
+                        File(tree.images.mainImage?.path ?? ''),
+                        fit: BoxFit.cover,
+                      ),
               ),
               Container(
                 padding: EdgeInsets.all(4.0),
