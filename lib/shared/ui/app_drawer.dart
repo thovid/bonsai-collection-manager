@@ -16,12 +16,14 @@ Drawer buildAppDrawer(
           child: Column(
             children: <Widget>[
               DrawerHeader(
+                padding: EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
+                  
                     image: DecorationImage(
                   image: AssetImage("icons/bonsai.png"),
-                  fit: BoxFit.fitHeight,
+                  fit: BoxFit.contain,
                 )),
-                child: Column(children: [
+                child: ListView(children: [
                   Text(
                     "Bonsai Collection Manager",
                     style: Theme.of(context).textTheme.headline6,
@@ -34,6 +36,7 @@ Drawer buildAppDrawer(
                   targetRoute: ViewBonsaiCollectionPage.route_name,
                   title: "My collection".i18n,
                   currentRoute: currentPage),
+              Divider(),
               AboutListTile(
                 icon: Icon(Icons.help),
                 applicationIcon: ImageIcon(AssetImage('icons/bonsai.png')),

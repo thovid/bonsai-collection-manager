@@ -130,5 +130,5 @@ class ImageDescriptor {
 
   bool get isMainImage => parent._mainImage == this;
   Future<bool> toggleIsMainImage() async => parent._toggleIsMain(this);
-  void remove() => parent.removeImage(this);
+  Future<void> remove() async => await parent.removeImage(this);
 }
