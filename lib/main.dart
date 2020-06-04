@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
     return WithAppContext(
       child: MaterialApp(
         title: 'Bonsai Collection Manager',
+        debugShowCheckedModeBanner: false,
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
