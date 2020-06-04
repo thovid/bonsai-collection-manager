@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/credits/ui/credits_page.dart';
 import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:provider/provider.dart';
@@ -46,13 +47,16 @@ Route<dynamic> generateRoute(RouteSettings settings) {
               return LoadingScreen();
             return ChangeNotifierProvider<BonsaiTreeWithImages>.value(
               value: snapshot.data,
-              builder: (context, _) => ViewBonsaiPage(),
+              builder: (context, _) =>  I18n(child: ViewBonsaiPage()),
             );
           },
         );
       });
 
+    case CreditsPage.route_name:
+      return MaterialPageRoute(builder: (context) =>  I18n(child: CreditsPage()));
+
     default:
-      return MaterialPageRoute(builder: (context) => RouteNotFound());
+      return MaterialPageRoute(builder: (context) =>  I18n(child: RouteNotFound()));
   }
 }

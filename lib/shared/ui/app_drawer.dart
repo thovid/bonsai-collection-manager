@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../../credits/ui/credits_page.dart';
 import '../../trees/ui/view_bonsai_collection_page.dart';
 import '../i18n/app_drawer.i18n.dart';
 
@@ -14,17 +15,39 @@ Drawer buildAppDrawer(
         child: SafeArea(
           child: Column(
             children: <Widget>[
+              DrawerHeader(
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                  image: AssetImage("icons/bonsai.png"),
+                  fit: BoxFit.fitHeight,
+                )),
+                child: Column(children: [
+                  Text(
+                    "Bonsai Collection Manager",
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                ]),
+              ),
               _buildDrawerItem(
+                  icon: ImageIcon(AssetImage('icons/bonsai.png')),
                   context: context,
                   targetRoute: ViewBonsaiCollectionPage.route_name,
                   title: "My collection".i18n,
                   currentRoute: currentPage),
               AboutListTile(
-                //applicationIcon: TODO
+                icon: Icon(Icons.help),
+                applicationIcon: ImageIcon(AssetImage('icons/bonsai.png')),
                 applicationName: 'Bonsai Collection Manager',
                 applicationVersion: '1.0.0',
                 applicationLegalese: '© Thomas Vidic',
-              )
+                aboutBoxChildren: <Widget>[Text(aboutText.i18n)],
+              ),
+              _buildDrawerItem(
+                  context: context,
+                  icon: Icon(Icons.info),
+                  targetRoute: CreditsPage.route_name,
+                  title: 'Credits',
+                  currentRoute: currentPage),
             ],
           ),
         ),
@@ -34,7 +57,7 @@ Drawer buildAppDrawer(
 Widget _buildDrawerItem(
     {@required BuildContext context,
     @required String targetRoute,
-    Icon icon,
+    Widget icon,
     @required String title,
     @required String currentRoute}) {
   final bool isSelected = targetRoute == currentRoute;
@@ -46,7 +69,8 @@ Widget _buildDrawerItem(
         title: Text(title),
         onTap: () {
           Navigator.of(context).pop();
-          if (!isSelected) Navigator.of(context).pushNamed(targetRoute);
+          if (!isSelected)
+            Navigator.of(context).pushNamed(targetRoute);
         },
       ));
 }
