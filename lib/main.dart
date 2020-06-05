@@ -11,9 +11,9 @@ import './shared/state/app_context.dart';
 import './shared/i18n/i18n.dart';
 
 void main() {
-  /*WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   print(imageCache.maximumSizeBytes);
-  imageCache.maximumSizeBytes = 10000000000;*/
+ // imageCache.maximumSizeBytes = 500 << 20;
   runApp(MyApp());
 }
 

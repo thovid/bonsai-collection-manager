@@ -40,8 +40,8 @@ class Images with ChangeNotifier {
   Future<ImageDescriptor> addImage(File image) async {
     final CollectionItemImage collectionImage =
         await repository.add(image, _mainImage == null, parent);
-    ImageDescriptor descriptor =
-        ImageDescriptor(parent: this, path: image.path, id: collectionImage.id);
+    ImageDescriptor descriptor = ImageDescriptor._internal(
+        parent: this, path: collectionImage.fileName, id: collectionImage.id);
     if (_images.isEmpty) {
       _mainImage = descriptor;
     }
@@ -97,13 +97,13 @@ class Images with ChangeNotifier {
 
     if (loaded != null) {
       _images.addAll(loaded
-          ?.map(
-              (e) => ImageDescriptor(parent: this, id: e.id, path: e.fileName))
+          ?.map((e) => ImageDescriptor._internal(
+              parent: this, id: e.id, path: e.fileName))
           ?.toList());
       CollectionItemImage mainImage = loaded
           ?.firstWhere((element) => element.isMainImage, orElse: () => null);
       _mainImage = mainImage != null
-          ? ImageDescriptor(
+          ? ImageDescriptor._internal(
               parent: this, id: mainImage.id, path: mainImage.fileName)
           : null;
     }
@@ -126,19 +126,19 @@ class ImageDescriptor {
   final String path;
   final ModelID<CollectionItemImage> _id;
 
-  ImageDescriptor(
+  ImageDescriptor._internal(
       {@required this.parent,
       @required this.path,
       @required ModelID<CollectionItemImage> id})
       : assert(parent != null && path != null && id != null),
         _id = id;
-  factory ImageDescriptor.fromImage(CollectionItemImage image, Images model) {
-    if (image == null) return null;
-    return ImageDescriptor(parent: model, path: image.fileName, id: image.id);
+
+  ImageProvider toFullImage() {
+    return ResizeImage.resizeIfNeeded(500, null, FileImage(File(path)));
   }
 
-  File toFile() {
-    return File(path);
+  ImageProvider toThumbnail() {
+    return ResizeImage.resizeIfNeeded(150, null, FileImage(File(path)));
   }
 
   bool get isMainImage => parent._mainImage == this;

@@ -2,8 +2,6 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -71,16 +69,19 @@ class ViewBonsaiCollectionPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Expanded(
-                child: tree.images.mainImage?.path == null
+                child: tree.images.mainImage == null
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                             Icon(Icons.add_photo_alternate),
                             Text('No image yet'.i18n)
                           ])
-                    : Image.file(
-                        File(tree.images.mainImage?.path ?? ''),
-                        fit: BoxFit.cover,
+                    : Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Image(
+                          image: tree.images.mainImage.toThumbnail(),
+                          fit: BoxFit.cover,
+                        ),
                       ),
               ),
               Container(

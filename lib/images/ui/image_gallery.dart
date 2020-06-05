@@ -13,20 +13,39 @@ import '../i18n/image_gallery.i18n.dart';
 import '../model/images.dart';
 
 typedef Future<void> ImageSelectedCallback(File imageFile);
+typedef void IsWorkingCallback(bool isWorking);
 
-class ImageGallery extends StatelessWidget {
+class ImageGallery extends StatefulWidget {
+  @override
+  _ImageGalleryState createState() => _ImageGalleryState();
+}
+
+class _ImageGalleryState extends State<ImageGallery> {
+  bool _isWorking = false;
+
+  void updateIsWorking(bool isWorking) {
+    setState(() {
+      _isWorking = isWorking;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Card(
-        child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        Expanded(flex: 4, child: MainImageTile()),
-        Expanded(child: ImagesPanel()),
+    return Stack(
+      children: [
+        Card(
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Expanded(flex: 4, child: MainImageTile()),
+            Expanded(child: ImagesPanel(isWorkingCallback: updateIsWorking)),
+          ],
+        )),
+        if (_isWorking) Center(child: CircularProgressIndicator()),
       ],
-    ));
+    );
   }
 }
 
@@ -44,19 +63,28 @@ class MainImageTile extends StatelessWidget {
 
   Widget _buildImageOrHint(BuildContext context, Images model) {
     if (model.mainImage != null)
-      return _buildTapableImage(context, model.mainImage);
+      return _buildTapableImage(context, model.mainImage, useThumbnail: false);
     return Center(child: Text("Add your first image".i18n));
   }
 }
 
 class ImagesPanel extends StatelessWidget {
+  final IsWorkingCallback isWorkingCallback;
+
+  ImagesPanel({this.isWorkingCallback});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<Images>(
         builder: (context, imageGalleryModel, _) => Column(
               children: <Widget>[
                 ImagesPanelMenuTile(
-                  onImageSelected: imageGalleryModel.addImage,
+                  onImageSelected: (file) async {
+                    isWorkingCallback(true);
+                    return imageGalleryModel
+                        .addImage(file)
+                        .then((_) => isWorkingCallback(false));
+                  },
                 ),
                 Expanded(
                     child: Container(
@@ -207,8 +235,8 @@ class _ImagePopupState extends State<ImagePopup> {
               Center(
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(5.0),
-                    child: Image.file(
-                      widget.image.toFile(),
+                    child: Image(
+                      image: widget.image.toFullImage(),
                       fit: BoxFit.contain,
                       errorBuilder: _defaultImageNotFound,
                     )),
@@ -240,17 +268,17 @@ class _ImagePopupState extends State<ImagePopup> {
       );
 }
 
-GestureDetector _buildTapableImage(
-    BuildContext context, ImageDescriptor image) {
+GestureDetector _buildTapableImage(BuildContext context, ImageDescriptor image,
+    {bool useThumbnail = true}) {
   return GestureDetector(
     onTap: () async {
       await showDialog(
           context: context, builder: (context) => ImagePopup(image));
     },
-    child: Image.file(
-      image.toFile(),
-      fit: BoxFit.cover,
+    child: Image(
+      image: useThumbnail ? image.toThumbnail() : image.toFullImage(),
       errorBuilder: _defaultImageNotFound,
+      fit: BoxFit.cover,
     ),
   );
 }
