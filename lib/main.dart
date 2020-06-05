@@ -11,6 +11,9 @@ import './shared/state/app_context.dart';
 import './shared/i18n/i18n.dart';
 
 void main() {
+  /*WidgetsFlutterBinding.ensureInitialized();
+  print(imageCache.maximumSizeBytes);
+  imageCache.maximumSizeBytes = 10000000000;*/
   runApp(MyApp());
 }
 
@@ -23,6 +26,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Bonsai Collection Manager',
         debugShowCheckedModeBanner: false,
+      //checkerboardOffscreenLayers: true,
+      //checkerboardRasterCacheImages: true,
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,

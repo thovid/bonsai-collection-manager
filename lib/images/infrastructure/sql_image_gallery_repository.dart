@@ -75,6 +75,6 @@ class SQLImageGalleryRepository extends BaseRepository with ImageRepository {
 
   Future<Directory> _getItemDirectory(ModelID parent) async {
     final Directory appDir = await getApplicationDocumentsDirectory();
-    return Directory("${appDir.path}/$parent").create(recursive: true);
+    return Directory("${appDir.path}/${parent.value}").create(recursive: true);
   }
 }

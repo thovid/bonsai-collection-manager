@@ -19,6 +19,8 @@ class BonsaiTreeWithImages with ChangeNotifier {
     });
   }
 
+  bool get imagesFetched => images.imagesFetched;
+
   set treeData(BonsaiTreeData data) {
     _treeData = data;
     notifyListeners();

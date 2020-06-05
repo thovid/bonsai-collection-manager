@@ -29,10 +29,13 @@ class Images with ChangeNotifier {
   final ImageRepository repository;
   final List<ImageDescriptor> _images = [];
   ImageDescriptor _mainImage;
+  bool _requiresFetch = true;
 
   Images({@required this.parent, @required this.repository});
 
   List<ImageDescriptor> get images => _images;
+
+  bool get imagesFetched => !_requiresFetch;
 
   Future<ImageDescriptor> addImage(File image) async {
     final CollectionItemImage collectionImage =
@@ -85,9 +88,12 @@ class Images with ChangeNotifier {
   }
 
   Future<void> fetchImages() async {
+    if (!_requiresFetch) return;
+
     _images.clear();
     _mainImage = null;
-    final List<CollectionItemImage> loaded = await repository.loadImages(parent);
+    final List<CollectionItemImage> loaded =
+        await repository.loadImages(parent);
 
     if (loaded != null) {
       _images.addAll(loaded
@@ -106,9 +112,9 @@ class Images with ChangeNotifier {
       _mainImage = _images[0];
     }
 
+    _requiresFetch = false;
     notifyListeners();
   }
-
 
   Future<void> deleteAll() async {
     return repository.removeAll(parent);

@@ -4,10 +4,10 @@
 
 import 'dart:io';
 
-import 'package:bonsaicollectionmanager/shared/ui/app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../shared/ui/app_drawer.dart';
 import '../model/bonsai_tree_collection.dart';
 import '../model/bonsai_tree_with_images.dart';
 import '../i18n/bonsai_collection_view.i18n.dart';
@@ -43,6 +43,10 @@ class ViewBonsaiCollectionPage extends StatelessWidget {
       );
 
   _buildLoadingTreeTile(BonsaiTreeWithImages tree) {
+    if (tree.imagesFetched) {
+      return Card(child: _buildTreeTile(tree));
+    }
+
     return FutureBuilder(
       future: tree.fetchImages(),
       builder: (context, snapshot) {
