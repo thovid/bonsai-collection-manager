@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/shared/ui/spaces.dart';
 import 'package:flutter/material.dart';
 
 import '../../credits/ui/credits_page.dart';
@@ -16,27 +17,46 @@ Drawer buildAppDrawer(
           child: Column(
             children: <Widget>[
               DrawerHeader(
-                padding: EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                  
-                    image: DecorationImage(
-                  image: AssetImage("icons/bonsai.png"),
-                  fit: BoxFit.contain,
-                )),
-                child: ListView(children: [
+                decoration: BoxDecoration(color: Colors.white10),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                  Expanded(
+                    child: Image(
+                      image: AssetImage("icons/bonsai.png"),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  smallSpace,
                   Text(
                     "Bonsai Collection Manager",
                     style: Theme.of(context).textTheme.headline6,
                   ),
-                ]),
+                ])),
               ),
+           /*   UserAccountsDrawerHeader(
+                decoration: BoxDecoration(color: Colors.white10),
+                currentAccountPicture: Image(
+                  image: AssetImage("icons/bonsai.png"),
+                  fit: BoxFit.contain,
+                ),
+                accountName: Text(""),
+                accountEmail: Text(
+                  "Bonsai Collection\nManager",
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+              ),*/
               _buildDrawerItem(
                   icon: ImageIcon(AssetImage('icons/bonsai.png')),
                   context: context,
                   targetRoute: ViewBonsaiCollectionPage.route_name,
                   title: "My collection".i18n,
                   currentRoute: currentPage),
-              Divider(),
+              Divider(
+                color: Colors.black54,
+              ),
               AboutListTile(
                 icon: Icon(Icons.help),
                 applicationIcon: ImageIcon(AssetImage('icons/bonsai.png')),
@@ -73,7 +93,7 @@ Widget _buildDrawerItem(
         onTap: () {
           Navigator.of(context).pop();
           if (!isSelected)
-            Navigator.of(context).pushNamed(targetRoute);
+            Navigator.of(context).pushReplacementNamed(targetRoute);
         },
       ));
 }
