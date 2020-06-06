@@ -19,35 +19,23 @@ Drawer buildAppDrawer(
               DrawerHeader(
                 decoration: BoxDecoration(color: Colors.white10),
                 child: Align(
-                  alignment: Alignment.topLeft,
+                    alignment: Alignment.topLeft,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                  Expanded(
-                    child: Image(
-                      image: AssetImage("icons/bonsai.png"),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  smallSpace,
-                  Text(
-                    "Bonsai Collection Manager",
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                ])),
+                          Expanded(
+                            child: Image(
+                              image: AssetImage("icons/bonsai.png"),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          smallSpace,
+                          Text(
+                            "Bonsai Collection Manager",
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                        ])),
               ),
-           /*   UserAccountsDrawerHeader(
-                decoration: BoxDecoration(color: Colors.white10),
-                currentAccountPicture: Image(
-                  image: AssetImage("icons/bonsai.png"),
-                  fit: BoxFit.contain,
-                ),
-                accountName: Text(""),
-                accountEmail: Text(
-                  "Bonsai Collection\nManager",
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-              ),*/
               _buildDrawerItem(
                   icon: ImageIcon(AssetImage('icons/bonsai.png')),
                   context: context,
@@ -70,7 +58,8 @@ Drawer buildAppDrawer(
                   icon: Icon(Icons.info),
                   targetRoute: CreditsPage.route_name,
                   title: 'Credits',
-                  currentRoute: currentPage),
+                  currentRoute: currentPage,
+                  pushOnStack: true),
             ],
           ),
         ),
@@ -82,7 +71,8 @@ Widget _buildDrawerItem(
     @required String targetRoute,
     Widget icon,
     @required String title,
-    @required String currentRoute}) {
+    @required String currentRoute,
+    bool pushOnStack = false}) {
   final bool isSelected = targetRoute == currentRoute;
 
   return Container(
@@ -92,8 +82,12 @@ Widget _buildDrawerItem(
         title: Text(title),
         onTap: () {
           Navigator.of(context).pop();
-          if (!isSelected)
-            Navigator.of(context).pushReplacementNamed(targetRoute);
+          if (!isSelected) {
+            if (pushOnStack)
+              Navigator.of(context).pushNamed(targetRoute);
+            else
+              Navigator.of(context).pushReplacementNamed(targetRoute);
+          }
         },
       ));
 }

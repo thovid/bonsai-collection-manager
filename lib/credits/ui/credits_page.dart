@@ -17,7 +17,7 @@ class CreditsPage extends StatelessWidget {
         appBar: AppBar(
           title: Text("Credits"),
         ),
-        drawer: buildAppDrawer(context: context, currentPage: route_name),
+        //drawer: buildAppDrawer(context: context, currentPage: route_name),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
