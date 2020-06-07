@@ -6,7 +6,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../shared/ui/app_drawer.dart';
 import '../../shared/ui/spaces.dart';
 
 class CreditsPage extends StatelessWidget {
@@ -17,7 +16,6 @@ class CreditsPage extends StatelessWidget {
         appBar: AppBar(
           title: Text("Credits"),
         ),
-        //drawer: buildAppDrawer(context: context, currentPage: route_name),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
