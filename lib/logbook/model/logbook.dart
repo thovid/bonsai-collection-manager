@@ -154,4 +154,13 @@ class LogbookEntryWithImages with ChangeNotifier {
   }
 }
 
-enum LogWorkType { pruning, custom }
+enum LogWorkType {
+  watered,
+  fertilized,
+  sprayed,
+  wired,
+  deadwood,
+  pruned,
+  repotted,
+  custom
+}

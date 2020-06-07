@@ -24,7 +24,7 @@ main() {
 
   test('can load logbook with entry', () async {
     final LogbookEntry logbookEntry = (LogbookEntryBuilder()
-          ..workType = LogWorkType.pruning
+          ..workType = LogWorkType.pruned
           ..date = DateTime.now()
           ..notes = "Some notes")
         .build();
@@ -37,7 +37,7 @@ main() {
         imageRepository: DummyImageRepository(),
         subjectId: treeId);
     expect(logbook.length, equals(1));
-    expect(logbook.entries[0].entry.workType, equals(LogWorkType.pruning));
+    expect(logbook.entries[0].entry.workType, equals(LogWorkType.pruned));
   });
 
   test('can add entry to logbook', () async {
@@ -50,7 +50,7 @@ main() {
         imageRepository: DummyImageRepository());
 
     final LogbookEntry logbookEntry = (LogbookEntryBuilder()
-          ..workType = LogWorkType.pruning
+          ..workType = LogWorkType.pruned
           ..date = DateTime.now()
           ..notes = "Some notes")
         .build();
@@ -63,7 +63,7 @@ main() {
 
   test('can get and update entry', () async {
     final LogbookEntry logbookEntry = (LogbookEntryBuilder()
-          ..workType = LogWorkType.pruning
+          ..workType = LogWorkType.pruned
           ..date = DateTime.now()
           ..notes = "Some notes")
         .build();
@@ -96,7 +96,7 @@ main() {
 
   test('can delete entry', () async {
     final LogbookEntry logbookEntry = (LogbookEntryBuilder()
-      ..workType = LogWorkType.pruning
+      ..workType = LogWorkType.pruned
       ..date = DateTime.now()
       ..notes = "Some notes")
         .build();
