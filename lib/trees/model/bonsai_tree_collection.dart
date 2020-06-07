@@ -19,6 +19,7 @@ mixin BonsaiTreeRepository {
 }
 
 class BonsaiTreeCollection with ChangeNotifier {
+
   static Future<BonsaiTreeCollection> load(
       {@required BonsaiTreeRepository treeRepository,
       @required ImageRepository imageRepository}) async {
