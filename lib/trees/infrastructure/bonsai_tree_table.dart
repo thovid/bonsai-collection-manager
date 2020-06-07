@@ -45,16 +45,7 @@ class BonsaiTreeTable {
   }
 
   static Future write(BonsaiTreeData tree, DatabaseExecutor db) async {
-    Map<String, dynamic> data = {
-      tree_id: tree.id.value,
-      treeName: tree.treeName,
-      species: tree.species.latinName,
-      speciesOrdinal: tree.speciesOrdinal,
-      potType: tree.potType.toString(),
-      developmentLevel: tree.developmentLevel.toString(),
-      acquiredFrom: tree.acquiredFrom,
-      acquiredAt: tree.acquiredAt.toIso8601String(),
-    };
+    Map<String, dynamic> data = _toMap(tree);
 
     return db.insert(table_name, data,
         conflictAlgorithm: ConflictAlgorithm.replace);
@@ -87,22 +78,31 @@ class BonsaiTreeTable {
     return db.delete(table_name, where: '$tree_id = ?', whereArgs: [id.value]);
   }
 
-  static Future<BonsaiTreeData> _fromMap(
-      Map<String, dynamic> values, SpeciesRepository speciesRepository) async {
-    return (BonsaiTreeDataBuilder(id: values[tree_id])
-          ..treeName = values[treeName]
-          ..species =
-              await speciesRepository.findOne(latinName: values[species])
-          ..speciesOrdinal = values[speciesOrdinal]
-          ..potType = _enumValueFromString(values[potType], PotType.values)
-          ..developmentLevel = _enumValueFromString(
-              values[developmentLevel], DevelopmentLevel.values)
-          ..acquiredAt = DateTime.parse(values[acquiredAt])
-          ..acquiredFrom = values[acquiredFrom])
-        .build();
-  }
+  static Map<String, dynamic> _toMap(BonsaiTreeData tree) => {
+        tree_id: tree.id.value,
+        treeName: tree.treeName,
+        species: tree.species.latinName,
+        speciesOrdinal: tree.speciesOrdinal,
+        potType: tree.potType.toString(),
+        developmentLevel: tree.developmentLevel.toString(),
+        acquiredFrom: tree.acquiredFrom,
+        acquiredAt: tree.acquiredAt.toIso8601String(),
+      };
 
-  static T _enumValueFromString<T>(String value, List<T> values) {
-    return values.firstWhere((element) => element.toString() == value);
-  }
+  static Future<BonsaiTreeData> _fromMap(Map<String, dynamic> values,
+          SpeciesRepository speciesRepository) async =>
+      (BonsaiTreeDataBuilder(id: values[tree_id])
+            ..treeName = values[treeName]
+            ..species =
+                await speciesRepository.findOne(latinName: values[species])
+            ..speciesOrdinal = values[speciesOrdinal]
+            ..potType = _enumValueFromString(values[potType], PotType.values)
+            ..developmentLevel = _enumValueFromString(
+                values[developmentLevel], DevelopmentLevel.values)
+            ..acquiredAt = DateTime.parse(values[acquiredAt])
+            ..acquiredFrom = values[acquiredFrom])
+          .build();
+
+  static T _enumValueFromString<T>(String value, List<T> values) =>
+      values.firstWhere((element) => element.toString() == value);
 }
