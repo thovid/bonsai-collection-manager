@@ -91,7 +91,7 @@ main() {
     final LogbookEntryWithImages found = logbook.findById(updatedWithImages.id);
     expect(found.entry.workType, equals(LogWorkType.custom));
     expect(found.entry.workTypeName, equals('second styling'));
-    verify(repository.update(updated));
+    verify(repository.update(updated, treeId));
   });
 
   test('can delete entry', () async {

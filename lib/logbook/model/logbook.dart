@@ -6,12 +6,11 @@ import 'package:flutter/material.dart';
 
 import '../../images/model/images.dart';
 import '../../shared/model/model_id.dart';
-import '../../shared/infrastructure/base_repository.dart';
 
-abstract class LogbookRepository extends BaseRepository {
-  Future<List<LogbookEntry>> loadLogbook(ModelID treeId);
-  Future<LogbookEntry> add(LogbookEntry logbookEntry, ModelID subjectId);
-  Future<LogbookEntry> update(LogbookEntry logbookEntry);
+abstract class LogbookRepository {
+  Future<List<LogbookEntry>> loadLogbook(ModelID subjectId);
+  Future<void> add(LogbookEntry logbookEntry, ModelID subjectId);
+  Future<void> update(LogbookEntry logbookEntry, ModelID subjectId);
   Future<void> delete(ModelID<LogbookEntry> id);
 }
 
@@ -70,7 +69,7 @@ class Logbook with ChangeNotifier {
     }
 
     _entries[index] = entryWithImages;
-    await _logbookRepository.update(entryWithImages.entry);
+    await _logbookRepository.update(entryWithImages.entry, _subjectId);
     return entryWithImages;
   }
 
