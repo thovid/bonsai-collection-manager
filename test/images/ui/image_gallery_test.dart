@@ -191,7 +191,7 @@ Future _startViewWith(Images model, WidgetTester tester) async {
   var collection = await BonsaiTreeCollection.load(
       treeRepository: TestBonsaiRepository([aBonsaiTree]),
       imageRepository: model.repository);
-  var app = testAppWith(
+  var app = await testAppWith(
       ChangeNotifierProvider<Images>.value(
         value: model,
         builder: (context, child) => ImageGallery(),

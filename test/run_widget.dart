@@ -3,6 +3,8 @@
  */
 
 import 'package:bonsaicollectionmanager/images/model/images.dart';
+import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
+import 'package:bonsaicollectionmanager/logbook/ui/view_logbook_entry_page.dart';
 import 'package:bonsaicollectionmanager/shared/i18n/i18n.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
@@ -26,7 +28,17 @@ Images empty = Images(
 void main() {
   //runImageGallery();
   //runEditBonsaiView();
-  runViewBonsaiView();
+  //runViewBonsaiView();
+  runViewLogbookEntryPage();
+}
+
+Future runViewLogbookEntryPage() async {
+  LogbookEntry entry = aLogbookEntry;
+  LogbookEntryWithImages entryWithImages = LogbookEntryWithImages(entry: entry, images: empty);
+  runApp(WidgetRunner(ChangeNotifierProvider.value(
+    value: entryWithImages,
+    builder: (context, child) => ViewLogbookEntryPage(),
+  )));
 }
 
 Future runViewBonsaiView() async {

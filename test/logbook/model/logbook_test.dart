@@ -114,5 +114,3 @@ main() {
     verify(repository.delete(logbookEntry.id));
   });
 }
-
-class MockLogbookRepository extends Mock implements LogbookRepository {}

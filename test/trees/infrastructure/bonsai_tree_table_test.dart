@@ -18,7 +18,6 @@ main() {
     var table = allTables.firstWhere((element) =>
         element['type'] == 'table' &&
         element['name'] == BonsaiTreeTable.table_name);
-    print(table);
     expect(table, isNotNull);
   });
 

@@ -3,6 +3,7 @@
  */
 
 import 'package:bonsaicollectionmanager/images/model/images.dart';
+import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
@@ -39,3 +40,5 @@ Future<BonsaiTreeCollection> emptyCollection() async =>
     BonsaiTreeCollection.load(
         treeRepository: TestBonsaiRepository([]),
         imageRepository: DummyImageRepository());
+
+final LogbookEntry aLogbookEntry = (LogbookEntryBuilder()).build();

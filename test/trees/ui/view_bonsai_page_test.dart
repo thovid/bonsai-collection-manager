@@ -44,13 +44,14 @@ main() {
   });
 }
 
-Future<void> _openView(WidgetTester tester, BonsaiTreeCollection collection) {
+Future<void> _openView(
+    WidgetTester tester, BonsaiTreeCollection collection) async {
   final BonsaiTreeData tree = aBonsaiTree;
   final BonsaiTreeWithImages treeWithImages = BonsaiTreeWithImages(
     treeData: tree,
     images: Images(parent: tree.id, repository: DummyImageRepository()),
   );
-  return tester.pumpWidget(testUtils.testAppWith(
+  return tester.pumpWidget(await testUtils.testAppWith(
       ChangeNotifierProvider.value(
           value: treeWithImages, child: ViewBonsaiPage()),
       bonsaiCollection: collection));

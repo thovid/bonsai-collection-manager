@@ -16,7 +16,7 @@ import '../../utils/test_utils.dart' as testUtils;
 main() {
   testWidgets('screen shows tree data', (WidgetTester tester) async {
     var collection = await testUtils.loadCollectionWith([aBonsaiTree]);
-    await tester.pumpWidget(testUtils.testAppWith(
+    await tester.pumpWidget( await testUtils.testAppWith(
         EditBonsaiPage(tree: aBonsaiTreeWithImages),
         bonsaiCollection: collection));
 
@@ -32,7 +32,7 @@ main() {
     final mockNavigationObserver = MockNavigatorObserver();
     var collection = await testUtils.loadCollectionWith([aBonsaiTree]);
     await tester
-        .pumpWidget(testUtils.testAppWith(
+        .pumpWidget(await testUtils.testAppWith(
             EditBonsaiPage(tree: aBonsaiTreeWithImages),
             navigationObserver: mockNavigationObserver,
             bonsaiCollection: collection))
@@ -45,7 +45,7 @@ main() {
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
-    await tester.pumpWidget(testUtils.testAppWith(EditBonsaiPage(),
+    await tester.pumpWidget(await testUtils.testAppWith(EditBonsaiPage(),
         bonsaiCollection: await testUtils.loadCollectionWith([aBonsaiTree])));
     expect(Translations.missingKeys, isEmpty);
     expect(Translations.missingTranslations, isEmpty);

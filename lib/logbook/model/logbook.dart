@@ -116,8 +116,9 @@ class LogbookEntryBuilder {
             ModelID<LogbookEntry>.newId(),
         workType = fromEntry?.workType ?? LogWorkType.custom,
         date = fromEntry?.date ?? DateTime.now(),
-        workTypeName = fromEntry?.workTypeName ?? '',
-        notes = fromEntry?.notes ?? '';
+        workTypeName = fromEntry?.workTypeName ?? 'a custom work type',
+        notes = fromEntry?.notes ??
+            'I did the very successful custom work type job';
 
   LogbookEntry build() {
     return LogbookEntry._builder(this);

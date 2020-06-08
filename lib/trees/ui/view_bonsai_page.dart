@@ -70,11 +70,11 @@ class ViewBonsaiPage extends StatelessWidget {
             )),
           ),
           smallSpace,
-          Container(
-            padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+          Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
             child: Card(
-              child: Container(
-                padding: EdgeInsets.only(left: 10, bottom: 10),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10, bottom: 10),
                 child: Table(
                   columnWidths: {0: FractionColumnWidth(.4)},
                   children: [
