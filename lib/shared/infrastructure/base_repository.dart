@@ -6,6 +6,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../logbook/infrastructure/logbook_entry_table.dart';
 import '../../images/infrastructure/collection_item_image_table.dart';
 import '../../trees/infrastructure/bonsai_tree_table.dart';
 
@@ -25,6 +26,7 @@ class BaseRepository {
           onCreate: (Database db, int version) async {
             await BonsaiTreeTable.createTable(db);
             await CollectionItemImageTable.createTable(db);
+            await LogbookEntryTable.createTable(db);
           },
         ));
     initialized = true;

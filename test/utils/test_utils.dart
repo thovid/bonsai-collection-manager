@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/logbook/infrastructure/logbook_entry_table.dart';
 import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
 import 'package:bonsaicollectionmanager/trees/infrastructure/bonsai_tree_table.dart';
 import 'package:bonsaicollectionmanager/images/infrastructure/collection_item_image_table.dart';
@@ -49,6 +50,7 @@ Future<Database> openTestDatabase(
     print('creating tables in test database...');
     await BonsaiTreeTable.createTable(database);
     await CollectionItemImageTable.createTable(database);
+    await LogbookEntryTable.createTable(database);
   }
   return database;
 }

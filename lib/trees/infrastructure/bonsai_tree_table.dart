@@ -4,6 +4,7 @@
 
 import 'package:sqflite/sqflite.dart';
 
+import '../../shared/infrastructure/enum_utils.dart';
 import '../../shared/model/model_id.dart';
 import '../model/bonsai_tree_data.dart';
 import '../model/species.dart';
@@ -44,12 +45,9 @@ class BonsaiTreeTable {
         ")");
   }
 
-  static Future write(BonsaiTreeData tree, DatabaseExecutor db) async {
-    Map<String, dynamic> data = _toMap(tree);
-
-    return db.insert(table_name, data,
-        conflictAlgorithm: ConflictAlgorithm.replace);
-  }
+  static Future write(BonsaiTreeData tree, DatabaseExecutor db) async =>
+      db.insert(table_name, _toMap(tree),
+          conflictAlgorithm: ConflictAlgorithm.replace);
 
   static Future<BonsaiTreeData> read(ModelID<BonsaiTreeData> id,
       SpeciesRepository speciesRepository, DatabaseExecutor db) async {
@@ -96,13 +94,10 @@ class BonsaiTreeTable {
             ..species =
                 await speciesRepository.findOne(latinName: values[species])
             ..speciesOrdinal = values[speciesOrdinal]
-            ..potType = _enumValueFromString(values[potType], PotType.values)
-            ..developmentLevel = _enumValueFromString(
+            ..potType = enumValueFromString(values[potType], PotType.values)
+            ..developmentLevel = enumValueFromString(
                 values[developmentLevel], DevelopmentLevel.values)
             ..acquiredAt = DateTime.parse(values[acquiredAt])
             ..acquiredFrom = values[acquiredFrom])
           .build();
-
-  static T _enumValueFromString<T>(String value, List<T> values) =>
-      values.firstWhere((element) => element.toString() == value);
 }

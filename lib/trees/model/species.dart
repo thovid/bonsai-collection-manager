@@ -53,38 +53,3 @@ class Species {
   @override
   int get hashCode => latinName.hashCode;
 }
-
-/// List of known species
-class KnownSpecies {
-  static final List<Species> knownSpecies = [
-    Species(TreeType.conifer,
-        latinName: "unknown conifer", informalName: "unknown conifer"),
-    Species(TreeType.deciduous,
-        latinName: "unknown deciduous", informalName: "unknown deciduous"),
-    Species(TreeType.broadleaf_evergreen,
-        latinName: "unknown broadleaf evergreen",
-        informalName: "unknown broadleaf evergreen"),
-    Species(TreeType.tropical,
-        latinName: "unknown tropical", informalName: "unknown tropical"),
-    Species(TreeType.conifer,
-        latinName: "Pinus Silvestris", informalName: "Scots Pine"),
-    Species(TreeType.conifer,
-        latinName: "Pinus mugo", informalName: "Mugo Pine"),
-    Species(TreeType.conifer,
-        latinName: "juniperus chinensis", informalName: "Chinese Juniper"),
-  ];
-
-  static Future<List<Species>> findByPattern(String pattern) async {
-    var lowerCasePattern = pattern.toLowerCase();
-    return Future(() {
-      var result = <Species>[];
-      knownSpecies.forEach((element) {
-        if (element.latinName.toLowerCase().contains(lowerCasePattern) ||
-            element.informalName.toLowerCase().contains(lowerCasePattern)) {
-          result.add(element);
-        }
-      });
-      return result;
-    });
-  }
-}
