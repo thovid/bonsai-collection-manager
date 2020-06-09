@@ -10,6 +10,7 @@ import '../../shared/ui/spaces.dart';
 import '../i18n/view_logbook_entry_page.i18n.dart';
 import '../model/logbook.dart';
 import './work_type_panel.dart';
+import './edit_logbook_entry_page.dart';
 
 class ViewLogbookEntryPage extends StatelessWidget {
   @override
@@ -19,6 +20,10 @@ class ViewLogbookEntryPage extends StatelessWidget {
             appBar: AppBar(
               title: Text(_title(logbookEntry)),
               actions: <Widget>[
+                FlatButton(
+                  child: Icon(Icons.edit),
+                  onPressed: () => _startEdit(context, logbook, logbookEntry),
+                ),
                 FlatButton(
                   child: Icon(Icons.delete),
                   onPressed: () => _delete(context, logbookEntry, logbook),
@@ -99,4 +104,16 @@ class ViewLogbookEntryPage extends StatelessWidget {
       Navigator.of(context).pop();
     }
   }
+
+  Future<void> _startEdit(BuildContext context, Logbook logbook,
+          LogbookEntryWithImages logbookEntry) async =>
+      Navigator.of(context).push(
+        MaterialPageRoute<LogbookEntryWithImages>(
+          fullscreenDialog: true,
+          builder: (context) => ChangeNotifierProvider.value(
+            value: logbook,
+            builder: (_, __) => EditLogbookEntryPage(entry: logbookEntry),
+          ),
+        ),
+      );
 }

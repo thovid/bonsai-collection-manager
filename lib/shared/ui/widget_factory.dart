@@ -12,11 +12,14 @@ TextFormField formTextField(BuildContext context,
         bool readOnly = true,
         String hint,
         String label,
+        int lines = 1,
         Function(String value) onSaved}) =>
     TextFormField(
       cursorColor: Theme.of(context).cursorColor,
       enabled: !readOnly,
       initialValue: initialValue,
+      minLines: lines,
+      maxLines: lines,
       decoration: InputDecoration(
         filled: !readOnly,
         hintText: hint,
@@ -82,7 +85,8 @@ TextFormField formDatePickerField(context,
   );
 }
 
-String _formatDate(DateTime value) => DateFormat.yMMMd(I18n.locale?.toString()).format(value);
+String _formatDate(DateTime value) =>
+    DateFormat.yMMMd(I18n.locale?.toString()).format(value);
 
 Future<DateTime> _getDate(BuildContext context, DateTime initialDate) {
   return showDatePicker(

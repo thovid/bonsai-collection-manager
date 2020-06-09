@@ -22,13 +22,13 @@ class WorkTypePanel extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                _avatarFor(workType),
+                workTypeIconFor(workType),
                 mediumHorizontalSpace,
                 Text(_buildWorkTypeName(),
-                    style: Theme.of(context).textTheme.subtitle1),
+                    style: Theme.of(context).textTheme.headline6),
               ],
             ),
           ),
@@ -42,27 +42,28 @@ class WorkTypePanel extends StatelessWidget {
     return workTypeName;
   }
 
-  Widget _avatarFor(LogWorkType workType) {
-    switch (workType) {
-      case LogWorkType.wired:
-        return Icon(LogWorkTypeIcons.wire);
-      case LogWorkType.watered:
-        return Icon(LogWorkTypeIcons.watering);
-      case LogWorkType.sprayed:
-        return Icon(LogWorkTypeIcons.pest_control);
-      case LogWorkType.repotted:
-        return Icon(LogWorkTypeIcons.pot);
-      case LogWorkType.pruned:
-        return Icon(LogWorkTypeIcons.manicure);
-      case LogWorkType.fertilized:
-        return Icon(LogWorkTypeIcons.seed_bag);
-      case LogWorkType.deadwood:
-        return Icon(LogWorkTypeIcons.wood);
-      case LogWorkType.pinched:
-        return Icon(LogWorkTypeIcons.pinch);
-      case LogWorkType.custom:
-      default:
-        return Icon(LogWorkTypeIcons.settings);
-    }
+}
+
+Widget workTypeIconFor(LogWorkType workType) {
+  switch (workType) {
+    case LogWorkType.wired:
+      return Icon(LogWorkTypeIcons.wire);
+    case LogWorkType.watered:
+      return Icon(LogWorkTypeIcons.watering);
+    case LogWorkType.sprayed:
+      return Icon(LogWorkTypeIcons.pest_control);
+    case LogWorkType.repotted:
+      return Icon(LogWorkTypeIcons.pot);
+    case LogWorkType.pruned:
+      return Icon(LogWorkTypeIcons.manicure);
+    case LogWorkType.fertilized:
+      return Icon(LogWorkTypeIcons.seed_bag);
+    case LogWorkType.deadwood:
+      return Icon(LogWorkTypeIcons.wood);
+    case LogWorkType.pinched:
+      return Icon(LogWorkTypeIcons.pinch);
+    case LogWorkType.custom:
+    default:
+      return Icon(LogWorkTypeIcons.settings);
   }
 }

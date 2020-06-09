@@ -45,16 +45,16 @@ class ViewBonsaiPage extends StatelessWidget {
   Text _buildTitle(BonsaiTreeWithImages tree) =>
       Text(tree.treeData.displayName);
 
-  void _startEdit(BuildContext context, BonsaiTreeWithImages tree) async {
-    Navigator.of(context).push(
-      MaterialPageRoute<BonsaiTreeWithImages>(
-        fullscreenDialog: true,
-        builder: (BuildContext context) => EditBonsaiPage(
-          tree: tree,
+  Future<void> _startEdit(
+          BuildContext context, BonsaiTreeWithImages tree) async =>
+      Navigator.of(context).push(
+        MaterialPageRoute<BonsaiTreeWithImages>(
+          fullscreenDialog: true,
+          builder: (BuildContext context) => EditBonsaiPage(
+            tree: tree,
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildBody(BuildContext context, BonsaiTreeWithImages tree) => Column(
         mainAxisAlignment: MainAxisAlignment.start,
