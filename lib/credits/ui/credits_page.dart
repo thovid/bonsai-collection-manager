@@ -21,14 +21,14 @@ class CreditsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              mediumSpace,
+              mediumVerticalSpace,
               RichText(
                 text: _p([
                   _t("Made with flutter: "),
                   _l("www.flutter.dev", url: "http://www.flutter.dev"),
                 ]),
               ),
-              mediumSpace,
+              mediumVerticalSpace,
               RichText(
                 text: _p([
                   _t("App icon made by "),
@@ -39,7 +39,7 @@ class CreditsPage extends StatelessWidget {
                   _l("www.flaticon.com", url: "https://www.flaticon.com"),
                 ]),
               ),
-              mediumSpace,
+              mediumVerticalSpace,
               RichText(
                 text: _p([
                   _t("Tree type icons made by "),

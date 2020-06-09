@@ -89,7 +89,7 @@ class SpeciesPickerState extends State<SpeciesPicker> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: _buildTreeTypeBar(context),
         ),
-        smallSpace,
+        smallVerticalSpace,
         _buildTypeAheadField()
       ],
     );

@@ -162,5 +162,6 @@ enum LogWorkType {
   deadwood,
   pruned,
   repotted,
-  custom
+  custom,
+  pinched,
 }

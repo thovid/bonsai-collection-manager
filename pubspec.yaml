@@ -70,6 +70,9 @@ flutter:
     - family:  TreeTypeIcons
       fonts:
         - asset: icons/TreeTypeIcons.ttf
+    - family: LogWorkType
+      fonts:
+        - asset: icons/LogWorkType.ttf
   assets:
    - data/bonsai_species.json
    - icons/bonsai.png

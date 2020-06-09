@@ -29,7 +29,7 @@ Drawer buildAppDrawer(
                               fit: BoxFit.contain,
                             ),
                           ),
-                          smallSpace,
+                          smallVerticalSpace,
                           Text(
                             "Bonsai Collection Manager",
                             style: Theme.of(context).textTheme.headline6,

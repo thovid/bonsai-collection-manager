@@ -69,7 +69,7 @@ class ViewBonsaiPage extends StatelessWidget {
               child: ImageGallery(),
             )),
           ),
-          smallSpace,
+          smallVerticalSpace,
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
             child: Card(

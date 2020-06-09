@@ -21,6 +21,8 @@ main() {
 
     await _openView(tester, logbook, anEntry);
 
+    expect(find.text(// title
+        '${anEntry.workTypeName}'), findsOneWidget);
     expect(find.text(anEntry.workTypeName), findsOneWidget);
     expect(find.text(DateFormat.yMMMd().format(anEntry.date)), findsOneWidget);
     expect(find.text(anEntry.notes), findsOneWidget);

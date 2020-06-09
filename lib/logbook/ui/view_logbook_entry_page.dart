@@ -9,16 +9,24 @@ import 'package:provider/provider.dart';
 import '../../shared/ui/spaces.dart';
 import '../i18n/view_logbook_entry_page.i18n.dart';
 import '../model/logbook.dart';
+import './work_type_panel.dart';
 
 class ViewLogbookEntryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SafeArea(
         child: Consumer<LogbookEntryWithImages>(
           builder: (context, logbookEntry, _) => Scaffold(
+            appBar: AppBar(
+              title: Text(_title(logbookEntry)),
+            ),
             body: _buildBody(context, logbookEntry),
           ),
         ),
       );
+
+  String _title(LogbookEntryWithImages logbookEntry) {
+    return 'Logbook entry'.i18n ;//'${logbookEntry.entry.workTypeName}';
+  }
 
   Widget _buildBody(
           BuildContext context, LogbookEntryWithImages logbookEntry) =>
@@ -26,21 +34,13 @@ class ViewLogbookEntryPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _workTypeRow(context, logbookEntry.entry),
-          smallSpace,
+          WorkTypePanel(
+            workType: logbookEntry.entry.workType,
+            workTypeName: logbookEntry.entry.workTypeName,
+          ),
+          smallVerticalSpace,
           _informationBox(context, logbookEntry.entry),
         ],
-      );
-
-  Widget _workTypeRow(BuildContext context, LogbookEntry entry) => Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Card(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[Text(entry.workTypeName)],
-          ),
-        ),
       );
 
   Widget _informationBox(BuildContext context, LogbookEntry entry) => Padding(
@@ -51,8 +51,8 @@ class ViewLogbookEntryPage extends StatelessWidget {
             child: Table(
               columnWidths: {0: FractionColumnWidth(.4)},
               children: [
-                _tableRow('Date'.i18n, DateFormat.yMMMd().format(entry.date)),
-                _tableRow('Notes'.i18n, entry.notes),
+                _tableRow('Date', DateFormat.yMMMd().format(entry.date)),
+                _tableRow('Notes', entry.notes),
               ],
             ),
           ),

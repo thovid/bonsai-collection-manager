@@ -70,7 +70,7 @@ class _EditBonsaiPageState extends State<EditBonsaiPage> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: <Widget>[
-          mediumSpace,
+          mediumVerticalSpace,
           Form(
               key: _formKey,
               child: Column(
@@ -82,14 +82,14 @@ class _EditBonsaiPageState extends State<EditBonsaiPage> {
                         hint: "The species of the tree".i18n,
                         label: "Species".i18n,
                         onSaved: (value) => _treeBuilder.species = value),
-                    mediumSpace,
+                    mediumVerticalSpace,
                     formTextField(context,
                         initialValue: _treeBuilder.treeName,
                         readOnly: false,
                         hint: "Name your tree (optional)".i18n,
                         label: "Name".i18n,
                         onSaved: (value) => _treeBuilder.treeName = value),
-                    mediumSpace,
+                    mediumVerticalSpace,
                     formDropdownField(context,
                         label: "Development Level".i18n,
                         value: _treeBuilder.developmentLevel,
@@ -98,7 +98,7 @@ class _EditBonsaiPageState extends State<EditBonsaiPage> {
                         onSaved: (value) =>
                             _treeBuilder.developmentLevel = value,
                         translate: (value) => value.toString().i18n),
-                    mediumSpace,
+                    mediumVerticalSpace,
                     formDropdownField(context,
                         label: "Pot Type".i18n,
                         value: _treeBuilder.potType,
@@ -106,7 +106,7 @@ class _EditBonsaiPageState extends State<EditBonsaiPage> {
                         values: PotType.values,
                         onSaved: (value) => _treeBuilder.potType = value,
                         translate: (value) => value.toString().i18n),
-                    mediumSpace,
+                    mediumVerticalSpace,
                     formDatePickerField(
                       context,
                       initialValue: _treeBuilder.acquiredAt,
@@ -114,7 +114,7 @@ class _EditBonsaiPageState extends State<EditBonsaiPage> {
                       label: "Acquired at".i18n,
                       onChanged: (value) => _treeBuilder.acquiredAt = value,
                     ),
-                    mediumSpace,
+                    mediumVerticalSpace,
                     formTextField(
                       context,
                       initialValue: _treeBuilder.acquiredFrom,
@@ -123,7 +123,7 @@ class _EditBonsaiPageState extends State<EditBonsaiPage> {
                       label: "Acquired from".i18n,
                       onSaved: (value) => _treeBuilder.acquiredFrom = value,
                     ),
-                    mediumSpace,
+                    mediumVerticalSpace,
                   ])),
         ],
       ),
