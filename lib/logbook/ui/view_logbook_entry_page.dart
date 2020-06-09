@@ -14,10 +14,16 @@ import './work_type_panel.dart';
 class ViewLogbookEntryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SafeArea(
-        child: Consumer<LogbookEntryWithImages>(
-          builder: (context, logbookEntry, _) => Scaffold(
+        child: Consumer2<LogbookEntryWithImages, Logbook>(
+          builder: (context, logbookEntry, logbook, _) => Scaffold(
             appBar: AppBar(
               title: Text(_title(logbookEntry)),
+              actions: <Widget>[
+                FlatButton(
+                  child: Icon(Icons.delete),
+                  onPressed: () => _delete(context, logbookEntry, logbook),
+                )
+              ],
             ),
             body: _buildBody(context, logbookEntry),
           ),
@@ -25,7 +31,7 @@ class ViewLogbookEntryPage extends StatelessWidget {
       );
 
   String _title(LogbookEntryWithImages logbookEntry) {
-    return 'Logbook entry'.i18n ;//'${logbookEntry.entry.workTypeName}';
+    return 'Logbook entry'.i18n; //'${logbookEntry.entry.workTypeName}';
   }
 
   Widget _buildBody(
@@ -68,4 +74,29 @@ class ViewLogbookEntryPage extends StatelessWidget {
             child: Container(
                 padding: const EdgeInsets.only(top: 10.0), child: Text(value)))
       ]);
+
+  Future _delete(BuildContext context, LogbookEntryWithImages entry,
+      Logbook logbook) async {
+    final bool shouldDelete = await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text('Really delete?'.i18n),
+              content: Text('Deletion can not be made undone!'.i18n),
+              actions: [
+                FlatButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text('Cancel'.i18n),
+                ),
+                FlatButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text('Delete'.i18n),
+                ),
+              ],
+            ));
+
+    if (shouldDelete) {
+      await logbook.delete(entry.id);
+      Navigator.of(context).pop();
+    }
+  }
 }

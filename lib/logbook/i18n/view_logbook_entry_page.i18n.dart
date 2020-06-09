@@ -17,7 +17,14 @@ extension Localization on String {
       {
         'en_us': 'Notes',
         'de': 'Notizen',
-      });
+      } +
+      {"en_us": "Cancel", "de": "Abbrechen"} +
+      {"en_us": "Really delete?", "de": "Wirklich löschen?"} +
+      {
+        "en_us": "Deletion can not be made undone!",
+        "de": "Löschen kann nicht rückgängig gemacht werden!"
+      } +
+      {"en_us": "Delete", "de": "Löschen"});
 
   String get i18n => localize(this, _t);
 }

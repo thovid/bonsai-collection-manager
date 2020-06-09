@@ -20,11 +20,12 @@ import 'package:provider/provider.dart';
 
 import 'utils/test_data.dart';
 import 'utils/test_mocks.dart';
+import 'utils/test_utils.dart' as testUtils;
 
 /// Helper to run a widget in a scaffold for visual checking purposes
 
-Images empty = Images(
-    parent: ModelID.newId(), repository: DummyImageRepository());
+Images empty =
+    Images(parent: ModelID.newId(), repository: DummyImageRepository());
 void main() {
   //runImageGallery();
   //runEditBonsaiView();
@@ -34,11 +35,20 @@ void main() {
 
 Future runViewLogbookEntryPage() async {
   LogbookEntry entry = aLogbookEntry;
-  LogbookEntryWithImages entryWithImages = LogbookEntryWithImages(entry: entry, images: empty);
-  runApp(WidgetRunner(ChangeNotifierProvider.value(
-    value: entryWithImages,
-    builder: (context, child) => ViewLogbookEntryPage(),
-  )));
+  Logbook logbook = await testUtils.loadLogbookWith([entry]);
+  LogbookEntryWithImages entryWithImages =
+      LogbookEntryWithImages(entry: entry, images: empty);
+  runApp(
+    WidgetRunner(
+      ChangeNotifierProvider.value(
+        value: logbook,
+        child: ChangeNotifierProvider.value(
+          value: entryWithImages,
+          builder: (context, child) => ViewLogbookEntryPage(),
+        ),
+      ),
+    ),
+  );
 }
 
 Future runViewBonsaiView() async {
@@ -47,10 +57,14 @@ Future runViewBonsaiView() async {
     treeData: tree,
     images: empty,
   );
-  runApp(WidgetRunner(ChangeNotifierProvider.value(
-    value: treeWithImages,
-    builder: (context, child) => ViewBonsaiPage(),
-  )));
+  runApp(
+    WidgetRunner(
+      ChangeNotifierProvider.value(
+        value: treeWithImages,
+        builder: (context, child) => ViewBonsaiPage(),
+      ),
+    ),
+  );
 }
 
 void runEditBonsaiView() {
@@ -76,23 +90,25 @@ class WidgetRunner extends StatelessWidget {
   Widget build(BuildContext context) {
     return WithAppContext(
       child: MaterialApp(
-          title: 'Bonsai Collection Manager',
-          localizationsDelegates: [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: supportedLanguageCodes,
-          theme: ThemeData(
-            primarySwatch: Colors.lightGreen,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          home: I18n(
-              child: Scaffold(
+        title: 'Bonsai Collection Manager',
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: supportedLanguageCodes,
+        theme: ThemeData(
+          primarySwatch: Colors.lightGreen,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: I18n(
+          child: Scaffold(
             body: Center(
               child: child,
             ),
-          ))),
+          ),
+        ),
+      ),
     );
   }
 }

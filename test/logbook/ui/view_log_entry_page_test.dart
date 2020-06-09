@@ -5,6 +5,7 @@
 import 'package:bonsaicollectionmanager/images/model/images.dart';
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
 import 'package:bonsaicollectionmanager/logbook/ui/view_logbook_entry_page.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,6 @@ main() {
       (WidgetTester tester) async {
     var anEntry = aLogbookEntry;
     var logbook = await testUtils.loadLogbookWith([anEntry]);
-
     await _openView(tester, logbook, anEntry);
 
     expect(find.text(// title
@@ -26,6 +26,17 @@ main() {
     expect(find.text(anEntry.workTypeName), findsOneWidget);
     expect(find.text(DateFormat.yMMMd().format(anEntry.date)), findsOneWidget);
     expect(find.text(anEntry.notes), findsOneWidget);
+  });
+
+  testWidgets('can delete entry', (WidgetTester tester) async {
+    var anEntry = aLogbookEntry;
+    var logbook = await testUtils.loadLogbookWith([anEntry]);
+    await _openView(tester, logbook, anEntry);
+
+    await tester.tap(find.byIcon(Icons.delete)).then((_) => tester.pump());
+    expect(find.text('Really delete?'), findsOneWidget);
+    await tester.tap(find.text('Delete')).then((_) => tester.pumpAndSettle());
+    expect(logbook.length, equals(0));
   });
 }
 
@@ -35,9 +46,12 @@ Future<void> _openView(
       entry: entry,
       images: Images(repository: DummyImageRepository(), parent: entry.id));
   return tester.pumpWidget(await testUtils.testAppWith(
-    ChangeNotifierProvider<LogbookEntryWithImages>.value(
-      value: entryWithImages,
-      builder: (context, child) => ViewLogbookEntryPage(),
+    ChangeNotifierProvider<Logbook>.value(
+      value: logbook,
+      child: ChangeNotifierProvider<LogbookEntryWithImages>.value(
+        value: entryWithImages,
+        builder: (context, child) => ViewLogbookEntryPage(),
+      ),
     ),
   ));
 }
