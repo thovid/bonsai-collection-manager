@@ -51,7 +51,7 @@ class ViewLogbookPage extends StatelessWidget {
           LogbookEntryWithImages entry) =>
       ListTile(
         leading: CircleAvatar(child: workTypeIconFor(entry.entry.workType)),
-        title: Text(entry.entry.workTypeName),
+        title: Text(entry.entry.workTypeName ?? ''),
         subtitle: Text(
           DateFormat.yMMMd(I18n.locale?.toString()).format(entry.entry.date),
         ),
