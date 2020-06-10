@@ -2,10 +2,11 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 import 'package:i18n_extension/i18n_extension.dart';
+import '../../logbook/i18n/log_work_type_translations.dart';
 import 'bonsai_enums.i18n.dart';
 
 extension Localization on String {
-  static var _t = BonsaiEnumTranslations.t *
+  static var _t = BonsaiEnumTranslations.t * LogWorkTypeTranslations.t *
       (Translations("en_us") +
           {"en_us": "Add new tree", "de": "Neuen Baum hinzufügen"} +
           {"en_us": "Edit", "de": "Bearbeiten"} +
@@ -31,7 +32,7 @@ extension Localization on String {
             "en_us": "Deletion can not be made undone!",
             "de": "Löschen kann nicht rückgängig gemacht werden!"
           } +
-          {"en_us": "Delete", "de": "Löschen"});
+          {"en_us": "Delete", "de": "Löschen"} + {"en_us": "More", "de": "Mehr"});
 
   String get i18n => localize(this, _t);
 }

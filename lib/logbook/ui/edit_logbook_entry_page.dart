@@ -2,7 +2,6 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +18,9 @@ class EditLogbookEntryPage extends StatefulWidget {
   static const route_name = '/logbook/edit-entry';
 
   final LogbookEntryWithImages entry;
+  final LogWorkType initialWorkType;
 
-  EditLogbookEntryPage({this.entry});
+  EditLogbookEntryPage({this.entry, this.initialWorkType});
 
   @override
   _EditLogbookEntryPageState createState() => _EditLogbookEntryPageState();
@@ -34,14 +34,22 @@ class _EditLogbookEntryPageState extends State<EditLogbookEntryPage> {
   @override
   void initState() {
     super.initState();
-    _entryBuilder = LogbookEntryBuilder(fromEntry: widget.entry?.entry);
-    _workTypeNameController.text = _entryBuilder.workTypeName;
+    _initFromWidget();
   }
 
   @override
   void didUpdateWidget(EditLogbookEntryPage oldWidget) {
     super.didUpdateWidget(oldWidget);
+    _initFromWidget();
+  }
+
+  void _initFromWidget() {
     _entryBuilder = LogbookEntryBuilder(fromEntry: widget.entry?.entry);
+    _entryBuilder.workType =
+        widget.entry?.entry?.workType ?? widget.initialWorkType;
+    _entryBuilder.workTypeName = widget.entry?.entry?.workTypeName ??
+        widget.initialWorkType?.toString()?.i18n ??
+        '';
     _workTypeNameController.text = _entryBuilder.workTypeName;
   }
 
@@ -98,9 +106,8 @@ class _EditLogbookEntryPageState extends State<EditLogbookEntryPage> {
         ),
       ));
 
-  Widget _buildTitle() => Text(widget.entry != null
-      ? 'Edit entry'.i18n
-      : 'Create entry'.i18n);
+  Widget _buildTitle() =>
+      Text(widget.entry != null ? 'Edit entry'.i18n : 'Create entry'.i18n);
 
   Future _save(Logbook logbook) async {
     if (!_formKey.currentState.validate()) {

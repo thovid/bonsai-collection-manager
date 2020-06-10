@@ -2,14 +2,17 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
 import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import '../../logbook/ui/view_logbook_page.dart';
 import '../../images/model/images.dart';
+
 import '../../images/ui/image_gallery.dart';
+import '../../shared/icons/log_work_type_icons.dart';
+import '../../shared/ui/speed_dial.dart';
 import '../../shared/ui/spaces.dart';
 import '../model/bonsai_tree_collection.dart';
 import '../model/bonsai_tree_with_images.dart';
@@ -28,11 +31,6 @@ class ViewBonsaiPage extends StatelessWidget {
               title: _buildTitle(tree),
               actions: <Widget>[
                 IconButton(
-                  icon: Icon(Icons.edit),
-                  tooltip: "Edit".i18n,
-                  onPressed: () => _startEdit(context, tree),
-                ),
-                IconButton(
                   icon: Icon(Icons.apps),
                   onPressed: () => Navigator.of(context).pushNamed(
                       ViewLogbookPage.route_name,
@@ -45,6 +43,30 @@ class ViewBonsaiPage extends StatelessWidget {
               ],
             ),
             body: _buildBody(context, tree),
+            floatingActionButton: SpeedDial(
+              children: [
+                SpeedDialItem(
+                  label: 'More'.i18n,
+                  icon: Icon(Icons.more_horiz),
+                  onPressed: () {},
+                ),
+                SpeedDialItem(
+                  label: LogWorkType.fertilized.toString().i18n,
+                  icon: Icon(LogWorkTypeIcons.seed_bag),
+                  onPressed: () {},
+                ),
+                SpeedDialItem(
+                  label: LogWorkType.watered.toString().i18n,
+                  icon: Icon(LogWorkTypeIcons.watering),
+                  onPressed: () {},
+                ),
+                SpeedDialItem(
+                  label: 'Edit'.i18n,
+                  icon: Icon(Icons.edit),
+                  onPressed: () => _startEdit(context, tree),
+                ),
+              ],
+            ),
           ),
         ),
       );
