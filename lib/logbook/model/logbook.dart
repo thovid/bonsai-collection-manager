@@ -83,6 +83,7 @@ class Logbook with ChangeNotifier {
       LogbookEntryWithImages entryWithImages) async {
     await _logbookRepository.add(entryWithImages.entry, _subjectId);
     _entries.add(entryWithImages);
+    _entries.sort((a, b) => a.entry.date.compareTo(b.entry.date));
     notifyListeners();
     return entryWithImages;
   }

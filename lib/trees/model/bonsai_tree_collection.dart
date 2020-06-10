@@ -79,6 +79,7 @@ class BonsaiTreeCollection with ChangeNotifier {
   Future<BonsaiTreeWithImages> _insert(BonsaiTreeWithImages newTree) async {
     newTree.treeData = _updateSpeciesOrdinal(newTree.treeData);
     _trees.add(newTree);
+    _trees.sort((a, b) => a.treeData.acquiredAt.compareTo(b.treeData.acquiredAt));
     await _treeRepository.update(newTree.treeData);
     notifyListeners();
     return newTree;
@@ -93,6 +94,7 @@ class BonsaiTreeCollection with ChangeNotifier {
       tree.treeData = _updateSpeciesOrdinal(tree.treeData);
     }
     _trees[index] = tree;
+    _trees.sort((a, b) => a.treeData.acquiredAt.compareTo(b.treeData.acquiredAt));
     await _treeRepository.update(tree.treeData);
     return tree;
   }
