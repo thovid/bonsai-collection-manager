@@ -11,6 +11,7 @@ import 'package:tuple/tuple.dart';
 import '../i18n/view_logbook_page.i18n.dart';
 import '../model/logbook.dart';
 import './work_type_panel.dart';
+import './edit_logbook_entry_page.dart';
 import './view_logbook_entry_page.dart';
 
 class ViewLogbookPage extends StatelessWidget {
@@ -25,6 +26,11 @@ class ViewLogbookPage extends StatelessWidget {
             title: Text('Logbook'.i18n),
           ),
           body: _buildBody(context, logbook),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => _addEntry(context, logbook),
+            tooltip: "Add log entry".i18n,
+            child: Icon(Icons.add),
+          ),
         ),
       ),
     );
@@ -54,4 +60,8 @@ class ViewLogbookPage extends StatelessWidget {
               arguments: Tuple2(logbook, entry));
         },
       );
+
+  Future _addEntry(BuildContext context, Logbook logbook) async =>
+      Navigator.of(context).pushNamed(EditLogbookEntryPage.route_name,
+          arguments: Tuple2(logbook, null));
 }

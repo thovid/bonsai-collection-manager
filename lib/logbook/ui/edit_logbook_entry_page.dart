@@ -97,7 +97,9 @@ class _EditLogbookEntryPageState extends State<EditLogbookEntryPage> {
         ),
       ));
 
-  Widget _buildTitle() => null;
+  Widget _buildTitle() => Text(widget.entry != null
+      ? 'Edit entry'.i18n
+      : 'Create entry'.i18n);
 
   Future _save(Logbook logbook) async {
     if (!_formKey.currentState.validate()) {

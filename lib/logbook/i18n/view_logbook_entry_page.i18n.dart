@@ -42,6 +42,14 @@ extension Localization on String {
           {
             "en_us": "Add some notes",
             "de": "Füge eine Notiz hinzu",
+          } +
+          {
+            "en_us": "Edit entry",
+            "de": "Eintrag bearbeiten",
+          } +
+          {
+            "en_us": "Create entry",
+            "de": "Eintrag erstellen",
           }) *
       LogWorkTypeTranslations.t;
 

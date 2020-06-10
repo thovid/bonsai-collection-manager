@@ -78,7 +78,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
             if (snapshot.connectionState != ConnectionState.done)
               return LoadingScreen();
 
-           // return MultiProvider(providers: [], child: ,);
+            // return MultiProvider(providers: [], child: ,);
 
             return ChangeNotifierProvider<Logbook>.value(
               value: logbook,
@@ -92,7 +92,18 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         );
       });
 
-    //case EditLogbookEntryPage.route_name:
+    case EditLogbookEntryPage.route_name:
+      return MaterialPageRoute(builder: (context) {
+        final args =
+            settings.arguments as Tuple2<Logbook, LogbookEntryWithImages>;
+        final logbook = args.item1;
+        final entryWithImages = args.item2;
+        return ChangeNotifierProvider<Logbook>.value(
+          value: logbook,
+          builder: (context, _) =>
+              I18n(child: EditLogbookEntryPage(entry: entryWithImages)),
+        );
+      });
 
     case ViewLogbookPage.route_name:
       return MaterialPageRoute(
