@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 import '../i18n/view_logbook_page.i18n.dart';
 import '../model/logbook.dart';
@@ -35,21 +36,22 @@ class ViewLogbookPage extends StatelessWidget {
       child: ListView.builder(
         itemCount: entries.length,
         itemBuilder: (context, index) =>
-            _buildLogbookEntryTile(context, entries[index]),
+            _buildLogbookEntryTile(context, logbook, entries[index]),
       ),
     );
   }
 
-  Widget _buildLogbookEntryTile(
-          BuildContext context, LogbookEntryWithImages entry) =>
+  Widget _buildLogbookEntryTile(BuildContext context, Logbook logbook,
+          LogbookEntryWithImages entry) =>
       ListTile(
         leading: CircleAvatar(child: workTypeIconFor(entry.entry.workType)),
         title: Text(entry.entry.workTypeName),
         subtitle: Text(
-            DateFormat.yMMMd(I18n.locale?.toString()).format(entry.entry.date)),
+          DateFormat.yMMMd(I18n.locale?.toString()).format(entry.entry.date),
+        ),
         onTap: () {
-          Navigator.of(context)
-              .pushNamed(ViewLogbookEntryPage.route_name, arguments: entry);
+          Navigator.of(context).pushNamed(ViewLogbookEntryPage.route_name,
+              arguments: Tuple2(logbook, entry));
         },
       );
 }

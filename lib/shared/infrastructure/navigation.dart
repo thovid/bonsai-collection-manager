@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../trees/model/bonsai_tree_with_images.dart';
 import '../../trees/model/bonsai_tree_collection.dart';
@@ -19,6 +20,7 @@ import '../../logbook/ui/view_logbook_page.dart';
 import '../../logbook/ui/view_logbook_entry_page.dart';
 import '../../logbook/ui/edit_logbook_entry_page.dart';
 
+import '../model/model_id.dart';
 import '../state/app_context.dart';
 import '../ui/loading_screen.dart';
 import '../ui/route_not_found.dart';
@@ -66,17 +68,25 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case ViewLogbookEntryPage.route_name:
       return MaterialPageRoute(builder: (context) {
-        final entry = settings.arguments as LogbookEntryWithImages;
-        // TODO load logbook
+        final args =
+            settings.arguments as Tuple2<Logbook, LogbookEntryWithImages>;
+        final logbook = args.item1;
+        final entry = args.item2;
         return FutureBuilder(
           future: entry.fetchImages(),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done)
               return LoadingScreen();
 
-            return ChangeNotifierProvider<LogbookEntryWithImages>.value(
-              value: snapshot.data,
-              builder: (context, _) => I18n(child: ViewLogbookEntryPage()),
+           // return MultiProvider(providers: [], child: ,);
+
+            return ChangeNotifierProvider<Logbook>.value(
+              value: logbook,
+              builder: (context, _) =>
+                  ChangeNotifierProvider<LogbookEntryWithImages>.value(
+                value: snapshot.data,
+                builder: (context, _) => I18n(child: ViewLogbookEntryPage()),
+              ),
             );
           },
         );
@@ -84,7 +94,28 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     //case EditLogbookEntryPage.route_name:
 
-    //case ViewLogbookPage.route_name:
+    case ViewLogbookPage.route_name:
+      return MaterialPageRoute(
+        builder: (context) {
+          final subjectId = settings.arguments as ModelID;
+          final imageRepository = AppContext.of(context).imageRepository;
+          final logbookRepository = AppContext.of(context).logbookRepository;
+          return FutureBuilder(
+            future: Logbook.load(
+                logbookRepository: logbookRepository,
+                imageRepository: imageRepository,
+                subjectId: subjectId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done)
+                return LoadingScreen();
+              return ChangeNotifierProvider<Logbook>.value(
+                value: snapshot.data,
+                builder: (context, child) => I18n(child: ViewLogbookPage()),
+              );
+            },
+          );
+        },
+      );
 
     case CreditsPage.route_name:
       return MaterialPageRoute(

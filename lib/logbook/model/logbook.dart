@@ -130,8 +130,8 @@ class LogbookEntryWithImages with ChangeNotifier {
   Images images;
 
   LogbookEntryWithImages(
-      {@required LogbookEntry entry, @required Images images})
-      : _entry = entry {
+      {@required LogbookEntry entry, @required this.images})
+      : _entry = entry{
     images.addListener(() {
       notifyListeners();
     });

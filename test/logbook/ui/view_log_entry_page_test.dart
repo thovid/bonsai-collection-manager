@@ -4,6 +4,7 @@
 
 import 'package:bonsaicollectionmanager/images/model/images.dart';
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
+import 'package:bonsaicollectionmanager/logbook/ui/edit_logbook_entry_page.dart';
 import 'package:bonsaicollectionmanager/logbook/ui/view_logbook_entry_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -60,6 +61,18 @@ main() {
     verify(mockNavigationObserver.didPop(any, any));
   });
 
+  testWidgets('can create new entry', (WidgetTester tester) async {
+    final mockNavigationObserver = MockNavigatorObserver();
+    var logbook = await testUtils.loadLogbookWith([]);
+    await _openView(tester, logbook, null,
+        navigatorObserver: mockNavigationObserver);
+    await tester.enterText(
+        find.bySemanticsLabel('Notes'), 'this is a new note');
+    await tester.tap(find.text('Save')).then((_) => tester.pumpAndSettle());
+    verify(mockNavigationObserver.didReplace(
+        newRoute: anyNamed('newRoute'), oldRoute: anyNamed('oldRoute')));
+  });
+
   testWidgets('All translations defined', (WidgetTester tester) async {
     var anEntry = aLogbookEntry;
     var logbook = await testUtils.loadLogbookWith([anEntry]);
@@ -72,19 +85,31 @@ main() {
 
 Future<void> _openView(WidgetTester tester, Logbook logbook, LogbookEntry entry,
     {NavigatorObserver navigatorObserver}) async {
-  final LogbookEntryWithImages entryWithImages = LogbookEntryWithImages(
-      entry: entry,
-      images: Images(repository: DummyImageRepository(), parent: entry.id));
-  return tester.pumpWidget(
-    await testUtils.testAppWith(
-      ChangeNotifierProvider<Logbook>.value(
-        value: logbook,
-        child: ChangeNotifierProvider<LogbookEntryWithImages>.value(
-          value: entryWithImages,
-          builder: (context, child) => ViewLogbookEntryPage(),
+  if (entry != null) {
+    final LogbookEntryWithImages entryWithImages = LogbookEntryWithImages(
+        entry: entry,
+        images: Images(repository: DummyImageRepository(), parent: entry.id));
+    return tester.pumpWidget(
+      await testUtils.testAppWith(
+        ChangeNotifierProvider<Logbook>.value(
+          value: logbook,
+          child: ChangeNotifierProvider<LogbookEntryWithImages>.value(
+            value: entryWithImages,
+            builder: (context, child) => ViewLogbookEntryPage(),
+          ),
         ),
+        navigationObserver: navigatorObserver,
       ),
-      navigationObserver: navigatorObserver,
-    ),
-  );
+    );
+  } else {
+    return tester.pumpWidget(
+      await testUtils.testAppWith(
+        ChangeNotifierProvider<Logbook>.value(
+          value: logbook,
+          builder: (context, child) => EditLogbookEntryPage(),
+        ),
+        navigationObserver: navigatorObserver,
+      ),
+    );
+  }
 }

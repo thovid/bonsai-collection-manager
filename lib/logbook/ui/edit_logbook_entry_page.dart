@@ -2,9 +2,11 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/logbook/ui/view_logbook_entry_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../shared/ui/spaces.dart';
 import '../../shared/ui/widget_factory.dart';
@@ -108,7 +110,12 @@ class _EditLogbookEntryPageState extends State<EditLogbookEntryPage> {
       widget.entry.entry = entry;
       logbook.update(widget.entry);
       Navigator.of(context).pop(widget.entry);
+      return;
     }
+
+    final LogbookEntryWithImages newEntry = await logbook.add(entry);
+    Navigator.of(context).pushReplacementNamed(ViewLogbookEntryPage.route_name,
+        arguments: Tuple2(logbook, newEntry));
   }
 
   Widget _buildWorkTypeSelector() {

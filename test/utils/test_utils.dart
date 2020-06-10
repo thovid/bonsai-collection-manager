@@ -2,9 +2,9 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/images/model/images.dart';
 import 'package:bonsaicollectionmanager/logbook/infrastructure/logbook_entry_table.dart';
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
+import 'package:bonsaicollectionmanager/shared/infrastructure/navigation.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
 import 'package:bonsaicollectionmanager/shared/ui/route_not_found.dart';
@@ -35,15 +35,18 @@ Future<Widget> testAppWith(Widget widget,
         navigatorObservers: [
           if (navigationObserver != null) navigationObserver
         ],
+        onGenerateRoute: generateRoute,
         onUnknownRoute: (settings) => MaterialPageRoute(
           builder: (context) => RouteNotFound(),
         ),
       ),
       testContext: AppContext(
-          isInitialized: true,
-          bonsaiCollection: bonsaiCollection,
-          speciesRepository: testSpecies,
-          imageRepository: DummyImageRepository()));
+        isInitialized: true,
+        bonsaiCollection: bonsaiCollection,
+        speciesRepository: testSpecies,
+        imageRepository: DummyImageRepository(),
+        logbookRepository: MockLogbookRepository(),
+      ));
 }
 
 Future<Database> openTestDatabase(

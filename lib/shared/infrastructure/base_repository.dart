@@ -22,11 +22,15 @@ class BaseRepository {
     }
     _database = await _dbPath(db_name).then((path) => openDatabase(
           path,
-          version: 1,
+          version: 2,
           onCreate: (Database db, int version) async {
             await BonsaiTreeTable.createTable(db);
             await CollectionItemImageTable.createTable(db);
             await LogbookEntryTable.createTable(db);
+          },
+          onUpgrade: (db, oldVersion, newVersion) async {
+            if (oldVersion == newVersion) return;
+            if (newVersion == 2) await LogbookEntryTable.createTable(db);
           },
         ));
     initialized = true;

@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/logbook/ui/view_logbook_page.dart';
 import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:intl/intl.dart';
@@ -26,6 +27,12 @@ class ViewBonsaiPage extends StatelessWidget {
             appBar: AppBar(
               title: _buildTitle(tree),
               actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.apps),
+                  onPressed: () => Navigator.of(context).pushNamed(
+                      ViewLogbookPage.route_name,
+                      arguments: tree.id),
+                ),
                 IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () => _delete(context, tree, collection),
