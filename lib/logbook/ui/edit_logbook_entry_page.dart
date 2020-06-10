@@ -2,7 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/logbook/ui/view_logbook_entry_page.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +13,7 @@ import '../../shared/ui/widget_factory.dart';
 import '../i18n/view_logbook_entry_page.i18n.dart';
 import '../model/logbook.dart';
 import './work_type_panel.dart';
+import './view_logbook_entry_page.dart';
 
 class EditLogbookEntryPage extends StatefulWidget {
   static const route_name = '/logbook/edit-entry';

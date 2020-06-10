@@ -3,7 +3,6 @@
  */
 
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
-import 'package:bonsaicollectionmanager/logbook/ui/view_logbook_entry_page.dart';
 import 'package:bonsaicollectionmanager/logbook/ui/view_logbook_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

@@ -38,7 +38,7 @@ class ViewLogbookEntryPage extends StatelessWidget {
       );
 
   String _title(LogbookEntryWithImages logbookEntry) {
-    return 'Logbook entry'.i18n; //'${logbookEntry.entry.workTypeName}';
+    return 'Logbook entry'.i18n;
   }
 
   Widget _buildBody(
@@ -72,34 +72,42 @@ class ViewLogbookEntryPage extends StatelessWidget {
         ),
       );
 
-  TableRow _tableRow(String labelKey, String value) => TableRow(children: [
-        TableCell(
+  TableRow _tableRow(String labelKey, String value) => TableRow(
+        children: [
+          TableCell(
             child: Container(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Text(labelKey.i18n + ':'))),
-        TableCell(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Text(labelKey.i18n + ':'),
+            ),
+          ),
+          TableCell(
             child: Container(
-                padding: const EdgeInsets.only(top: 10.0), child: Text(value)))
-      ]);
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Text(value),
+            ),
+          ),
+        ],
+      );
 
   Future _delete(BuildContext context, LogbookEntryWithImages entry,
       Logbook logbook) async {
     final bool shouldDelete = await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: Text('Really delete?'.i18n),
-              content: Text('Deletion can not be made undone!'.i18n),
-              actions: [
-                FlatButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text('Cancel'.i18n),
-                ),
-                FlatButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: Text('Delete'.i18n),
-                ),
-              ],
-            ));
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Really delete?'.i18n),
+        content: Text('Deletion can not be made undone!'.i18n),
+        actions: [
+          FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('Cancel'.i18n),
+          ),
+          FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('Delete'.i18n),
+          ),
+        ],
+      ),
+    );
 
     if (shouldDelete) {
       await logbook.delete(entry.id);
