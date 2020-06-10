@@ -2,17 +2,23 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-
 import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../trees/model/bonsai_tree_with_images.dart';
-import '../../trees/ui/view_bonsai_collection_page.dart';
 import '../../trees/model/bonsai_tree_collection.dart';
+import '../../trees/ui/view_bonsai_collection_page.dart';
 import '../../trees/ui/view_bonsai_page.dart';
 import '../../trees/ui/edit_bonsai_page.dart';
+
 import '../../credits/ui/credits_page.dart';
+
+import '../../logbook/model/logbook.dart';
+import '../../logbook/ui/view_logbook_page.dart';
+import '../../logbook/ui/view_logbook_entry_page.dart';
+import '../../logbook/ui/edit_logbook_entry_page.dart';
+
 import '../state/app_context.dart';
 import '../ui/loading_screen.dart';
 import '../ui/route_not_found.dart';
@@ -57,6 +63,28 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           },
         );
       });
+
+    case ViewLogbookEntryPage.route_name:
+      return MaterialPageRoute(builder: (context) {
+        final entry = settings.arguments as LogbookEntryWithImages;
+        // TODO load logbook
+        return FutureBuilder(
+          future: entry.fetchImages(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done)
+              return LoadingScreen();
+
+            return ChangeNotifierProvider<LogbookEntryWithImages>.value(
+              value: snapshot.data,
+              builder: (context, _) => I18n(child: ViewLogbookEntryPage()),
+            );
+          },
+        );
+      });
+
+    //case EditLogbookEntryPage.route_name:
+
+    //case ViewLogbookPage.route_name:
 
     case CreditsPage.route_name:
       return MaterialPageRoute(

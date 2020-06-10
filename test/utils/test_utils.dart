@@ -7,6 +7,7 @@ import 'package:bonsaicollectionmanager/logbook/infrastructure/logbook_entry_tab
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
+import 'package:bonsaicollectionmanager/shared/ui/route_not_found.dart';
 import 'package:bonsaicollectionmanager/trees/infrastructure/bonsai_tree_table.dart';
 import 'package:bonsaicollectionmanager/images/infrastructure/collection_item_image_table.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
@@ -34,6 +35,9 @@ Future<Widget> testAppWith(Widget widget,
         navigatorObservers: [
           if (navigationObserver != null) navigationObserver
         ],
+        onUnknownRoute: (settings) => MaterialPageRoute(
+          builder: (context) => RouteNotFound(),
+        ),
       ),
       testContext: AppContext(
           isInitialized: true,

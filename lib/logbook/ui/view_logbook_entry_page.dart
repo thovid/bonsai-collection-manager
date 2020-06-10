@@ -13,6 +13,8 @@ import './work_type_panel.dart';
 import './edit_logbook_entry_page.dart';
 
 class ViewLogbookEntryPage extends StatelessWidget {
+  static const String route_name = '/logbook/view-entry';
+
   @override
   Widget build(BuildContext context) => SafeArea(
         child: Consumer2<LogbookEntryWithImages, Logbook>(

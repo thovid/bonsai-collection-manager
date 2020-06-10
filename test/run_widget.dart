@@ -5,6 +5,7 @@
 import 'package:bonsaicollectionmanager/images/model/images.dart';
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
 import 'package:bonsaicollectionmanager/logbook/ui/view_logbook_entry_page.dart';
+import 'package:bonsaicollectionmanager/logbook/ui/view_logbook_page.dart';
 import 'package:bonsaicollectionmanager/shared/i18n/i18n.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
@@ -30,7 +31,21 @@ void main() {
   //runImageGallery();
   //runEditBonsaiView();
   //runViewBonsaiView();
-  runViewLogbookEntryPage();
+  //runViewLogbookEntryPage();
+  runViewLogbookPage();
+}
+
+Future runViewLogbookPage() async {
+  LogbookEntry entry = aLogbookEntry;
+  Logbook logbook = await testUtils.loadLogbookWith([entry, entry, entry]);
+  runApp(
+    WidgetRunner(
+      ChangeNotifierProvider.value(
+        value: logbook,
+        builder: (context, child) => ViewLogbookPage(),
+      ),
+    ),
+  );
 }
 
 Future runViewLogbookEntryPage() async {

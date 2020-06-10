@@ -13,6 +13,8 @@ import '../model/logbook.dart';
 import './work_type_panel.dart';
 
 class EditLogbookEntryPage extends StatefulWidget {
+  static const route_name = '/logbook/edit-entry';
+
   final LogbookEntryWithImages entry;
 
   EditLogbookEntryPage({this.entry});
@@ -123,9 +125,7 @@ class _EditLogbookEntryPageState extends State<EditLogbookEntryPage> {
             onChanged: (value) {
               _entryBuilder.workType = value;
               _workTypeNameController.text = value.toString().i18n;
-              setState(() {
-
-              });
+              setState(() {});
             },
           ),
         ),
