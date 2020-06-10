@@ -83,7 +83,7 @@ class ViewLogbookEntryPage extends StatelessWidget {
           TableCell(
             child: Container(
               padding: const EdgeInsets.only(top: 10.0),
-              child: Text(value),
+              child: Text(value ?? ''),
             ),
           ),
         ],

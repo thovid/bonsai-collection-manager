@@ -20,7 +20,10 @@ import '../../utils/test_utils.dart' as testUtils;
 main() {
   testWidgets('view shows data of a single log entry',
       (WidgetTester tester) async {
-    var anEntry = aLogbookEntry;
+    var anEntry = (LogbookEntryBuilder()
+          ..workTypeName = 'custom'
+          ..notes = 'notes')
+        .build();
     var logbook = await testUtils.loadLogbookWith([anEntry]);
     await _openView(tester, logbook, anEntry);
 
