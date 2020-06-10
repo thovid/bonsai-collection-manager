@@ -51,8 +51,12 @@ class BonsaiTreeTable {
 
   static Future<BonsaiTreeData> read(ModelID<BonsaiTreeData> id,
       SpeciesRepository speciesRepository, DatabaseExecutor db) async {
-    List<Map<String, dynamic>> data = await db.query(table_name,
-        columns: columns, where: '$tree_id = ?', whereArgs: [id.value]);
+    List<Map<String, dynamic>> data = await db.query(
+      table_name,
+      columns: columns,
+      where: '$tree_id = ?',
+      whereArgs: [id.value],
+    );
     if (data.length == 0) {
       return null;
     }
@@ -62,8 +66,11 @@ class BonsaiTreeTable {
 
   static Future<List<BonsaiTreeData>> readAll(
       SpeciesRepository speciesRepository, DatabaseExecutor db) async {
-    List<Map<String, dynamic>> data =
-        await db.query(table_name, columns: columns);
+    List<Map<String, dynamic>> data = await db.query(
+      table_name,
+      columns: columns,
+      orderBy: '$acquiredAt DESC',
+    );
     List<BonsaiTreeData> result = List(data.length);
     for (var i = 0; i < data.length; i++) {
       BonsaiTreeData t = await _fromMap(data[i], speciesRepository);
@@ -72,9 +79,12 @@ class BonsaiTreeTable {
     return result;
   }
 
-  static Future<void> delete(ModelID<BonsaiTreeData> id, Database db) async {
-    return db.delete(table_name, where: '$tree_id = ?', whereArgs: [id.value]);
-  }
+  static Future<void> delete(ModelID<BonsaiTreeData> id, Database db) async =>
+      db.delete(
+        table_name,
+        where: '$tree_id = ?',
+        whereArgs: [id.value],
+      );
 
   static Map<String, dynamic> _toMap(BonsaiTreeData tree) => {
         tree_id: tree.id.value,

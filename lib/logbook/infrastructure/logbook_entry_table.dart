@@ -39,8 +39,11 @@ class LogbookEntryTable {
 
   static Future write(LogbookEntry logbookEntry, ModelID subject,
           DatabaseExecutor database) async =>
-      database.insert(table_name, _toMap(logbookEntry, subject),
-          conflictAlgorithm: ConflictAlgorithm.replace);
+      database.insert(
+        table_name,
+        _toMap(logbookEntry, subject),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
 
   static Future<LogbookEntry> read(
       ModelID<LogbookEntry> id, DatabaseExecutor database) async {
@@ -54,15 +57,22 @@ class LogbookEntryTable {
   }
 
   static Future delete(
-      ModelID<LogbookEntry> id, DatabaseExecutor database) async {
-    return database
-        .delete(table_name, where: '$entry_id = ?', whereArgs: [id.value]);
-  }
+          ModelID<LogbookEntry> id, DatabaseExecutor database) async =>
+      database.delete(
+        table_name,
+        where: '$entry_id = ?',
+        whereArgs: [id.value],
+      );
 
   static Future<List<LogbookEntry>> readAll(
       ModelID subject, DatabaseExecutor database) async {
-    var data = await database.query(table_name,
-        columns: columns, where: '$subject_id = ?', whereArgs: [subject.value]);
+    var data = await database.query(
+      table_name,
+      columns: columns,
+      where: '$subject_id = ?',
+      whereArgs: [subject.value],
+      orderBy: '$date DESC',
+    );
     List<LogbookEntry> result = List<LogbookEntry>(data.length);
     for (int i = 0; i < data.length; i++) {
       result[i] = _fromMap(data[i]);
