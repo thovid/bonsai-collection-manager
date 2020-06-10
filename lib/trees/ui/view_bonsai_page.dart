@@ -2,12 +2,12 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/logbook/ui/view_logbook_page.dart';
 import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../logbook/ui/view_logbook_page.dart';
 import '../../images/model/images.dart';
 import '../../images/ui/image_gallery.dart';
 import '../../shared/ui/spaces.dart';
@@ -28,6 +28,11 @@ class ViewBonsaiPage extends StatelessWidget {
               title: _buildTitle(tree),
               actions: <Widget>[
                 IconButton(
+                  icon: Icon(Icons.edit),
+                  tooltip: "Edit".i18n,
+                  onPressed: () => _startEdit(context, tree),
+                ),
+                IconButton(
                   icon: Icon(Icons.apps),
                   onPressed: () => Navigator.of(context).pushNamed(
                       ViewLogbookPage.route_name,
@@ -40,11 +45,6 @@ class ViewBonsaiPage extends StatelessWidget {
               ],
             ),
             body: _buildBody(context, tree),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () => _startEdit(context, tree),
-              tooltip: "Edit".i18n,
-              child: Icon(Icons.edit),
-            ),
           ),
         ),
       );

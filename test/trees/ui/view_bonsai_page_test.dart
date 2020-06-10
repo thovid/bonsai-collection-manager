@@ -33,7 +33,7 @@ main() {
         findsOneWidget);
     expect(find.text(aBonsaiTree.acquiredFrom), findsOneWidget);
     expect(
-        find.widgetWithIcon(FloatingActionButton, Icons.edit), findsOneWidget);
+        find.widgetWithIcon(IconButton, Icons.edit), findsOneWidget);
     expect(find.byType(ImageGallery), findsOneWidget);
   });
 
