@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2020 by Thomas Vidic
+ * Adapted from 'https://mrflutter.com/floatingactionbutton-deep-dive-part-2-create-a-speed-dial-widget/'
+ * Posted byloolooii
  */
 
 import 'package:flutter/material.dart';
