@@ -7,7 +7,7 @@ import 'package:bonsaicollectionmanager/images/ui/image_gallery.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
-import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_page.dart';
+import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_tabbed_page.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:i18n_extension/i18n_extension.dart';
@@ -49,8 +49,15 @@ Future<void> _openView(
     treeData: tree,
     images: Images(parent: tree.id, repository: DummyImageRepository()),
   );
+  final logbook = await testUtils.loadLogbookWith([]);
+
   return tester.pumpWidget(await testUtils.testAppWith(
-      ChangeNotifierProvider.value(
-          value: treeWithImages, child: ViewBonsaiPage()),
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: treeWithImages),
+          ChangeNotifierProvider.value(value: logbook),
+        ],
+        child: ViewBonsaiTabbedPage(),
+      ),
       bonsaiCollection: collection));
 }
