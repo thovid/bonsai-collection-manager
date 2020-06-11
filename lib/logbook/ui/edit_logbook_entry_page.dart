@@ -20,7 +20,7 @@ class EditLogbookEntryPage extends StatefulWidget {
   final LogbookEntryWithImages entry;
   final LogWorkType initialWorkType;
 
-  EditLogbookEntryPage({this.entry, this.initialWorkType});
+  EditLogbookEntryPage({this.entry, this.initialWorkType = LogWorkType.custom});
 
   @override
   _EditLogbookEntryPageState createState() => _EditLogbookEntryPageState();
