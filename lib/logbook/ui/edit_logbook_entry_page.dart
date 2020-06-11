@@ -16,6 +16,7 @@ import './view_logbook_entry_page.dart';
 
 class EditLogbookEntryPage extends StatefulWidget {
   static const route_name = '/logbook/edit-entry';
+  static const route_name_create = '/logbook/create-entry';
 
   final LogbookEntryWithImages entry;
   final LogWorkType initialWorkType;

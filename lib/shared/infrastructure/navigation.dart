@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_tabbed_page.dart';
 import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:provider/provider.dart';
@@ -66,6 +67,45 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         );
       });
 
+    case ViewBonsaiTabbedPage.route_name:
+      return MaterialPageRoute(builder: (context) {
+        final tree = settings.arguments as BonsaiTreeWithImages;
+        final collection = AppContext.of(context).bonsaiCollection;
+        final logbookRepository = AppContext.of(context).logbookRepository;
+        final imageRepository = AppContext.of(context).imageRepository;
+
+        return FutureBuilder(
+            future: tree.fetchImages(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done)
+                return LoadingScreen();
+              return FutureBuilder(
+                future: Logbook.load(
+                    logbookRepository: logbookRepository,
+                    imageRepository: imageRepository,
+                    subjectId: tree.id),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done)
+                    return LoadingScreen();
+                  return MultiProvider(
+                    providers: [
+                      ChangeNotifierProvider<BonsaiTreeCollection>.value(
+                        value: collection,
+                      ),
+                      ChangeNotifierProvider<BonsaiTreeWithImages>.value(
+                        value: tree,
+                      ),
+                      ChangeNotifierProvider<Logbook>.value(
+                        value: snapshot.data,
+                      ),
+                    ],
+                    child: ViewBonsaiTabbedPage(),
+                  );
+                },
+              );
+            });
+      });
+
     case ViewLogbookEntryPage.route_name:
       return MaterialPageRoute(builder: (context) {
         final args =
@@ -102,6 +142,20 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           value: logbook,
           builder: (context, _) =>
               I18n(child: EditLogbookEntryPage(entry: entryWithImages)),
+        );
+      });
+
+    case EditLogbookEntryPage.route_name_create:
+      return MaterialPageRoute(builder: (context) {
+        final args = settings.arguments as Tuple2<Logbook, LogWorkType>;
+        final logbook = args.item1;
+        final initialWorkType = args.item2;
+        return ChangeNotifierProvider<Logbook>.value(
+          value: logbook,
+          builder: (context, _) => I18n(
+              child: EditLogbookEntryPage(
+            initialWorkType: initialWorkType,
+          )),
         );
       });
 

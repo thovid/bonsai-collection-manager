@@ -6,7 +6,8 @@ import '../../logbook/i18n/log_work_type_translations.dart';
 import 'bonsai_enums.i18n.dart';
 
 extension Localization on String {
-  static var _t = BonsaiEnumTranslations.t * LogWorkTypeTranslations.t *
+  static var _t = BonsaiEnumTranslations.t *
+      LogWorkTypeTranslations.t *
       (Translations("en_us") +
           {"en_us": "Add new tree", "de": "Neuen Baum hinzufügen"} +
           {"en_us": "Edit", "de": "Bearbeiten"} +
@@ -32,7 +33,10 @@ extension Localization on String {
             "en_us": "Deletion can not be made undone!",
             "de": "Löschen kann nicht rückgängig gemacht werden!"
           } +
-          {"en_us": "Delete", "de": "Löschen"} + {"en_us": "More", "de": "Mehr"});
+          {"en_us": "Delete", "de": "Löschen"} +
+          {"en_us": "More", "de": "Mehr"} +
+          {"en_us": "Tree", "de": "Baum"} +
+          {"en_us": "Logbook", "de": "Logbuch"});
 
   String get i18n => localize(this, _t);
 }

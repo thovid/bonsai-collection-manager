@@ -9,7 +9,7 @@ import '../../shared/ui/app_drawer.dart';
 import '../model/bonsai_tree_collection.dart';
 import '../model/bonsai_tree_with_images.dart';
 import '../i18n/bonsai_collection_view.i18n.dart';
-import './view_bonsai_page.dart';
+import './view_bonsai_tabbed_page.dart';
 import './edit_bonsai_page.dart';
 
 class ViewBonsaiCollectionPage extends StatelessWidget {
@@ -98,7 +98,7 @@ class ViewBonsaiCollectionPage extends StatelessWidget {
           ),
           onTap: () {
             Navigator.of(context)
-                .pushNamed(ViewBonsaiPage.route_name, arguments: tree);
+                .pushNamed(ViewBonsaiTabbedPage.route_name, arguments: tree);
           },
         ),
       ),

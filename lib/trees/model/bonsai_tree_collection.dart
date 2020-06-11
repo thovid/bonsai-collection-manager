@@ -19,7 +19,6 @@ mixin BonsaiTreeRepository {
 }
 
 class BonsaiTreeCollection with ChangeNotifier {
-
   static Future<BonsaiTreeCollection> load(
       {@required BonsaiTreeRepository treeRepository,
       @required ImageRepository imageRepository}) async {
@@ -64,9 +63,8 @@ class BonsaiTreeCollection with ChangeNotifier {
     return _updateAt(index, tree);
   }
 
-  BonsaiTreeWithImages findById(ModelID<BonsaiTreeData> id) {
-    return _trees.firstWhere((element) => element.id == id, orElse: () => null);
-  }
+  BonsaiTreeWithImages findById(ModelID<BonsaiTreeData> id) =>
+      _trees.firstWhere((element) => element.id == id, orElse: () => null);
 
   Future<void> delete(BonsaiTreeWithImages tree) async {
     await tree.images
@@ -77,10 +75,10 @@ class BonsaiTreeCollection with ChangeNotifier {
   }
 
   Future<BonsaiTreeWithImages> _insert(BonsaiTreeWithImages newTree) async {
-    newTree.treeData = _updateSpeciesOrdinal(newTree.treeData);
-    _trees.add(newTree);
-    _trees.sort((a, b) => a.treeData.acquiredAt.compareTo(b.treeData.acquiredAt));
-    await _treeRepository.update(newTree.treeData);
+    newTree.treeData = (BonsaiTreeDataBuilder(fromTree: newTree.treeData)
+          ..speciesOrdinal = _nextOrdinalFor(newTree.treeData.species))
+        .build();
+    await _addTreeToCacheAndRepository(newTree);
     notifyListeners();
     return newTree;
   }
@@ -88,27 +86,33 @@ class BonsaiTreeCollection with ChangeNotifier {
   // does not notifyListeners() because we do not want to update the whole collection
   Future<BonsaiTreeWithImages> _updateAt(
       int index, BonsaiTreeWithImages tree) async {
-    final BonsaiTreeWithImages oldVersion = _trees[index];
-    if (oldVersion.treeData.species.latinName !=
-        tree.treeData.species.latinName) {
-      tree.treeData = _updateSpeciesOrdinal(tree.treeData);
-    }
-    _trees[index] = tree;
-    _trees.sort((a, b) => a.treeData.acquiredAt.compareTo(b.treeData.acquiredAt));
-    await _treeRepository.update(tree.treeData);
+    _updateSpeciesOrdinal(index, tree);
+    await _addTreeToCacheAndRepository(tree);
     return tree;
   }
-
-  BonsaiTreeData _updateSpeciesOrdinal(BonsaiTreeData tree) =>
-      (BonsaiTreeDataBuilder(fromTree: tree)
-            ..speciesOrdinal = _nextOrdinalFor(tree.species))
-          .build();
 
   List<BonsaiTreeWithImages> _findAll(Species species) =>
       _trees.fold(<BonsaiTreeWithImages>[], (result, element) {
         if (element.treeData.species == species) result.add(element);
         return result;
       });
+
+  Future _addTreeToCacheAndRepository(BonsaiTreeWithImages tree) async {
+    _trees.add(tree);
+    _trees.sort(
+        (a, b) => -a.treeData.acquiredAt.compareTo(b.treeData.acquiredAt));
+    _treeRepository.update(tree.treeData);
+  }
+
+  void _updateSpeciesOrdinal(int index, BonsaiTreeWithImages tree) {
+    final BonsaiTreeWithImages oldVersion = _trees[index];
+    if (oldVersion.treeData.species.latinName !=
+        tree.treeData.species.latinName) {
+      tree.treeData = (BonsaiTreeDataBuilder(fromTree: tree.treeData)
+            ..speciesOrdinal = _nextOrdinalFor(tree.treeData.species))
+          .build();
+    }
+  }
 
   int _nextOrdinalFor(Species species) => _findAll(species).fold(
       1,

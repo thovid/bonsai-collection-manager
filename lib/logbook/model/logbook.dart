@@ -10,7 +10,6 @@ import '../../shared/model/model_id.dart';
 abstract class LogbookRepository {
   Future<List<LogbookEntry>> loadLogbook(ModelID subjectId);
   Future<void> add(LogbookEntry logbookEntry, ModelID subjectId);
-  Future<void> update(LogbookEntry logbookEntry, ModelID subjectId);
   Future<void> delete(ModelID<LogbookEntry> id);
 }
 
@@ -50,27 +49,31 @@ class Logbook with ChangeNotifier {
 
   List<LogbookEntryWithImages> get entries => List.unmodifiable(_entries);
 
+  LogbookEntryWithImages findById(ModelID<LogbookEntry> id) =>
+      _entries.firstWhere((element) => element.id == id, orElse: () => null);
+
   Future<LogbookEntryWithImages> add(LogbookEntry logbookEntry) async {
     LogbookEntryWithImages entryWithImages = LogbookEntryWithImages(
         entry: logbookEntry,
         images: Images(repository: _imageRepository, parent: logbookEntry.id));
-    return await _insert(entryWithImages);
+    final LogbookEntryWithImages result =
+        await _addToCacheAndRepository(entryWithImages);
+    notifyListeners();
+    return result;
   }
-
-  LogbookEntryWithImages findById(ModelID<LogbookEntry> id) =>
-      _entries.firstWhere((element) => element.id == id, orElse: () => null);
 
   Future<LogbookEntryWithImages> update(
       LogbookEntryWithImages entryWithImages) async {
     final int index =
         _entries.indexWhere((element) => element.id == entryWithImages.id);
+    LogbookEntryWithImages result =
+        await _addToCacheAndRepository(entryWithImages);
+
     if (index < 0) {
-      return _insert(entryWithImages);
+      notifyListeners();
     }
 
-    _entries[index] = entryWithImages;
-    await _logbookRepository.update(entryWithImages.entry, _subjectId);
-    return entryWithImages;
+    return result;
   }
 
   Future<void> delete(ModelID<LogbookEntry> id) async {
@@ -79,12 +82,11 @@ class Logbook with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<LogbookEntryWithImages> _insert(
+  Future<LogbookEntryWithImages> _addToCacheAndRepository(
       LogbookEntryWithImages entryWithImages) async {
     await _logbookRepository.add(entryWithImages.entry, _subjectId);
     _entries.add(entryWithImages);
-    _entries.sort((a, b) => a.entry.date.compareTo(b.entry.date));
-    notifyListeners();
+    _entries.sort((a, b) => -a.entry.date.compareTo(b.entry.date));
     return entryWithImages;
   }
 }
@@ -129,9 +131,8 @@ class LogbookEntryWithImages with ChangeNotifier {
   LogbookEntry _entry;
   Images images;
 
-  LogbookEntryWithImages(
-      {@required LogbookEntry entry, @required this.images})
-      : _entry = entry{
+  LogbookEntryWithImages({@required LogbookEntry entry, @required this.images})
+      : _entry = entry {
     images.addListener(() {
       notifyListeners();
     });

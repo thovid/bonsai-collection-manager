@@ -13,10 +13,6 @@ class SQLLogbookRepository extends BaseRepository with LogbookRepository {
       init().then((db) => LogbookEntryTable.write(logbookEntry, subjectId, db));
 
   @override
-  Future<void> update(LogbookEntry logbookEntry, ModelID subjectId) async =>
-      init().then((db) => LogbookEntryTable.write(logbookEntry, subjectId, db));
-
-  @override
   Future<void> delete(ModelID<LogbookEntry> id) async =>
       init().then((db) => LogbookEntryTable.delete(id, db));
 
