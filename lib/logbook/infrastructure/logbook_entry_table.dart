@@ -80,6 +80,10 @@ class LogbookEntryTable {
     return result;
   }
 
+  static Future deleteAll(ModelID subjectId, DatabaseExecutor database) async =>
+      database.delete(table_name,
+          where: '$subject_id = ?', whereArgs: [subjectId.value]);
+
   static Map<String, dynamic> _toMap(LogbookEntry entry, ModelID subject) => {
         entry_id: entry.id.value,
         subject_id: subject.value,

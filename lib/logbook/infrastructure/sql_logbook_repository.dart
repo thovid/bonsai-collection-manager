@@ -19,4 +19,8 @@ class SQLLogbookRepository extends BaseRepository with LogbookRepository {
   @override
   Future<List<LogbookEntry>> loadLogbook(ModelID subjectId) async =>
       init().then((db) => LogbookEntryTable.readAll(subjectId, db));
+
+  @override
+  Future<void> deleteAll(ModelID subjectId) async =>
+      init().then((db) => LogbookEntryTable.deleteAll(subjectId, db));
 }

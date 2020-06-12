@@ -11,6 +11,7 @@ abstract class LogbookRepository {
   Future<List<LogbookEntry>> loadLogbook(ModelID subjectId);
   Future<void> add(LogbookEntry logbookEntry, ModelID subjectId);
   Future<void> delete(ModelID<LogbookEntry> id);
+  Future<void> deleteAll(ModelID subjectId);
 }
 
 class Logbook with ChangeNotifier {
@@ -88,6 +89,17 @@ class Logbook with ChangeNotifier {
     _entries.add(entryWithImages);
     _entries.sort((a, b) => -a.entry.date.compareTo(b.entry.date));
     return entryWithImages;
+  }
+
+  Future deleteAll() async {
+    List<Future> futureImageDeletions =
+        _entries.map((e) => _imageRepository.removeAll(e.id)).toList();
+    Future futureLogEntryDeletion = _logbookRepository.deleteAll(_subjectId);
+
+    Future.wait(futureImageDeletions..add(futureLogEntryDeletion));
+
+    _entries.clear();
+    notifyListeners();
   }
 }
 

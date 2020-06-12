@@ -59,6 +59,26 @@ main() {
     List<LogbookEntry> entries = await LogbookEntryTable.readAll(subject, db);
     expect(entries.length, equals(2));
   });
+
+  test('can delete all entries for a subject', () async {
+    DatabaseExecutor db = await openTestDatabase();
+    var otherSubject = ModelID.newId();
+    var firstForSubject = _anEntry();
+    var secondForSubject = _anEntry();
+    var forOtherSubject = _anEntry();
+
+    await LogbookEntryTable.write(firstForSubject, subject, db);
+    await LogbookEntryTable.write(secondForSubject, subject, db);
+
+    await LogbookEntryTable.write(forOtherSubject, otherSubject, db);
+
+    await LogbookEntryTable.deleteAll(subject, db);
+    var deletedEntries = await LogbookEntryTable.readAll(subject, db);
+    expect(deletedEntries.length, equals(0));
+
+    var notDeleted = await LogbookEntryTable.readAll(otherSubject, db);
+    expect(notDeleted.length, equals(1));
+  });
 }
 
 LogbookEntry _anEntry() => LogbookEntryBuilder().build();

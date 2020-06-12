@@ -40,7 +40,7 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                 actions: <Widget>[
                   IconButton(
                     icon: Icon(Icons.delete),
-                    onPressed: () => _delete(context, tree, collection),
+                    onPressed: () => _delete(context, tree, logbook, collection),
                   )
                 ],
                 bottom: TabBar(
@@ -111,7 +111,7 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
       );
 
   Future _delete(BuildContext context, BonsaiTreeWithImages tree,
-      BonsaiTreeCollection collection) async {
+      Logbook logbook, BonsaiTreeCollection collection) async {
     final bool shouldDelete = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -131,6 +131,7 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
 
     if (shouldDelete) {
       await collection.delete(tree);
+      await logbook.deleteAll();
       Navigator.of(context).pop();
     }
   }
