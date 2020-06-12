@@ -3,11 +3,10 @@
  */
 
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
-import 'package:bonsaicollectionmanager/logbook/ui/view_logbook_page.dart';
+import 'package:bonsaicollectionmanager/logbook/ui/logbook_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
 
 import '../../utils/test_data.dart';
 import '../../utils/test_mocks.dart';
@@ -59,10 +58,10 @@ Future _openView(WidgetTester tester, Logbook logbook,
     {NavigatorObserver navigatorObserver}) async {
   return tester.pumpWidget(
     await testUtils.testAppWith(
-      ChangeNotifierProvider<Logbook>.value(
-        value: logbook,
-        builder: (context, child) => ViewLogbookPage(),
-      ),
+      Scaffold(
+          body: LogbookView(
+        logbook: logbook,
+      )),
       navigationObserver: navigatorObserver,
     ),
   );

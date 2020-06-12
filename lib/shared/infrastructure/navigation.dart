@@ -16,11 +16,9 @@ import '../../trees/ui/view_bonsai_tabbed_page.dart';
 import '../../credits/ui/credits_page.dart';
 
 import '../../logbook/model/logbook.dart';
-import '../../logbook/ui/view_logbook_page.dart';
 import '../../logbook/ui/view_logbook_entry_page.dart';
 import '../../logbook/ui/edit_logbook_entry_page.dart';
 
-import '../model/model_id.dart';
 import '../state/app_context.dart';
 import '../ui/loading_screen.dart';
 import '../ui/route_not_found.dart';
@@ -137,29 +135,6 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           )),
         );
       });
-
-    case ViewLogbookPage.route_name:
-      return MaterialPageRoute(
-        builder: (context) {
-          final subjectId = settings.arguments as ModelID;
-          final imageRepository = AppContext.of(context).imageRepository;
-          final logbookRepository = AppContext.of(context).logbookRepository;
-          return FutureBuilder(
-            future: Logbook.load(
-                logbookRepository: logbookRepository,
-                imageRepository: imageRepository,
-                subjectId: subjectId),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done)
-                return LoadingScreen();
-              return ChangeNotifierProvider<Logbook>.value(
-                value: snapshot.data,
-                builder: (context, child) => I18n(child: ViewLogbookPage()),
-              );
-            },
-          );
-        },
-      );
 
     case CreditsPage.route_name:
       return MaterialPageRoute(
