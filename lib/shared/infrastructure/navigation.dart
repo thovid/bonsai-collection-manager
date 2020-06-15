@@ -26,61 +26,63 @@ import '../ui/route_not_found.dart';
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case ViewBonsaiCollectionPage.route_name:
-      return MaterialPageRoute(
-        builder: (context) {
-          final collection = AppContext.of(context).bonsaiCollection;
-          return ChangeNotifierProvider<BonsaiTreeCollection>.value(
-            value: collection,
-            child: I18n(
-              child: ViewBonsaiCollectionPage(),
-            ),
-          );
-        },
-      );
+      return MaterialPageRoute(builder: (context) {
+        final collection = AppContext.of(context).bonsaiCollection;
+        return ChangeNotifierProvider<BonsaiTreeCollection>.value(
+          value: collection,
+          child: I18n(child: ViewBonsaiCollectionPage()),
+        );
+      });
 
     case EditBonsaiPage.route_name:
-      final tree = settings.arguments as BonsaiTreeWithImages;
       return MaterialPageRoute(
           fullscreenDialog: true,
-          builder: (context) => I18n(child: EditBonsaiPage(tree: tree)));
+          builder: (context) {
+            final tree = settings.arguments as BonsaiTreeWithImages;
+            final collection = AppContext.of(context).bonsaiCollection;
+            return ChangeNotifierProvider<BonsaiTreeCollection>.value(
+              value: collection,
+              child: I18n(child: EditBonsaiPage(tree: tree)),
+            );
+          });
 
     case ViewBonsaiTabbedPage.route_name:
       return MaterialPageRoute(builder: (context) {
         final tree = settings.arguments as BonsaiTreeWithImages;
+
         final collection = AppContext.of(context).bonsaiCollection;
         final logbookRepository = AppContext.of(context).logbookRepository;
         final imageRepository = AppContext.of(context).imageRepository;
 
+        final future = Future.wait([
+          tree.fetchImages(),
+          Logbook.load(
+              logbookRepository: logbookRepository,
+              imageRepository: imageRepository,
+              subjectId: tree.id),
+        ]);
         return FutureBuilder(
-            future: tree.fetchImages(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done)
-                return LoadingScreen();
-              return FutureBuilder(
-                future: Logbook.load(
-                    logbookRepository: logbookRepository,
-                    imageRepository: imageRepository,
-                    subjectId: tree.id),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState != ConnectionState.done)
-                    return LoadingScreen();
-                  return MultiProvider(
-                    providers: [
-                      ChangeNotifierProvider<BonsaiTreeCollection>.value(
-                        value: collection,
-                      ),
-                      ChangeNotifierProvider<BonsaiTreeWithImages>.value(
-                        value: tree,
-                      ),
-                      ChangeNotifierProvider<Logbook>.value(
-                        value: snapshot.data,
-                      ),
-                    ],
-                    child: ViewBonsaiTabbedPage(),
-                  );
-                },
-              );
-            });
+          future: future,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return LoadingScreen();
+            }
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider<BonsaiTreeCollection>.value(
+                  value: collection,
+                ),
+                ChangeNotifierProvider<BonsaiTreeWithImages>.value(
+                  value: snapshot.data[0],
+                ),
+                ChangeNotifierProvider<Logbook>.value(
+                  value: snapshot.data[1],
+                ),
+              ],
+              child: I18n(child: ViewBonsaiTabbedPage()),
+            );
+          },
+        );
       });
 
     case ViewLogbookEntryPage.route_name:
@@ -92,18 +94,17 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         return FutureBuilder(
           future: entry.fetchImages(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done)
+            if (snapshot.connectionState != ConnectionState.done) {
               return LoadingScreen();
+            }
 
-            // return MultiProvider(providers: [], child: ,);
-
-            return ChangeNotifierProvider<Logbook>.value(
-              value: logbook,
-              builder: (context, _) =>
-                  ChangeNotifierProvider<LogbookEntryWithImages>.value(
-                value: snapshot.data,
-                builder: (context, _) => I18n(child: ViewLogbookEntryPage()),
-              ),
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider<Logbook>.value(value: logbook),
+                ChangeNotifierProvider<LogbookEntryWithImages>.value(
+                    value: snapshot.data),
+              ],
+              child: I18n(child: ViewLogbookEntryPage()),
             );
           },
         );
@@ -117,8 +118,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         final entryWithImages = args.item2;
         return ChangeNotifierProvider<Logbook>.value(
           value: logbook,
-          builder: (context, _) =>
-              I18n(child: EditLogbookEntryPage(entry: entryWithImages)),
+          child: I18n(child: EditLogbookEntryPage(entry: entryWithImages)),
         );
       });
 
@@ -129,10 +129,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         final initialWorkType = args.item2;
         return ChangeNotifierProvider<Logbook>.value(
           value: logbook,
-          builder: (context, _) => I18n(
-              child: EditLogbookEntryPage(
-            initialWorkType: initialWorkType,
-          )),
+          child: I18n(
+              child: EditLogbookEntryPage(initialWorkType: initialWorkType)),
         );
       });
 

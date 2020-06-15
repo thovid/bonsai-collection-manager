@@ -40,7 +40,8 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                 actions: <Widget>[
                   IconButton(
                     icon: Icon(Icons.delete),
-                    onPressed: () => _delete(context, tree, logbook, collection),
+                    onPressed: () =>
+                        _delete(context, tree, logbook, collection),
                   )
                 ],
                 bottom: TabBar(
@@ -101,14 +102,8 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
 
   Future<void> _startEdit(
           BuildContext context, BonsaiTreeWithImages tree) async =>
-      Navigator.of(context).push(
-        MaterialPageRoute<BonsaiTreeWithImages>(
-          fullscreenDialog: true,
-          builder: (BuildContext context) => EditBonsaiPage(
-            tree: tree,
-          ),
-        ),
-      );
+      Navigator.of(context)
+          .pushNamed(EditBonsaiPage.route_name, arguments: tree);
 
   Future _delete(BuildContext context, BonsaiTreeWithImages tree,
       Logbook logbook, BonsaiTreeCollection collection) async {
