@@ -22,14 +22,20 @@ void main() {
           .build()
     ]);
     await tester
-        .pumpWidget(await testUtils.testAppWith(ViewBonsaiCollectionPage(),
+        .pumpWidget(await testUtils.testAppWith(
+            ViewBonsaiCollectionPage(
+              withInitAnimation: false,
+            ),
             bonsaiCollection: treeCollection))
         .then((value) => tester.pumpAndSettle());
     expect(find.text('Testus Treeus 1 \'My Tree\''), findsOneWidget);
   });
 
   testWidgets('All translations defined', (WidgetTester tester) async {
-    await tester.pumpWidget(await testUtils.testAppWith(ViewBonsaiCollectionPage(),
+    await tester.pumpWidget(await testUtils.testAppWith(
+        ViewBonsaiCollectionPage(
+          withInitAnimation: false,
+        ),
         bonsaiCollection: await BonsaiTreeCollection.load(
             treeRepository: TestBonsaiRepository([aBonsaiTree]),
             imageRepository: DummyImageRepository())));
