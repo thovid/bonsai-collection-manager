@@ -28,7 +28,7 @@ dependencies:
   provider:
   i18n_extension:
   intl:
-  intl_translation:
+  #intl_translation:
   uuid:
   flutter_typeahead:
   sqflite:
@@ -36,11 +36,11 @@ dependencies:
   path_provider:
   image_picker:
   url_launcher:
-  tuple: ^1.0.3
+  tuple: #^1.0.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.3
+  cupertino_icons: # ^0.1.3
 
 dev_dependencies:
   test:
@@ -48,7 +48,7 @@ dev_dependencies:
     sdk: flutter
   sqflite_common_ffi:
   mockito:
-  flutter_launcher_icons: "^0.7.3"
+  flutter_launcher_icons:  #"^0.7.3"
 
 flutter_icons:
   android: "launcher_icon"

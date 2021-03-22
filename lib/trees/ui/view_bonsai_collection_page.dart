@@ -11,6 +11,7 @@ import '../model/bonsai_tree_with_images.dart';
 import '../i18n/bonsai_collection_view.i18n.dart';
 import './view_bonsai_tabbed_page.dart';
 import './edit_bonsai_page.dart';
+import 'species_picker.dart';
 
 class ViewBonsaiCollectionPage extends HomePageWithDrawer {
   static const route_name = '/';
@@ -75,7 +76,9 @@ class ViewBonsaiCollectionPage extends HomePageWithDrawer {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Expanded(
-                child: tree.images.mainImage == null
+                child: treeImage(tree),
+                /*
+                tree.images.mainImage == null
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -89,6 +92,8 @@ class ViewBonsaiCollectionPage extends HomePageWithDrawer {
                           fit: BoxFit.cover,
                         ),
                       ),
+
+                */
               ),
               Container(
                 padding: EdgeInsets.all(4.0),
@@ -110,6 +115,16 @@ class ViewBonsaiCollectionPage extends HomePageWithDrawer {
       ),
     );
   }
+
+  Widget treeImage(BonsaiTreeWithImages tree) => tree.images.mainImage == null
+      ? Icon(iconFor(tree.treeData.species.type))
+      : Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Image(
+            image: tree.images.mainImage.toThumbnail(),
+            fit: BoxFit.cover,
+          ),
+        );
 
   _addTree(BuildContext context) async {
     Navigator.of(context).pushNamed(EditBonsaiPage.route_name);

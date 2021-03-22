@@ -127,6 +127,7 @@ class ImagesPanelMenuTile extends StatefulWidget {
 
 class _ImagesPanelMenuTileState extends State<ImagesPanelMenuTile>
     with SingleTickerProviderStateMixin {
+  final imagePicker = ImagePicker();
   bool _showSelector = false;
   AnimationController _animationController;
 
@@ -185,11 +186,11 @@ class _ImagesPanelMenuTileState extends State<ImagesPanelMenuTile>
     ));
   }
 
-  Future<File> _openImagePicker(ImageSource source) async {
-    return await ImagePicker.pickImage(source: source);
+  Future<PickedFile> _openImagePicker(ImageSource source) async {
+    return await imagePicker.getImage(source: source);
   }
 
-  Future<void> _handleImagePicked(File image) async {
+  Future<void> _handleImagePicked(PickedFile image) async {
     if (image == null) {
       return;
     }
@@ -198,7 +199,7 @@ class _ImagesPanelMenuTileState extends State<ImagesPanelMenuTile>
     setState(() {
       _showSelector = false;
     });
-    widget.onImageSelected(image);
+    widget.onImageSelected(File(image.path));
   }
 }
 

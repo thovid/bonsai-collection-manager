@@ -160,26 +160,27 @@ class SpeciesPickerState extends State<SpeciesPicker> {
 }
 
 CircleAvatar avatarFor(BuildContext context, TreeType treeType, bool active) {
-  IconData iconData = TreeTypeIcons.pine;
-  switch (treeType) {
-    case TreeType.conifer:
-      iconData = TreeTypeIcons.pine;
-      break;
-    case TreeType.deciduous:
-      iconData = TreeTypeIcons.tree_1;
-      break;
-    case TreeType.broadleaf_evergreen:
-      iconData = TreeTypeIcons.tree_17;
-      break;
-    case TreeType.tropical:
-      iconData = TreeTypeIcons.palm_tree;
-      break;
-  }
-
+  final IconData iconData = iconFor(treeType);
   final Color color =
       active ? Theme.of(context).accentColor : Theme.of(context).disabledColor;
   return CircleAvatar(
     child: Icon(iconData),
     backgroundColor: color,
   );
+}
+
+IconData iconFor(TreeType treeType) {
+  switch (treeType) {
+    case TreeType.conifer:
+      return TreeTypeIcons.pine;
+    case TreeType.deciduous:
+      return TreeTypeIcons.tree_1;
+    case TreeType.broadleaf_evergreen:
+      return TreeTypeIcons.tree_17;
+    case TreeType.tropical:
+      return TreeTypeIcons.palm_tree;
+
+    default:
+      return TreeTypeIcons.pine;
+  }
 }
