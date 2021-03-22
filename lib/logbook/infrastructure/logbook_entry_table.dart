@@ -73,7 +73,7 @@ class LogbookEntryTable {
       whereArgs: [subject.value],
       orderBy: '$date DESC',
     );
-    List<LogbookEntry> result = List<LogbookEntry>(data.length);
+    List<LogbookEntry> result = []..length = data.length;
     for (int i = 0; i < data.length; i++) {
       result[i] = _fromMap(data[i]);
     }

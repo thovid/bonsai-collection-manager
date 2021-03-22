@@ -15,7 +15,7 @@ TextFormField formTextField(BuildContext context,
         int lines = 1,
         Function(String value) onSaved}) =>
     TextFormField(
-      cursorColor: Theme.of(context).cursorColor,
+      cursorColor: TextSelectionTheme.of(context).cursorColor,
       enabled: !readOnly,
       initialValue: initialValue,
       minLines: lines,
@@ -64,7 +64,7 @@ TextFormField formDatePickerField(context,
       TextEditingController(text: _formatDate(initialValue));
   return TextFormField(
     controller: controller,
-    cursorColor: Theme.of(context).cursorColor,
+    cursorColor: TextSelectionTheme.of(context).cursorColor,
     readOnly: true,
     enabled: !readOnly,
     onTap: readOnly

@@ -71,7 +71,7 @@ class BonsaiTreeTable {
       columns: columns,
       orderBy: '$acquiredAt DESC',
     );
-    List<BonsaiTreeData> result = List(data.length);
+    List<BonsaiTreeData> result = []..length = data.length;
     for (var i = 0; i < data.length; i++) {
       BonsaiTreeData t = await _fromMap(data[i], speciesRepository);
       result[i] = t;

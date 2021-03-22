@@ -60,7 +60,7 @@ class CollectionItemImageTable {
       ModelID treeId, DatabaseExecutor db) async {
     List<Map<String, dynamic>> data = await db.query(table_name,
         columns: columns, where: '$parent_id = ?', whereArgs: [treeId.value]);
-    List<CollectionItemImage> result = List(data.length);
+    List<CollectionItemImage> result = []..length = data.length;
     for (var i = 0; i < data.length; i++) {
       CollectionItemImage t = await _fromMap(data[i]);
       result[i] = t;

@@ -130,7 +130,7 @@ class SpeciesPickerState extends State<SpeciesPicker> {
         });
       },
       onSaved: (_) => widget.onSaved(_selectedValue),
-      autovalidate: false,
+      autovalidateMode: AutovalidateMode.always,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Please select a tree species".i18n;
