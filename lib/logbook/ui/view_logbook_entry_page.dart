@@ -20,11 +20,11 @@ class ViewLogbookEntryPage extends StatelessWidget {
               appBar: AppBar(
                 title: Text(_title(logbookEntry)),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: Icon(Icons.edit),
                     onPressed: () => _startEdit(context, logbook, logbookEntry),
                   ),
-                  FlatButton(
+                  TextButton(
                     child: Icon(Icons.delete),
                     onPressed: () => _delete(context, logbookEntry, logbook),
                   )
@@ -48,11 +48,11 @@ class ViewLogbookEntryPage extends StatelessWidget {
         title: Text('Really delete?'.i18n),
         content: Text('Deletion can not be made undone!'.i18n),
         actions: [
-          FlatButton(
+          TextButton(
             onPressed: () => Navigator.of(context).pop(false),
             child: Text('Cancel'.i18n),
           ),
-          FlatButton(
+          TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: Text('Delete'.i18n),
           ),

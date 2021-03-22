@@ -149,7 +149,7 @@ class _ImagesPanelMenuTileState extends State<ImagesPanelMenuTile>
     return Card(
         child: Column(
       children: [
-        FlatButton(
+        TextButton(
           child: AnimatedIcon(
             icon: AnimatedIcons.menu_close,
             progress: _animationController,
@@ -167,14 +167,14 @@ class _ImagesPanelMenuTileState extends State<ImagesPanelMenuTile>
         ExpandedSection(
             expand: _showSelector,
             child: Column(children: [
-              FlatButton(
+              TextButton(
                 child: Icon(Icons.add_a_photo),
                 onPressed: () async {
                   await _openImagePicker(ImageSource.camera)
                       .then((image) => _handleImagePicked(image));
                 },
               ),
-              FlatButton(
+              TextButton(
                 child: Icon(Icons.add_photo_alternate),
                 onPressed: () async {
                   await _openImagePicker(ImageSource.gallery)

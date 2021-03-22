@@ -184,7 +184,7 @@ Finder _openGalleryButton() => find.byIcon(Icons.add_photo_alternate);
 
 Finder _openMenuButton() {
   return find.byWidgetPredicate(
-      (widget) => (widget is FlatButton && widget.child is AnimatedIcon));
+      (widget) => (widget is TextButton && widget.child is AnimatedIcon));
 }
 
 Future _startViewWith(Images model, WidgetTester tester) async {

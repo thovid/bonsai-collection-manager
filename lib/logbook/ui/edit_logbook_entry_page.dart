@@ -61,7 +61,7 @@ class _EditLogbookEntryPageState extends State<EditLogbookEntryPage> {
           appBar: AppBar(
             title: _buildTitle(),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () => _save(logbook),
                 child: Text('Save'.i18n,
                     style: Theme.of(context).textTheme.subtitle1),

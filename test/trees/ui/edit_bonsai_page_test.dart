@@ -38,7 +38,7 @@ main() {
             bonsaiCollection: collection))
         .then((_) =>
             tester.enterText(find.bySemanticsLabel('Name'), 'Other Name'))
-        .then((_) => tester.tap(find.byType(FlatButton)))
+        .then((_) => tester.tap(find.byType(TextButton)))
         .then((_) => tester.pump());
 
     verify(mockNavigationObserver.didPop(any, any));

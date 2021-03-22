@@ -50,7 +50,7 @@ class _EditBonsaiPageState extends State<EditBonsaiPage> {
           appBar: AppBar(
             title: _buildTitle(),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () => _save(collection),
                 child: Text('Save'.i18n,
                     style: Theme.of(context).textTheme.subtitle1),
