@@ -19,9 +19,10 @@ Widget speciesPicker(BuildContext context,
     bool readOnly = true,
     String hint,
     String label,
-    FindSpecies findSpecies,
     Function(Species value) onSaved}) {
-  var finder = AppContext.of(context).speciesRepository.findMatching;
+  var repository = AppContext.of(context).speciesRepository;
+  var finder = repository.findMatching;
+  var saver = repository.save;
   return SpeciesPicker(
     readOnly: readOnly,
     initialValue: initialValue,
@@ -31,10 +32,12 @@ Widget speciesPicker(BuildContext context,
     ),
     onSaved: onSaved,
     findSpecies: finder,
+    saveSpecies: saver,
   );
 }
 
 typedef FutureOr<Iterable<Species>> FindSpecies(String pattern);
+typedef Future<bool> SaveSpecies(Species species);
 
 /// Widget to pick a tree species
 class SpeciesPicker extends StatefulWidget {
@@ -43,14 +46,16 @@ class SpeciesPicker extends StatefulWidget {
   final InputDecoration decoration;
   final Function(Species) onSaved;
   final FindSpecies findSpecies;
+  final SaveSpecies saveSpecies;
 
-  SpeciesPicker(
-      {this.readOnly = false,
-      this.initialValue,
-      this.decoration,
-      @required this.onSaved,
-      @required this.findSpecies})
-      : assert(onSaved != null && findSpecies != null);
+  SpeciesPicker({
+    this.readOnly = false,
+    this.initialValue,
+    this.decoration,
+    @required this.onSaved,
+    @required this.findSpecies,
+    @required this.saveSpecies,
+  }) : assert(onSaved != null && findSpecies != null);
 
   @override
   SpeciesPickerState createState() => SpeciesPickerState();
@@ -129,6 +134,14 @@ class SpeciesPickerState extends State<SpeciesPicker> {
           _selectedValue = suggestion;
         });
       },
+      noItemsFoundBuilder: (context) => TextButton(
+          child: Text("Not found. Create?".i18n),
+          onPressed: () => _showAddTreeSpeciesDialog(
+                context,
+                _controller.text,
+                widget.findSpecies,
+                widget.saveSpecies,
+              )),
       onSaved: (_) => widget.onSaved(_selectedValue),
       autovalidateMode: AutovalidateMode.always,
       validator: (value) {
@@ -182,5 +195,113 @@ IconData iconFor(TreeType treeType) {
 
     default:
       return TreeTypeIcons.pine;
+  }
+}
+
+class AddSpeciesDialog extends Dialog {}
+
+Future<void> _showAddTreeSpeciesDialog(
+    BuildContext context,
+    String initialLatinName,
+    FindSpecies findSpecies,
+    SaveSpecies saveSpecies) async {
+  return await showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+            builder: (context, setState) => AlertDialog(
+                  title: Text("Add Species".i18n),
+                  content: AddSpeciesForm(
+                    initialLatinName,
+                    findSpecies,
+                    saveSpecies,
+                  ),
+                ));
+      });
+}
+
+class AddSpeciesForm extends StatefulWidget {
+  final FindSpecies findSpecies;
+  final SaveSpecies saveSpecies;
+  final String initialLatinName;
+  AddSpeciesForm(this.initialLatinName, this.findSpecies, this.saveSpecies);
+
+  @override
+  AddSpeciesFormState createState() => AddSpeciesFormState();
+}
+
+class AddSpeciesFormState extends State<AddSpeciesForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String latinName;
+  String informalName;
+
+  bool _latinNameExisting = false;
+
+  void save() {}
+
+  @override
+  Widget build(BuildContext context) {
+    _formKey.currentState?.validate();
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextFormField(
+            initialValue: widget.initialLatinName,
+            validator: (value) {
+              if (value.isEmpty) return "Latin name".i18n;
+              if (_latinNameExisting) return "Species already existing".i18n;
+
+              return null;
+            },
+            onSaved: (value) {
+              latinName = value;
+            },
+            decoration:
+                InputDecoration(hintText: "Please enter the latin name".i18n),
+          ),
+          TextFormField(
+            validator: (value) {
+              return value.isNotEmpty ? null : "Informal name".i18n;
+            },
+            decoration: InputDecoration(
+                hintText: "Please enter the informal name".i18n),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                _formKey.currentState.save();
+
+                _checkLatinName(latinName).then((ok) {
+                  setState(() {
+                    _latinNameExisting = !ok;
+                  });
+
+                  if (_formKey.currentState.validate()) {
+                    // save
+                    Species species = Species(TreeType.conifer,
+                        latinName: latinName, informalName: informalName);
+                    widget.saveSpecies(species).then((saved) {
+                      if (saved) {
+                        // close dialog
+                        Navigator.pop(context);
+                      }
+                    });
+                  }
+                });
+              },
+              child: Text("Save".i18n),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<bool> _checkLatinName(String latinName) async {
+    Iterable<Species> species = await widget.findSpecies(latinName);
+    return species == null || species.isEmpty;
   }
 }
