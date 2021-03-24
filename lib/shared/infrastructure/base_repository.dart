@@ -9,6 +9,7 @@ import 'package:sqflite/sqflite.dart';
 import '../../logbook/infrastructure/logbook_entry_table.dart';
 import '../../images/infrastructure/collection_item_image_table.dart';
 import '../../trees/infrastructure/bonsai_tree_table.dart';
+import '../../trees/infrastructure/species_table.dart';
 
 class BaseRepository {
   static const String db_name = 'bonsaiCollectionManager.db';
@@ -22,15 +23,19 @@ class BaseRepository {
     }
     _database = await _dbPath(db_name).then((path) => openDatabase(
           path,
-          version: 2,
+          version: 3,
           onCreate: (Database db, int version) async {
+            await SpeciesTable.createTable(db);
             await BonsaiTreeTable.createTable(db);
             await CollectionItemImageTable.createTable(db);
             await LogbookEntryTable.createTable(db);
           },
           onUpgrade: (db, oldVersion, newVersion) async {
             if (oldVersion == newVersion) return;
-            if (newVersion == 2) await LogbookEntryTable.createTable(db);
+            if (newVersion >= 2 && oldVersion < 2)
+              await LogbookEntryTable.createTable(db);
+            if (newVersion >= 3 && oldVersion < 3)
+              await SpeciesTable.createTable(db);
           },
         ));
     initialized = true;

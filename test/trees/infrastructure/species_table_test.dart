@@ -6,9 +6,6 @@ import 'package:bonsaicollectionmanager/trees/infrastructure/species_table.dart'
 import 'package:bonsaicollectionmanager/trees/model/species.dart';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sqflite_common/sqlite_api.dart';
-
-import '../../utils/test_data.dart';
 import '../../utils/test_utils.dart';
 
 main() {

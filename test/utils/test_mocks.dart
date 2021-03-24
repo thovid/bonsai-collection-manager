@@ -55,8 +55,8 @@ class DummyImageRepository extends ImageRepository {
   }
 }
 
-class TestSpeciesRepository extends SpeciesRepository {
-  final List<Species> species;
+class TestSpeciesRepository with SpeciesRepository {
+  final Future<List<Species>> species;
   TestSpeciesRepository(this.species);
 }
 

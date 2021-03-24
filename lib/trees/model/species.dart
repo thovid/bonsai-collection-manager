@@ -5,29 +5,27 @@
 /// General type a tree can be.
 enum TreeType { conifer, deciduous, broadleaf_evergreen, tropical }
 
-abstract class SpeciesRepository {
-  List<Species> get species;
+mixin SpeciesRepository {
+  Future<List<Species>> get species;
 
   Future<List<Species>> findMatching(String pattern) async {
     var lowerCasePattern = pattern.toLowerCase();
-    return Future(() {
-      var result = <Species>[];
-      species.forEach((element) {
-        if (element._searchString.contains(lowerCasePattern)) {
-          result.add(element);
-        }
-      });
-      return result;
+    var allSpecies = await species;
+    var result = <Species>[];
+    allSpecies.forEach((element) {
+      if (element._searchString.contains(lowerCasePattern)) {
+        result.add(element);
+      }
     });
+    return result;
   }
 
   Future<Species> findOne({String latinName}) async {
     var lowerCasePattern = latinName.toLowerCase();
-    return Future(() {
-      return species.firstWhere(
-          (element) => element.latinName.toLowerCase() == lowerCasePattern,
-          orElse: () => null);
-    });
+    var allSpecies = await species;
+    return allSpecies.firstWhere(
+        (element) => element.latinName.toLowerCase() == lowerCasePattern,
+        orElse: () => null);
   }
 
   Future<bool> save(Species species) async {

@@ -265,6 +265,9 @@ class AddSpeciesFormState extends State<AddSpeciesForm> {
             validator: (value) {
               return value.isNotEmpty ? null : "Informal name".i18n;
             },
+            onSaved: (value) {
+              informalName = value;
+            },
             decoration: InputDecoration(
                 hintText: "Please enter the informal name".i18n),
           ),

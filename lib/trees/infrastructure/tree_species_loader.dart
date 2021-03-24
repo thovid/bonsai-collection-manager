@@ -6,18 +6,45 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/services.dart' show rootBundle;
 
+import 'package:bonsaicollectionmanager/shared/infrastructure/base_repository.dart';
+
 import '../model/species.dart';
 import '../../shared/i18n/i18n.dart';
+import 'species_table.dart';
 
 /// Load species list from json file
 Future<SpeciesRepository> fetchSpecies(Locale locale) async {
-  return _InMemorySpeciesRepository(
-      await _loadSpeciesFile().then((json) => _parseSpeciesList(json, locale)));
+  return SQLSpeciesRepository(await fetchInitialSpecies(locale));
 }
 
-class _InMemorySpeciesRepository extends SpeciesRepository {
-  final List<Species> species;
-  _InMemorySpeciesRepository(this.species);
+Future<List<Species>> fetchInitialSpecies(Locale locale) =>
+    _loadSpeciesFile().then((json) => _parseSpeciesList(json, locale));
+
+class SQLSpeciesRepository extends BaseRepository with SpeciesRepository {
+  final List<Species> initialSpecies;
+
+  List<Species> _allSpecies;
+
+  SQLSpeciesRepository(this.initialSpecies);
+
+  Future<List<Species>> get species => _getSpecies();
+
+  Future<List<Species>> _getSpecies() async {
+    if (_allSpecies == null) {
+      _allSpecies =
+          initialSpecies + await init().then((db) => SpeciesTable.readAll(db));
+      _allSpecies.sort((a, b) => a.latinName.compareTo(b.latinName));
+    }
+
+    return _allSpecies;
+  }
+
+  Future<bool> save(Species species) async {
+    await init().then((db) => SpeciesTable.write(species, db));
+    _allSpecies.add(species);
+    _allSpecies.sort((a, b) => a.latinName.compareTo(b.latinName));
+    return true;
+  }
 }
 
 List<Species> _parseSpeciesList(String jsonString, Locale locale) {
