@@ -10,6 +10,7 @@ import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
 import 'package:bonsaicollectionmanager/shared/ui/route_not_found.dart';
 import 'package:bonsaicollectionmanager/trees/infrastructure/bonsai_tree_table.dart';
 import 'package:bonsaicollectionmanager/images/infrastructure/collection_item_image_table.dart';
+import 'package:bonsaicollectionmanager/trees/infrastructure/species_table.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +63,7 @@ Future<Database> openTestDatabase(
     await BonsaiTreeTable.createTable(database);
     await CollectionItemImageTable.createTable(database);
     await LogbookEntryTable.createTable(database);
+    await SpeciesTable.createTable(database);
   }
   return database;
 }
