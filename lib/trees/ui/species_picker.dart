@@ -138,7 +138,7 @@ class SpeciesPickerState extends State<SpeciesPicker> {
           child: Text("Not found. Create?".i18n),
           onPressed: () => _showAddTreeSpeciesDialog(
                 context,
-                _controller.text,
+                _controller,
                 widget.findSpecies,
                 widget.saveSpecies,
               )),
@@ -172,12 +172,16 @@ class SpeciesPickerState extends State<SpeciesPicker> {
   }
 }
 
-CircleAvatar avatarFor(BuildContext context, TreeType treeType, bool active) {
+CircleAvatar avatarFor(BuildContext context, TreeType treeType, bool active,
+    {VoidCallback onPressed}) {
   final IconData iconData = iconFor(treeType);
   final Color color =
       active ? Theme.of(context).accentColor : Theme.of(context).disabledColor;
   return CircleAvatar(
-    child: Icon(iconData),
+    child: IconButton(
+      icon: Icon(iconData),
+      onPressed: onPressed,
+    ),
     backgroundColor: color,
   );
 }
@@ -202,7 +206,7 @@ class AddSpeciesDialog extends Dialog {}
 
 Future<void> _showAddTreeSpeciesDialog(
     BuildContext context,
-    String initialLatinName,
+    TextEditingController initiatingTextController,
     FindSpecies findSpecies,
     SaveSpecies saveSpecies) async {
   return await showDialog(
@@ -212,7 +216,7 @@ Future<void> _showAddTreeSpeciesDialog(
             builder: (context, setState) => AlertDialog(
                   title: Text("Add Species".i18n),
                   content: AddSpeciesForm(
-                    initialLatinName,
+                    initiatingTextController,
                     findSpecies,
                     saveSpecies,
                   ),
@@ -223,8 +227,9 @@ Future<void> _showAddTreeSpeciesDialog(
 class AddSpeciesForm extends StatefulWidget {
   final FindSpecies findSpecies;
   final SaveSpecies saveSpecies;
-  final String initialLatinName;
-  AddSpeciesForm(this.initialLatinName, this.findSpecies, this.saveSpecies);
+  final TextEditingController initiatingTextController;
+  AddSpeciesForm(
+      this.initiatingTextController, this.findSpecies, this.saveSpecies);
 
   @override
   AddSpeciesFormState createState() => AddSpeciesFormState();
@@ -234,6 +239,7 @@ class AddSpeciesFormState extends State<AddSpeciesForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String latinName;
   String informalName;
+  TreeType selectedTreeType = TreeType.conifer;
 
   bool _latinNameExisting = false;
 
@@ -244,61 +250,97 @@ class AddSpeciesFormState extends State<AddSpeciesForm> {
     _formKey.currentState?.validate();
     return Form(
       key: _formKey,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextFormField(
-            initialValue: widget.initialLatinName,
-            validator: (value) {
-              if (value.isEmpty) return "Latin name".i18n;
-              if (_latinNameExisting) return "Species already existing".i18n;
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              initialValue: widget.initiatingTextController.text,
+              validator: (value) {
+                if (value.isEmpty) return "Latin name".i18n;
+                if (_latinNameExisting) return "Species already existing".i18n;
 
-              return null;
-            },
-            onSaved: (value) {
-              latinName = value;
-            },
-            decoration:
-                InputDecoration(hintText: "Please enter the latin name".i18n),
-          ),
-          TextFormField(
-            validator: (value) {
-              return value.isNotEmpty ? null : "Informal name".i18n;
-            },
-            onSaved: (value) {
-              informalName = value;
-            },
-            decoration: InputDecoration(
-                hintText: "Please enter the informal name".i18n),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                _formKey.currentState.save();
-
-                _checkLatinName(latinName).then((ok) {
-                  setState(() {
-                    _latinNameExisting = !ok;
-                  });
-
-                  if (_formKey.currentState.validate()) {
-                    // save
-                    Species species = Species(TreeType.conifer,
-                        latinName: latinName, informalName: informalName);
-                    widget.saveSpecies(species).then((saved) {
-                      if (saved) {
-                        // close dialog
-                        Navigator.pop(context);
-                      }
-                    });
-                  }
-                });
+                return null;
               },
-              child: Text("Save".i18n),
+              onSaved: (value) {
+                latinName = value;
+              },
+              decoration:
+                  InputDecoration(hintText: "Please enter the latin name".i18n),
             ),
-          ),
-        ],
+            TextFormField(
+              validator: (value) {
+                return value.isNotEmpty ? null : "Informal name".i18n;
+              },
+              onSaved: (value) {
+                informalName = value;
+              },
+              decoration: InputDecoration(
+                  hintText: "Please enter the informal name".i18n),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  avatarFor(context, TreeType.conifer,
+                      TreeType.conifer == selectedTreeType, onPressed: () {
+                    setState(() {
+                      selectedTreeType = TreeType.conifer;
+                    });
+                  }),
+                  avatarFor(context, TreeType.deciduous,
+                      TreeType.deciduous == selectedTreeType, onPressed: () {
+                    setState(() {
+                      selectedTreeType = TreeType.deciduous;
+                    });
+                  }),
+                  avatarFor(context, TreeType.broadleaf_evergreen,
+                      TreeType.broadleaf_evergreen == selectedTreeType,
+                      onPressed: () {
+                    setState(() {
+                      selectedTreeType = TreeType.broadleaf_evergreen;
+                    });
+                  }),
+                  avatarFor(context, TreeType.tropical,
+                      TreeType.tropical == selectedTreeType, onPressed: () {
+                    setState(() {
+                      selectedTreeType = TreeType.tropical;
+                    });
+                  }),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  _formKey.currentState.save();
+
+                  _checkLatinName(latinName).then((ok) {
+                    setState(() {
+                      _latinNameExisting = !ok;
+                    });
+
+                    if (_formKey.currentState.validate()) {
+                      // save
+                      Species species = Species(selectedTreeType,
+                          latinName: latinName, informalName: informalName);
+                      widget.saveSpecies(species).then((saved) {
+                        if (saved) {
+                          // close dialog
+                          widget.initiatingTextController.text = latinName;
+                          Navigator.pop(context);
+                        }
+                      });
+                    }
+                  });
+                },
+                child: Text("Save".i18n),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
