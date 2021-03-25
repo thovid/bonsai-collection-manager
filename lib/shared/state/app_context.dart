@@ -2,10 +2,10 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/logbook/infrastructure/sql_logbook_repository.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
-import '../i18n/i18n.dart';
 import '../../images/infrastructure/sql_image_gallery_repository.dart';
 import '../../images/model/images.dart';
 import '../../trees/model/species.dart';
@@ -13,6 +13,7 @@ import '../../trees/model/bonsai_tree_collection.dart';
 import '../../trees/infrastructure/sql_bonsai_tree_repository.dart';
 import '../../trees/infrastructure/tree_species_loader.dart';
 import '../../logbook/model/logbook.dart';
+import '../../logbook/infrastructure/sql_logbook_repository.dart';
 
 class AppContext {
   final isInitialized;
@@ -61,6 +62,25 @@ class _WithAppContextState extends State<WithAppContext> {
 
   @override
   Widget build(BuildContext context) {
+    /*   return FutureBuilder<AppContext>(
+      future: _load(context),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return SizedBox(
+            child: CircularProgressIndicator(),
+            width: 60,
+            height: 60,
+          );
+        }
+    if(snapshot.hasError) {
+      print("error!");
+    }
+        return _InheritedAppContext(
+          appContext: snapshot.data,
+          child: widget.child,
+        );
+      },
+    );*/
     return _InheritedAppContext(
       appContext: _appContext,
       child: widget.child,
@@ -68,7 +88,9 @@ class _WithAppContextState extends State<WithAppContext> {
   }
 
   Future<void> _loadAppContext() async {
-    Locale locale = await fetchLocale();
+    final String defaultLocale = Platform.localeName;
+    Locale locale = Locale(defaultLocale.split('_')[0], '');
+
     SpeciesRepository species = await fetchSpecies(locale);
     BonsaiTreeRepository treeRepository = SQLBonsaiTreeRepository(species);
     ImageRepository imageRepository = SQLImageGalleryRepository();
