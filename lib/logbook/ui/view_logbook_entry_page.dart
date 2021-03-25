@@ -20,12 +20,12 @@ class ViewLogbookEntryPage extends StatelessWidget {
               appBar: AppBar(
                 title: Text(_title(logbookEntry)),
                 actions: <Widget>[
-                  TextButton(
-                    child: Icon(Icons.edit),
+                  IconButton(
+                    icon: Icon(Icons.edit),
                     onPressed: () => _startEdit(context, logbook, logbookEntry),
                   ),
-                  TextButton(
-                    child: Icon(Icons.delete),
+                  IconButton(
+                    icon: Icon(Icons.delete),
                     onPressed: () => _delete(context, logbookEntry, logbook),
                   )
                 ],
