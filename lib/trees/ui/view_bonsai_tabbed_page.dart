@@ -39,6 +39,10 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                 title: _buildTitle(tree),
                 actions: <Widget>[
                   IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () => _startEdit(context, tree),
+                  ),
+                  IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () =>
                         _delete(context, tree, logbook, collection),
@@ -84,11 +88,6 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                     onPressed: () {
                       _addLogbookEntry(context, LogWorkType.watered, logbook);
                     },
-                  ),
-                  SpeedDialItem(
-                    label: 'Edit'.i18n,
-                    icon: Icon(Icons.edit),
-                    onPressed: () => _startEdit(context, tree),
                   ),
                 ],
               ),
