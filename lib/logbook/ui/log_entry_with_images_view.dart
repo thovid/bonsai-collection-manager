@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import '../../shared/ui/spaces.dart';
 import '../model/logbook.dart';
 import '../i18n/view_logbook_entry_page.i18n.dart';
-import './work_type_panel.dart';
+import '../../worktype/ui/work_type_panel.dart';
 
 class LogEntryWithImagesView extends StatelessWidget {
   final LogbookEntryWithImages logbookEntry;

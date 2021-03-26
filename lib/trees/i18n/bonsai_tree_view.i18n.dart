@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
+
 import 'package:i18n_extension/i18n_extension.dart';
-import '../../logbook/i18n/log_work_type_translations.dart';
+import '../../worktype/i18n/log_work_type_translations.dart';
 import 'bonsai_enums.i18n.dart';
 
 extension Localization on String {
@@ -36,7 +37,9 @@ extension Localization on String {
           {"en_us": "Delete", "de": "Löschen"} +
           {"en_us": "More", "de": "Mehr"} +
           {"en_us": "Tree", "de": "Baum"} +
-          {"en_us": "Logbook", "de": "Logbuch"});
+          {"en_us": "Logbook", "de": "Logbuch"} +
+          {"en_us": "Reminder", "de": "Erinnerungen"} +
+          {"en_us": "Add reminder", "de": "Erinnerung hinzufügen"});
 
   String get i18n => localize(this, _t);
 }

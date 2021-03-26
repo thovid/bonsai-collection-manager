@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 by Thomas Vidic
+ * Copyright (c) 2021 by Thomas Vidic
  */
 
 import 'package:i18n_extension/i18n_extension.dart';

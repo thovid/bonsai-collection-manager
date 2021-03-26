@@ -2,16 +2,18 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/worktype/ui/work_type_selector.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+import '../../worktype/model/work_type.dart';
+import '../../worktype/ui/icon_for_work_type.dart';
 import '../../shared/ui/spaces.dart';
 import '../../shared/ui/widget_factory.dart';
 import '../i18n/view_logbook_entry_page.i18n.dart';
 import '../model/logbook.dart';
-import './work_type_panel.dart';
 import './view_logbook_entry_page.dart';
 
 class EditLogbookEntryPage extends StatefulWidget {
@@ -30,7 +32,6 @@ class EditLogbookEntryPage extends StatefulWidget {
 class _EditLogbookEntryPageState extends State<EditLogbookEntryPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   LogbookEntryBuilder _entryBuilder;
-  TextEditingController _workTypeNameController = TextEditingController();
 
   @override
   void initState() {
@@ -51,7 +52,6 @@ class _EditLogbookEntryPageState extends State<EditLogbookEntryPage> {
     _entryBuilder.workTypeName = widget.entry?.entry?.workTypeName ??
         widget.initialWorkType?.toString()?.i18n ??
         '';
-    _workTypeNameController.text = _entryBuilder.workTypeName;
   }
 
   @override
@@ -83,7 +83,9 @@ class _EditLogbookEntryPageState extends State<EditLogbookEntryPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               mediumVerticalSpace,
-              _buildWorkTypeSelector(),
+              WorkTypeSelector(
+                hasWorkType: _entryBuilder,
+              ),
               mediumVerticalSpace,
               formDatePickerField(
                 context,
@@ -128,42 +130,4 @@ class _EditLogbookEntryPageState extends State<EditLogbookEntryPage> {
     Navigator.of(context).pushReplacementNamed(ViewLogbookEntryPage.route_name,
         arguments: Tuple2(logbook, newEntry));
   }
-
-  Widget _buildWorkTypeSelector() {
-    return Row(
-      children: <Widget>[
-        Flexible(
-          child: DropdownButtonFormField<LogWorkType>(
-            isExpanded: true,
-            selectedItemBuilder: (_) => LogWorkType.values
-                .map((e) => Center(child: workTypeIconFor(e)))
-                .toList(),
-            value: _entryBuilder.workType,
-            items: _buildWorkTypeItems(),
-            onChanged: (value) {
-              _entryBuilder.workType = value;
-              _workTypeNameController.text = value.toString().i18n;
-              setState(() {});
-            },
-          ),
-        ),
-        smallHorizontalSpace,
-        Flexible(
-          flex: 3,
-          child: TextFormField(
-            controller: _workTypeNameController,
-            onSaved: (newValue) => _entryBuilder.workTypeName = newValue,
-          ),
-        ),
-      ],
-    );
-  }
-
-  List<DropdownMenuItem<LogWorkType>> _buildWorkTypeItems() =>
-      LogWorkType.values
-          .map((e) => DropdownMenuItem(
-                child: Center(child: workTypeIconFor(e)),
-                value: e,
-              ))
-          .toList();
 }

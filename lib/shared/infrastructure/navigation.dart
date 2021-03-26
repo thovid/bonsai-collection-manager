@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
 import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:provider/provider.dart';

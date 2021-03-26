@@ -4,6 +4,7 @@
 
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
 import 'package:bonsaicollectionmanager/logbook/ui/logbook_view.dart';
+import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';

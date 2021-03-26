@@ -6,10 +6,12 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+import '../../reminder/ui/reminder_list_view.dart';
 import '../../logbook/ui/logbook_view.dart';
 import '../../logbook/model/logbook.dart';
 import '../../logbook/ui/edit_logbook_entry_page.dart';
@@ -27,7 +29,7 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SafeArea(
         child: DefaultTabController(
-          length: 2,
+          length: 3,
           child: Consumer3<BonsaiTreeWithImages, Logbook, BonsaiTreeCollection>(
             builder: (BuildContext context,
                     BonsaiTreeWithImages tree,
@@ -54,15 +56,15 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                         icon: ImageIcon(AssetImage('icons/bonsai.png')),
                         text: 'Tree'.i18n),
                     Tab(icon: Icon(Icons.list), text: 'Logbook'.i18n),
+                    Tab(icon: Icon(Icons.alarm), text: 'Reminder'.i18n),
                   ],
                 ),
               ),
               body: TabBarView(
                 children: <Widget>[
                   BonsaiWithImagesView(tree: tree),
-                  LogbookView(
-                    logbook: logbook,
-                  )
+                  LogbookView(logbook: logbook),
+                  ReminderView(reminderList: null /*TODO get reminderList*/),
                 ],
               ),
               floatingActionButton: SpeedDial(
@@ -87,6 +89,13 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                     icon: Icon(LogWorkTypeIcons.watering),
                     onPressed: () {
                       _addLogbookEntry(context, LogWorkType.watered, logbook);
+                    },
+                  ),
+                  SpeedDialItem(
+                    label: 'Add reminder'.i18n,
+                    icon: Icon(Icons.add_alarm),
+                    onPressed: () {
+                      _addReminder();
                     },
                   ),
                 ],
@@ -134,5 +143,9 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
       BuildContext context, LogWorkType initialWorkType, Logbook logbook) {
     Navigator.of(context).pushNamed(EditLogbookEntryPage.route_name_create,
         arguments: Tuple2(logbook, initialWorkType));
+  }
+
+  void _addReminder() {
+    // TODO implement
   }
 }

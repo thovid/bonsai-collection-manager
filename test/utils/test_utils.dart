@@ -4,6 +4,7 @@
 
 import 'package:bonsaicollectionmanager/logbook/infrastructure/logbook_entry_table.dart';
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
+import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
 import 'package:bonsaicollectionmanager/shared/infrastructure/navigation.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
@@ -85,4 +86,11 @@ Future<Logbook> loadLogbookWith(List<LogbookEntry> entries,
       logbookRepository: repo,
       imageRepository: DummyImageRepository(),
       subjectId: subject);
+}
+
+Future<ReminderList> loadReminderListWith(List<Reminder> entries,
+    {ModelID subject}) async {
+  subject ??= ModelID.newId();
+
+  return ReminderList();
 }

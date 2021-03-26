@@ -3,6 +3,7 @@
  */
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
+import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 

@@ -7,9 +7,9 @@ import 'package:i18n_extension/i18n_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:tuple/tuple.dart';
 
+import '../../worktype/ui/icon_for_work_type.dart';
 import '../model/logbook.dart';
 import './view_logbook_entry_page.dart';
-import './work_type_panel.dart';
 
 class LogbookView extends StatelessWidget {
   final Logbook logbook;

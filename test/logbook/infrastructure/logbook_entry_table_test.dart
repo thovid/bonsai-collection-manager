@@ -5,6 +5,7 @@
 import 'package:bonsaicollectionmanager/logbook/infrastructure/logbook_entry_table.dart';
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
+import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:test/test.dart';
 

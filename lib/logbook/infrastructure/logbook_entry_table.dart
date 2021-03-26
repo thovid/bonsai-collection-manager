@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
+import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 
 import '../model/logbook.dart';

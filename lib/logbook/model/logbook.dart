@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../../worktype/model/work_type.dart';
 import '../../images/model/images.dart';
 import '../../shared/model/model_id.dart';
 
@@ -65,15 +66,10 @@ class Logbook with ChangeNotifier {
 
   Future<LogbookEntryWithImages> update(
       LogbookEntryWithImages entryWithImages) async {
-    final int index =
-        _entries.indexWhere((element) => element.id == entryWithImages.id);
     LogbookEntryWithImages result =
         await _addToCacheAndRepository(entryWithImages);
 
-    if (index < 0) {
-      notifyListeners();
-    }
-
+    notifyListeners();
     return result;
   }
 
@@ -86,7 +82,13 @@ class Logbook with ChangeNotifier {
   Future<LogbookEntryWithImages> _addToCacheAndRepository(
       LogbookEntryWithImages entryWithImages) async {
     await _logbookRepository.add(entryWithImages.entry, _subjectId);
-    _entries.add(entryWithImages);
+    final int index =
+        _entries.indexWhere((element) => element.id == entryWithImages.id);
+    if (index >= 0) {
+      _entries[index] = entryWithImages;
+    } else {
+      _entries.add(entryWithImages);
+    }
     _entries.sort((a, b) => -a.entry.date.compareTo(b.entry.date));
     return entryWithImages;
   }
@@ -118,7 +120,7 @@ class LogbookEntry {
         notes = builder.notes;
 }
 
-class LogbookEntryBuilder {
+class LogbookEntryBuilder with HasWorkType {
   final ModelID<LogbookEntry> _id;
   LogWorkType workType;
   String workTypeName;
@@ -165,16 +167,4 @@ class LogbookEntryWithImages with ChangeNotifier {
     await images.fetchImages();
     return this;
   }
-}
-
-enum LogWorkType {
-  watered,
-  fertilized,
-  sprayed,
-  wired,
-  deadwood,
-  pruned,
-  repotted,
-  custom,
-  pinched,
 }
