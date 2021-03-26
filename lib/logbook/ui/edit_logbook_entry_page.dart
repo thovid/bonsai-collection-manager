@@ -2,14 +2,14 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/worktype/ui/work_type_selector.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../worktype/model/work_type.dart';
-import '../../worktype/ui/icon_for_work_type.dart';
+import '../../worktype/ui/work_type_selector.dart';
 import '../../shared/ui/spaces.dart';
 import '../../shared/ui/widget_factory.dart';
 import '../i18n/view_logbook_entry_page.i18n.dart';
