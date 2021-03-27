@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:intl/intl.dart';
 
+
 /// Simple helper to create a text form field.
 TextFormField formTextField(BuildContext context,
         {String initialValue,
@@ -58,6 +59,7 @@ DropdownButtonFormField<T> formDropdownField<T>(context,
 TextFormField formDatePickerField(context,
     {String label,
     DateTime initialValue,
+    DateTime firstDate,
     bool readOnly,
     Function(DateTime value) onChanged}) {
   final TextEditingController controller =
@@ -70,7 +72,8 @@ TextFormField formDatePickerField(context,
     onTap: readOnly
         ? () {}
         : () async {
-            DateTime value = (await _getDate(context, initialValue));
+            DateTime value =
+                (await _getDate(context, initialValue, firstDate: firstDate));
             if (value != null) {
               controller.text = _formatDate(value);
               onChanged(value);
@@ -88,11 +91,13 @@ TextFormField formDatePickerField(context,
 String _formatDate(DateTime value) =>
     DateFormat.yMMMd(I18n.locale?.toString()).format(value);
 
-Future<DateTime> _getDate(BuildContext context, DateTime initialDate) {
+Future<DateTime> _getDate(BuildContext context, DateTime initialDate,
+    {DateTime firstDate}) {
+  firstDate = firstDate ?? DateTime(initialDate.year + 80);
   return showDatePicker(
     context: context,
     initialDate: initialDate,
-    firstDate: DateTime(initialDate.year - 80),
-    lastDate: DateTime(initialDate.year + 1),
+    firstDate: firstDate,
+    lastDate: DateTime(initialDate.year + 2),
   );
 }

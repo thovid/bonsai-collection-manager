@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2020 by Thomas Vidic
  */
-import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
+
 import 'package:sqflite_common/sqlite_api.dart';
 
 import '../model/logbook.dart';
+import '../../worktype/model/work_type.dart';
 import '../../shared/infrastructure/enum_utils.dart';
 import '../../shared/model/model_id.dart';
 

@@ -4,6 +4,7 @@
 
 import 'package:bonsaicollectionmanager/logbook/infrastructure/logbook_entry_table.dart';
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
+import 'package:bonsaicollectionmanager/reminder/infrastructure/reminder_configuration_table.dart';
 import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
 import 'package:bonsaicollectionmanager/shared/infrastructure/navigation.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
@@ -65,6 +66,7 @@ Future<Database> openTestDatabase(
     await CollectionItemImageTable.createTable(database);
     await LogbookEntryTable.createTable(database);
     await SpeciesTable.createTable(database);
+    await ReminderConfigurationTable.createTable(database);
   }
   return database;
 }

@@ -34,6 +34,12 @@ class _WorkTypeSelectorState extends State<WorkTypeSelector> {
     _initFromWidget();
   }
 
+  @override
+  void dispose() {
+    _workTypeNameController.dispose();
+    super.dispose();
+  }
+
   void _initFromWidget() {
     _workTypeNameController.text = widget.hasWorkType.workTypeName;
   }

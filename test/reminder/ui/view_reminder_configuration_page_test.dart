@@ -24,15 +24,13 @@ main() {
   testWidgets('can create new reminder configuration',
       (WidgetTester tester) async {
     final mockNavigationObserver = MockNavigatorObserver();
-    //var logbook = await testUtils.loadLogbookWith([]);
     var reminderList = await testUtils.loadReminderListWith([]);
     await _openView(tester, reminderList, null,
         navigatorObserver: mockNavigationObserver);
-    /* await tester.enterText(
-        find.bySemanticsLabel('Notes'), 'this is a new note');
+    //await tester.enterText(find.bySemanticsLabel('Frequency'), '10');
     await tester.tap(find.text('Save')).then((_) => tester.pumpAndSettle());
     verify(mockNavigationObserver.didReplace(
-        newRoute: anyNamed('newRoute'), oldRoute: anyNamed('oldRoute')));*/
+        newRoute: anyNamed('newRoute'), oldRoute: anyNamed('oldRoute')));
   });
 }
 
@@ -54,8 +52,7 @@ Future<void> _openView(
       await testUtils.testAppWith(
         ChangeNotifierProvider<ReminderList>.value(
           value: reminderList,
-          builder: (context, child) =>
-              EditReminderConfigurationPage(reminderList),
+          builder: (context, child) => EditReminderConfigurationPage(),
         ),
         navigationObserver: navigatorObserver,
       ),

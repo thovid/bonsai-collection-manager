@@ -5,6 +5,8 @@
 import 'package:bonsaicollectionmanager/images/model/images.dart';
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
 import 'package:bonsaicollectionmanager/logbook/ui/view_logbook_entry_page.dart';
+import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
+import 'package:bonsaicollectionmanager/reminder/ui/edit_reminder_configuration_page.dart';
 import 'package:bonsaicollectionmanager/shared/i18n/i18n.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:bonsaicollectionmanager/shared/state/app_context.dart';
@@ -25,7 +27,8 @@ import 'utils/test_utils.dart' as testUtils;
 Images empty =
     Images(parent: ModelID.newId(), repository: DummyImageRepository());
 void main() {
-  runStartupScreen();
+  runEditReminderConfigurationPage();
+  //runStartupScreen();
   //runImageGallery();
   //runEditBonsaiView();
   //runViewBonsaiView();
@@ -45,12 +48,13 @@ class TestScreen extends HomePageWithDrawer {
 
   @override
   String buildTitle(BuildContext context) {
-   return "Title";
+    return "Title";
   }
 
   @override
   String get routeName => "/";
 }
+
 Future runStartupScreen() async {
   runApp(WidgetRunner(TestScreen()));
 }
@@ -71,6 +75,18 @@ Future runViewLogbookEntryPage() async {
       ),
     ),
   );
+}
+
+Future runEditReminderConfigurationPage() async {
+  ReminderList reminderList = ReminderList();
+  runApp(WidgetRunner(
+    ChangeNotifierProvider.value(
+      value: reminderList,
+      child: ChangeNotifierProvider.value(
+          value: null,
+          builder: (context, child) => EditReminderConfigurationPage()),
+    ),
+  ));
 }
 
 void runEditBonsaiView() {
