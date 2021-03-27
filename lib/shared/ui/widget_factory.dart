@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:intl/intl.dart';
 
-
 /// Simple helper to create a text form field.
 TextFormField formTextField(BuildContext context,
         {String initialValue,
@@ -62,10 +61,10 @@ TextFormField formDatePickerField(context,
     DateTime firstDate,
     bool readOnly,
     Function(DateTime value) onChanged}) {
-  final TextEditingController controller =
+  final TextEditingController _controller =
       TextEditingController(text: _formatDate(initialValue));
   return TextFormField(
-    controller: controller,
+    controller: _controller,
     cursorColor: TextSelectionTheme.of(context).cursorColor,
     readOnly: true,
     enabled: !readOnly,
@@ -75,7 +74,7 @@ TextFormField formDatePickerField(context,
             DateTime value =
                 (await _getDate(context, initialValue, firstDate: firstDate));
             if (value != null) {
-              controller.text = _formatDate(value);
+              _controller.text = _formatDate(value);
               onChanged(value);
             }
           },
@@ -93,7 +92,7 @@ String _formatDate(DateTime value) =>
 
 Future<DateTime> _getDate(BuildContext context, DateTime initialDate,
     {DateTime firstDate}) {
-  firstDate = firstDate ?? DateTime(initialDate.year + 80);
+  firstDate = firstDate ?? DateTime(initialDate.year - 80);
   return showDatePicker(
     context: context,
     initialDate: initialDate,

@@ -2,6 +2,7 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/reminder/ui/edit_reminder_configuration_view_model.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,7 +30,7 @@ class EditReminderConfigurationPage extends StatefulWidget {
 class _EditReminderConfigurationPageState
     extends State<EditReminderConfigurationPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  ReminderConfigurationBuilder _configurationBuilder;
+  EditReminderConfigurationViewModel _viewModel;
   TextEditingController _frequencyController = TextEditingController();
   TextEditingController _repetitionsController = TextEditingController();
 
@@ -46,14 +47,15 @@ class _EditReminderConfigurationPageState
   }
 
   void _initFromWidget() {
-    _configurationBuilder = ReminderConfigurationBuilder(
-        fromConfiguration: widget.reminderConfiguration);
-    _configurationBuilder.workTypeName =
+    _viewModel = EditReminderConfigurationViewModel(setState);
+    _viewModel.workTypeName = _viewModel.workType.toString().i18n;
+
+    /* _configurationBuilder.workTypeName =
         widget.reminderConfiguration?.workTypeName ??
             _configurationBuilder?.workType?.toString()?.i18n ??
-            '';
-    _frequencyController.text = "${_configurationBuilder.frequency}";
-    _repetitionsController.text = "1"; // TODO
+            '';*/
+    _frequencyController.text = _viewModel.frequency;
+    _repetitionsController.text = _viewModel.endingAfterRepetitions;
     /*
     _entryBuilder.workType =
         widget.entry?.entry?.workType ?? widget.initialWorkType;
@@ -111,17 +113,16 @@ class _EditReminderConfigurationPageState
                 children: <Widget>[
                   mediumVerticalSpace,
                   WorkTypeSelector(
-                    hasWorkType: _configurationBuilder,
+                    hasWorkType: _viewModel,
                   ),
                   mediumVerticalSpace,
                   formDatePickerField(
                     context,
-                    initialValue: _configurationBuilder.firstReminder,
-                    firstDate: _configurationBuilder.firstReminder,
+                    initialValue: _viewModel.firstReminder,
+                    firstDate: _viewModel.earliestFirstReminder,
                     label: 'On'.i18n,
                     readOnly: false,
-                    onChanged: (value) =>
-                        _configurationBuilder.firstReminder = value,
+                    onChanged: _viewModel.firstReminderChanged,
                   ),
                   mediumVerticalSpace,
                   Row(
@@ -130,12 +131,8 @@ class _EditReminderConfigurationPageState
                       Text("Repeat".i18n),
                       smallHorizontalSpace,
                       Checkbox(
-                        value: _configurationBuilder.repeat,
-                        onChanged: (value) {
-                          setState(() {
-                            _configurationBuilder.repeat = value;
-                          });
-                        },
+                        value: _viewModel.repeat,
+                        onChanged: _viewModel.repeatChanged,
                       )
                     ],
                   ),
@@ -149,35 +146,25 @@ class _EditReminderConfigurationPageState
                           controller: _frequencyController,
                           decoration: InputDecoration(
                               counterText: "",
-                              filled: _configurationBuilder.repeat),
-                          enabled: _configurationBuilder.repeat,
+                              filled: _viewModel.frequencyEditable),
+                          enabled: _viewModel.frequencyEditable,
                           maxLength: 2,
                           keyboardType: TextInputType.numberWithOptions(),
                           inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.digitsOnly
                           ],
-                          onChanged: (value) {
-                            final parsed = int.tryParse(value);
-                            if (parsed != null) {
-                              setState(() {
-                                _configurationBuilder.frequency = parsed;
-                              });
-                            }
-                          },
+                          onChanged: _viewModel.frequencyChanged,
                         ),
                       ),
                       smallHorizontalSpace,
                       Flexible(
                         child: formDropdownField(
                           context,
-                          value: _configurationBuilder.frequencyUnit,
-                          readOnly: !_configurationBuilder.repeat,
+                          value: _viewModel.frequencyUnit,
+                          readOnly: !_viewModel.frequencyEditable,
                           values: FrequencyUnit.values,
                           translate: (value) => value.toString().i18n,
-                          onSaved: (value) {
-                            _configurationBuilder.frequencyUnit = value;
-                            setState(() {});
-                          },
+                          onSaved: _viewModel.frequencyUnitChanged,
                         ),
                       ),
                     ],
@@ -197,15 +184,9 @@ class _EditReminderConfigurationPageState
                                 title: Text(
                                     EndingConditionType.never.toString().i18n),
                                 value: EndingConditionType.never,
-                                groupValue:
-                                    _configurationBuilder.endingConditionType,
-                                onChanged: _configurationBuilder.repeat
-                                    ? (value) {
-                                        setState(() {
-                                          _configurationBuilder
-                                              .endingConditionType = value;
-                                        });
-                                      }
+                                groupValue: _viewModel.endingConditionType,
+                                onChanged: _viewModel.endingConditionEditable
+                                    ? _viewModel.endingConditionTypeChanged
                                     : null,
                               ),
                             ),
@@ -222,29 +203,19 @@ class _EditReminderConfigurationPageState
                                     .toString()
                                     .i18n),
                                 value: EndingConditionType.after_date,
-                                groupValue:
-                                    _configurationBuilder.endingConditionType,
-                                onChanged: _configurationBuilder.repeat
-                                    ? (value) {
-                                        setState(() {
-                                          _configurationBuilder
-                                              .endingConditionType = value;
-                                        });
-                                      }
+                                groupValue: _viewModel.endingConditionType,
+                                onChanged: _viewModel.endingConditionEditable
+                                    ? _viewModel.endingConditionTypeChanged
                                     : null,
                               ),
                             ),
                             Flexible(
                               child: formDatePickerField(
                                 context,
-                                readOnly: !_configurationBuilder.repeat ||
-                                    EndingConditionType.after_date !=
-                                        _configurationBuilder
-                                            .endingConditionType,
-                                firstDate: _configurationBuilder.firstReminder,
-                                initialValue:
-                                    _configurationBuilder.firstReminder,
-                                onChanged: (value) {},
+                                readOnly: !_viewModel.endingAtDateEditable,
+                                firstDate: _viewModel.earliestEndingAtDate,
+                                initialValue: _viewModel.endingAtDate,
+                                onChanged: _viewModel.endingAtDateChanged,
                               ),
                             ),
                           ],
@@ -261,15 +232,9 @@ class _EditReminderConfigurationPageState
                                     .toString()
                                     .i18n),
                                 value: EndingConditionType.after_repetitions,
-                                groupValue:
-                                    _configurationBuilder.endingConditionType,
-                                onChanged: _configurationBuilder.repeat
-                                    ? (value) {
-                                        setState(() {
-                                          _configurationBuilder
-                                              .endingConditionType = value;
-                                        });
-                                      }
+                                groupValue: _viewModel.endingConditionType,
+                                onChanged: _viewModel.endingConditionEditable
+                                    ? _viewModel.endingConditionTypeChanged
                                     : null,
                               ),
                             ),
@@ -278,28 +243,20 @@ class _EditReminderConfigurationPageState
                                 child: TextField(
                                   controller: _repetitionsController,
                                   decoration: InputDecoration(
-                                      counterText: "",
-                                      filled: _configurationBuilder.repeat &&
-                                          EndingConditionType
-                                                  .after_repetitions ==
-                                              _configurationBuilder
-                                                  .endingConditionType),
-                                  enabled: _configurationBuilder.repeat &&
-                                      EndingConditionType.after_repetitions ==
-                                          _configurationBuilder
-                                              .endingConditionType,
+                                    counterText: "",
+                                    filled: _viewModel
+                                        .endingAfterRepetitionsEditable,
+                                  ),
+                                  enabled:
+                                      _viewModel.endingAfterRepetitionsEditable,
                                   maxLength: 2,
                                   keyboardType:
                                       TextInputType.numberWithOptions(),
                                   inputFormatters: <TextInputFormatter>[
                                     FilteringTextInputFormatter.digitsOnly
                                   ],
-                                  onChanged: (value) {
-                                    final parsed = int.tryParse(value);
-                                    if (parsed != null) {
-                                      setState(() {});
-                                    }
-                                  },
+                                  onChanged:
+                                      _viewModel.endingAfterRepetitionsChanged,
                                 ),
                               ),
                             ),

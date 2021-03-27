@@ -21,6 +21,8 @@ class ReminderConfigurationTable {
   static const frequency = 'frequency';
   static const frequency_unit = 'frequency_unit';
   static const ending_condition_type = 'ending_condition_type';
+  static const ending_at_date = 'ending_at_date';
+  static const ending_after_repetitions = 'ending_after_repetitions';
 
   static createTable(Database db) async {
     await db.execute("CREATE TABLE $table_name (" +
@@ -32,7 +34,9 @@ class ReminderConfigurationTable {
         '$repeat INTEGER,' +
         '$frequency INTEGER,' +
         '$frequency_unit TEXT,' +
-        '$ending_condition_type TEXT'
+        '$ending_condition_type TEXT,' +
+        '$ending_at_date TEXT,'
+            '$ending_after_repetitions INTEGER'
             ')');
   }
 
@@ -46,6 +50,8 @@ class ReminderConfigurationTable {
     frequency,
     frequency_unit,
     ending_condition_type,
+    ending_at_date,
+    ending_after_repetitions,
   ];
 
   static Future write(ReminderConfiguration configuration,
@@ -85,6 +91,8 @@ class ReminderConfigurationTable {
         frequency: entry.frequency,
         frequency_unit: entry.frequencyUnit.toString(),
         ending_condition_type: entry.endingConditionType.toString(),
+        ending_at_date: entry.endingAtDate.toIso8601String(),
+        ending_after_repetitions: entry.endingAfterRepetitions,
       };
 
   static ReminderConfiguration _fromMap(Map<String, dynamic> data) =>
@@ -99,6 +107,8 @@ class ReminderConfigurationTable {
             ..frequencyUnit =
                 enumValueFromString(data[frequency_unit], FrequencyUnit.values)
             ..endingConditionType = enumValueFromString(
-                data[ending_condition_type], EndingConditionType.values))
+                data[ending_condition_type], EndingConditionType.values)
+            ..endingAtDate = DateTime.parse(data[ending_at_date])
+            ..endingAfterRepetitions = data[ending_after_repetitions])
           .build();
 }

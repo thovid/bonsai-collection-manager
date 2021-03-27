@@ -28,10 +28,7 @@ mixin SpeciesRepository {
         orElse: () => null);
   }
 
-  Future<bool> save(Species species) async {
-    // TODO implement saving
-    return true;
-  }
+  Future<bool> save(Species species);
 }
 
 // The species of the tree.

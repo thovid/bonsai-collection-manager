@@ -32,6 +32,8 @@ class ReminderConfiguration {
   final int frequency;
   final FrequencyUnit frequencyUnit;
   final EndingConditionType endingConditionType;
+  final DateTime endingAtDate;
+  final int endingAfterRepetitions;
 
   ReminderConfiguration._builder(ReminderConfigurationBuilder builder)
       : id = builder._id,
@@ -43,7 +45,9 @@ class ReminderConfiguration {
         repeat = builder.repeat,
         frequency = builder.frequency,
         frequencyUnit = builder.frequencyUnit,
-        endingConditionType = builder.endingConditionType;
+        endingConditionType = builder.endingConditionType,
+        endingAtDate = builder.endingAtDate,
+        endingAfterRepetitions = builder.endingAfterRepetitions;
 }
 
 class ReminderConfigurationBuilder with HasWorkType {
@@ -57,6 +61,8 @@ class ReminderConfigurationBuilder with HasWorkType {
   int frequency;
   FrequencyUnit frequencyUnit;
   EndingConditionType endingConditionType;
+  DateTime endingAtDate;
+  int endingAfterRepetitions;
 
   ReminderConfigurationBuilder(
       {ReminderConfiguration fromConfiguration, String id})
@@ -70,10 +76,13 @@ class ReminderConfigurationBuilder with HasWorkType {
         firstReminder = fromConfiguration?.firstReminder ??
             DateTime.now().add(Duration(days: 1)),
         repeat = fromConfiguration?.repeat ?? false,
-        frequency = fromConfiguration?.frequency ?? 0,
+        frequency = fromConfiguration?.frequency ?? 1,
         frequencyUnit = fromConfiguration?.frequencyUnit ?? FrequencyUnit.days,
         endingConditionType =
-            fromConfiguration?.endingConditionType ?? EndingConditionType.never;
+            fromConfiguration?.endingConditionType ?? EndingConditionType.never,
+        endingAtDate = fromConfiguration?.endingAtDate ??
+            DateTime.now().add(Duration(days: 1)),
+        endingAfterRepetitions = fromConfiguration?.endingAfterRepetitions ?? 1;
 
   ReminderConfiguration build() => ReminderConfiguration._builder(this);
 }

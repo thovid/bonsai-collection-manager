@@ -58,6 +58,12 @@ class DummyImageRepository extends ImageRepository {
 class TestSpeciesRepository with SpeciesRepository {
   final Future<List<Species>> species;
   TestSpeciesRepository(this.species);
+
+  @override
+  Future<bool> save(Species s) async {
+    (await species).add(s);
+    return true;
+  }
 }
 
 class TestBonsaiRepository with BonsaiTreeRepository {

@@ -12,7 +12,6 @@ import '../../utils/test_mocks.dart';
 
 main() {
   final ModelID subjectId = ModelID.newId();
-// TODO test ending condition
   test('can create reminder configuration', () async {
     final ReminderConfiguration reminderConfiguration =
         (ReminderConfigurationBuilder()
