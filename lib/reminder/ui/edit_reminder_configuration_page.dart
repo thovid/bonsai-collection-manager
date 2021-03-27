@@ -2,7 +2,6 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/reminder/ui/edit_reminder_configuration_view_model.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,9 +9,12 @@ import 'package:provider/provider.dart';
 
 import '../../shared/ui/widget_factory.dart';
 import '../../shared/ui/spaces.dart';
+import '../../worktype/model/work_type.dart';
 import '../../worktype/ui/work_type_selector.dart';
 import '../model/reminder.dart';
 import '../i18n/view_reminder_configuration_page.i18n.dart';
+
+import 'edit_reminder_configuration_view_model.dart';
 
 class EditReminderConfigurationPage extends StatefulWidget {
   static const route_name = '/reminder/edit-configuration';
@@ -49,11 +51,6 @@ class _EditReminderConfigurationPageState
   void _initFromWidget() {
     _viewModel = EditReminderConfigurationViewModel(setState);
     _viewModel.workTypeName = _viewModel.workType.toString().i18n;
-
-    /* _configurationBuilder.workTypeName =
-        widget.reminderConfiguration?.workTypeName ??
-            _configurationBuilder?.workType?.toString()?.i18n ??
-            '';*/
     _frequencyController.text = _viewModel.frequency;
     _repetitionsController.text = _viewModel.endingAfterRepetitions;
     /*
@@ -114,6 +111,7 @@ class _EditReminderConfigurationPageState
                   mediumVerticalSpace,
                   WorkTypeSelector(
                     hasWorkType: _viewModel,
+                    tense: Tenses.present,
                   ),
                   mediumVerticalSpace,
                   formDatePickerField(
@@ -261,7 +259,8 @@ class _EditReminderConfigurationPageState
                               ),
                             ),
                             smallHorizontalSpace,
-                            Text("Repetitions".i18n),
+                            Text("Repetitions".plural(
+                                _viewModel.endingAfterRepetitionsValue)),
                           ],
                         ),
                       ),

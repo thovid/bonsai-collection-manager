@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 by Thomas Vidic
+ * Copyright (c) 2021 by Thomas Vidic
  */
 
 import 'package:flutter/material.dart';
@@ -12,8 +12,9 @@ import '../i18n/log_work_type.i18n.dart';
 class WorkTypePanel extends StatelessWidget {
   final LogWorkType workType;
   final String workTypeName;
+  final Tenses tense;
 
-  WorkTypePanel({this.workType, this.workTypeName});
+  WorkTypePanel({this.workType, this.workTypeName, this.tense = Tenses.past});
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -37,7 +38,7 @@ class WorkTypePanel extends StatelessWidget {
 
   String _buildWorkTypeName() {
     if (workTypeName == null || workTypeName.isEmpty) {
-      return workType.toString().i18n;
+      return workType.toString().tense(tense);
     }
     return workTypeName;
   }

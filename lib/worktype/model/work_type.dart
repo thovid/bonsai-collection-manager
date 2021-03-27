@@ -14,6 +14,10 @@ enum LogWorkType {
   pinched,
 }
 
+enum Tenses {
+  present, past
+}
+
 mixin HasWorkType {
   LogWorkType get workType;
   set workType(LogWorkType workType);

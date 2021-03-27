@@ -90,6 +90,9 @@ class EditReminderConfigurationViewModel with HasWorkType {
   String get endingAfterRepetitions =>
       "${_configurationBuilder.endingAfterRepetitions}";
 
+  int get endingAfterRepetitionsValue =>
+      _configurationBuilder.endingAfterRepetitions;
+
   ValueChanged<String> get endingAfterRepetitionsChanged => (value) {
         final result = int.tryParse(value);
         if (result != null) {

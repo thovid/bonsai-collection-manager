@@ -10,8 +10,9 @@ import 'package:flutter/material.dart';
 import 'icon_for_work_type.dart';
 
 class WorkTypeSelector extends StatefulWidget {
+  final Tenses tense;
   final HasWorkType hasWorkType;
-  WorkTypeSelector({this.hasWorkType});
+  WorkTypeSelector({this.hasWorkType, this.tense = Tenses.past});
 
   @override
   _WorkTypeSelectorState createState() {
@@ -58,7 +59,8 @@ class _WorkTypeSelectorState extends State<WorkTypeSelector> {
             items: _buildWorkTypeItems(),
             onChanged: (value) {
               widget.hasWorkType.workType = value;
-              _workTypeNameController.text = value.toString().i18n;
+              _workTypeNameController.text =
+                  value.toString().tense(widget.tense);
               setState(() {});
             },
           ),

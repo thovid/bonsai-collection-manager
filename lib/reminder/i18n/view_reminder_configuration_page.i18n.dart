@@ -55,12 +55,13 @@ extension Localization on String {
             "de": "Endet",
           } +
           {
-            "en_us": "Repetitions",
-            "de": "Wiederholungen",
+            "en_us": "Repetitions".one("Repetition"),
+            "de": "Wiederholungen".one("Wiederholung"),
           }) *
       LogWorkTypeTranslations.t *
       FrequencyUnitTranslations.t *
       EndingConditionTypeTranslations.t;
 
   String get i18n => localize(this, _t);
+  String plural(int value) => localizePlural(value, this, _t);
 }
