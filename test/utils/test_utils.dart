@@ -90,7 +90,7 @@ Future<Logbook> loadLogbookWith(List<LogbookEntry> entries,
       subjectId: subject);
 }
 
-Future<ReminderList> loadReminderListWith(List<Reminder> entries,
+Future<ReminderList> loadReminderListWith(List<DummyReminder> entries,
     {ModelID subject}) async {
   subject ??= ModelID.newId();
 

@@ -16,7 +16,7 @@ main() {
   testWidgets('can list all reminder for a tree', (WidgetTester tester) async {
     // TODO create 3 reminder configurations that produce 3 reminder tiles
     ReminderList reminderList = await testUtils
-        .loadReminderListWith([Reminder(), Reminder(), Reminder()]);
+        .loadReminderListWith([DummyReminder(), DummyReminder(), DummyReminder()]);
     await _openView(tester, reminderList);
     expect(find.byType(ListTile), findsNWidgets(3));
   });

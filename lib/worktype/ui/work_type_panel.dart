@@ -20,19 +20,23 @@ class WorkTypePanel extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.all(10.0),
         child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                workTypeIconFor(workType),
-                mediumHorizontalSpace,
-                Text(_buildWorkTypeName(),
-                    style: Theme.of(context).textTheme.headline6),
-              ],
+          
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  workTypeIconFor(workType),
+                  mediumHorizontalSpace,
+                  Expanded(
+                    child: Text(_buildWorkTypeName(),
+                        style: Theme.of(context).textTheme.headline6),
+                  ),
+                ],
+              ),
             ),
-          ),
+          //),
         ),
       );
 

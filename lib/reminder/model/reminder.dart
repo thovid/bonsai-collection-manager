@@ -7,14 +7,23 @@ import '../../shared/model/model_id.dart';
 import '../../worktype/model/work_type.dart';
 import 'package:flutter/foundation.dart';
 
-class Reminder {
+class DummyReminder {
   String get treeName => "Tree Name";
 
   LogWorkType get workType => LogWorkType.custom;
 
   String get workTypeName => "Do bonsai work";
 
-  String dueInFrom(DateTime now) => "Due in 2 Days";
+  int dueInFrom(DateTime now) => 2;
+}
+
+class Reminder {
+  final String treeName;
+  final LogWorkType workType;
+  final String workTypeName;
+  Reminder._internal({this.treeName, this.workType, this.workTypeName});
+
+  int dueInFrom(DateTime date) => 2;
 }
 
 class ReminderList with ChangeNotifier {
@@ -48,6 +57,11 @@ class ReminderConfiguration {
         endingConditionType = builder.endingConditionType,
         endingAtDate = builder.endingAtDate,
         endingAfterRepetitions = builder.endingAfterRepetitions;
+
+  Reminder getReminder() {
+    return Reminder._internal(
+        treeName: treeName, workType: workType, workTypeName: workTypeName);
+  }
 }
 
 class ReminderConfigurationBuilder with HasWorkType {

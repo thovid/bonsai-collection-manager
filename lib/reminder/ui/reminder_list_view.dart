@@ -3,12 +3,7 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:i18n_extension/i18n_widget.dart';
-import 'package:intl/intl.dart';
-
-import '../../logbook/model/logbook.dart';
-import '../../shared/icons/log_work_type_icons.dart';
-import '../../worktype/model/work_type.dart';
+import '../i18n/reminder_tile_translation.dart';
 import '../../worktype/ui/icon_for_work_type.dart';
 import '../model/reminder.dart';
 
@@ -20,7 +15,7 @@ class ReminderView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //List<Reminder> entries = reminderList.entries;
-    List<Reminder> entries = [Reminder(), Reminder(), Reminder()];
+    List<DummyReminder> entries = [DummyReminder(), DummyReminder(), DummyReminder()];
     return Center(
       child: ListView.builder(
         itemCount: entries.length,
@@ -31,15 +26,19 @@ class ReminderView extends StatelessWidget {
   }
 
   Widget _buildReminderTile(
-      BuildContext context, ReminderList reminderList, Reminder entry) {
+      BuildContext context, ReminderList reminderList, DummyReminder entry) {
     final now = DateTime.now();
+    final int dueInDays = entry.dueInFrom(now);
     return ExpansionTile(
       leading: CircleAvatar(child: workTypeIconFor(entry.workType)),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(entry.treeName, style: Theme.of(context).textTheme.headline6),
-          Text(entry.dueInFrom(now),
+          Text(
+              dueInDays >= 0
+                  ? "Due in %d days".plural(dueInDays)
+                  : "Was due %d days ago".plural(-dueInDays),
               style: Theme.of(context)
                   .textTheme
                   .bodyText1

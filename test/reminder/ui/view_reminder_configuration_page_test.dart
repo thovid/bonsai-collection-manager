@@ -35,7 +35,7 @@ main() {
 }
 
 Future<void> _openView(
-    WidgetTester tester, ReminderList reminderList, Reminder entry,
+    WidgetTester tester, ReminderList reminderList, DummyReminder entry,
     {NavigatorObserver navigatorObserver}) async {
   if (entry != null) {
     return tester.pumpWidget(
