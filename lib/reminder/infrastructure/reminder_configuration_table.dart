@@ -87,6 +87,23 @@ class ReminderConfigurationTable {
         whereArgs: [id.value],
       );
 
+  static Future<List<ReminderConfiguration>> readAll(
+      ModelID subjectId, DatabaseExecutor database) async {
+    List<Map<String, dynamic>> data = await database.query(
+      table_name,
+      columns: columns,
+      where: '$subject_id = ?',
+      whereArgs: [subjectId.value],
+      orderBy: '$next_reminder_at ASC',
+    );
+
+    List<ReminderConfiguration> result = []..length = data.length;
+    for (int i = 0; i < data.length; i++) {
+      result[i] = _fromMap(data[i]);
+    }
+    return result;
+  }
+
   static Map<String, dynamic> _toMap(ReminderConfiguration entry) => {
         entry_id: entry.id.value,
         subject_id: entry.subjectID.value,

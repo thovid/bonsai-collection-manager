@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:bonsaicollectionmanager/images/model/collection_item_image.dart';
 import 'package:bonsaicollectionmanager/images/model/images.dart';
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
+import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
@@ -88,3 +89,7 @@ class TestBonsaiRepository with BonsaiTreeRepository {
 }
 
 class MockLogbookRepository extends Mock implements LogbookRepository {}
+
+class MockReminderRepository extends Mock implements ReminderRepository {
+
+}

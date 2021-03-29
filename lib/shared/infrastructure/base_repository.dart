@@ -8,6 +8,7 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../logbook/infrastructure/logbook_entry_table.dart';
 import '../../images/infrastructure/collection_item_image_table.dart';
+import '../../reminder/infrastructure/reminder_configuration_table.dart';
 import '../../trees/infrastructure/bonsai_tree_table.dart';
 import '../../trees/infrastructure/species_table.dart';
 
@@ -23,12 +24,13 @@ class BaseRepository {
     }
     _database = await _dbPath(db_name).then((path) => openDatabase(
           path,
-          version: 3,
+          version: 4,
           onCreate: (Database db, int version) async {
             await SpeciesTable.createTable(db);
             await BonsaiTreeTable.createTable(db);
             await CollectionItemImageTable.createTable(db);
             await LogbookEntryTable.createTable(db);
+            await ReminderConfigurationTable.createTable(db);
           },
           onUpgrade: (db, oldVersion, newVersion) async {
             if (oldVersion == newVersion) return;
@@ -36,6 +38,9 @@ class BaseRepository {
               await LogbookEntryTable.createTable(db);
             if (newVersion >= 3 && oldVersion < 3)
               await SpeciesTable.createTable(db);
+            if (newVersion >= 4 && oldVersion < 4) {
+              await ReminderConfigurationTable.createTable(db);
+            }
           },
         ));
     initialized = true;

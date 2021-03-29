@@ -32,10 +32,12 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
   Widget build(BuildContext context) => SafeArea(
         child: DefaultTabController(
           length: 3,
-          child: Consumer3<BonsaiTreeWithImages, Logbook, BonsaiTreeCollection>(
+          child: Consumer4<BonsaiTreeWithImages, Logbook, ReminderList,
+              BonsaiTreeCollection>(
             builder: (BuildContext context,
                     BonsaiTreeWithImages tree,
                     Logbook logbook,
+                    ReminderList reminderList,
                     BonsaiTreeCollection collection,
                     Widget child) =>
                 Scaffold(
@@ -66,7 +68,7 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                 children: <Widget>[
                   BonsaiWithImagesView(tree: tree),
                   LogbookView(logbook: logbook),
-                  ReminderView(reminderList: null /*TODO get reminderList*/),
+                  ReminderView(reminderList: reminderList),
                 ],
               ),
               floatingActionButton: SpeedDial(
@@ -97,7 +99,7 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                     label: 'Add reminder'.i18n,
                     icon: Icon(Icons.add_alarm),
                     onPressed: () {
-                      _addReminder(context);
+                      _addReminder(context, reminderList);
                     },
                   ),
                 ],
@@ -147,9 +149,9 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
         arguments: Tuple2(logbook, initialWorkType));
   }
 
-  void _addReminder(BuildContext context) {
+  void _addReminder(BuildContext context, ReminderList reminderList) {
     Navigator.of(context).pushNamed(
         EditReminderConfigurationPage.route_name_create,
-        arguments: ReminderList()); // TODO inject reminder list
+        arguments: reminderList);
   }
 }

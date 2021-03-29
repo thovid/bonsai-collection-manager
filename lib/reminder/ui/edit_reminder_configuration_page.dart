@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+import '../../shared/model/model_id.dart';
 import '../../shared/ui/widget_factory.dart';
 import '../../shared/ui/spaces.dart';
 import '../../worktype/model/work_type.dart';
@@ -24,7 +25,9 @@ class EditReminderConfigurationPage extends StatefulWidget {
 
   final UpdateableReminderConfiguration reminderConfiguration;
 
-  EditReminderConfigurationPage({this.reminderConfiguration});
+  final ModelID subjectID;
+
+  EditReminderConfigurationPage({this.reminderConfiguration, this.subjectID});
   @override
   _EditReminderConfigurationPageState createState() {
     return _EditReminderConfigurationPageState();
@@ -52,7 +55,8 @@ class _EditReminderConfigurationPageState
 
   void _initFromWidget() {
     _viewModel = EditReminderConfigurationViewModel(setState,
-        reminderConfiguration: widget.reminderConfiguration?.value);
+        reminderConfiguration: widget.reminderConfiguration?.value,
+        subjectID: widget.subjectID);
     if (widget.reminderConfiguration == null) {
       _viewModel.updateWorkType(_viewModel.workType,
           _viewModel.workType.toString().tense(Tenses.present));

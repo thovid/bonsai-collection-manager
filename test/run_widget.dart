@@ -78,7 +78,7 @@ Future runViewLogbookEntryPage() async {
 }
 
 Future runEditReminderConfigurationPage() async {
-  ReminderList reminderList = ReminderList();
+  ReminderList reminderList = await testUtils.loadReminderListWith([]);
   runApp(WidgetRunner(
     ChangeNotifierProvider.value(
       value: reminderList,

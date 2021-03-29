@@ -50,12 +50,14 @@ Future<void> _openView(
     images: Images(parent: tree.id, repository: DummyImageRepository()),
   );
   final logbook = await testUtils.loadLogbookWith([]);
+  final reminderList = await testUtils.loadReminderListWith([]);
 
   return tester.pumpWidget(await testUtils.testAppWith(
       MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: treeWithImages),
           ChangeNotifierProvider.value(value: logbook),
+          ChangeNotifierProvider.value(value: reminderList),
         ],
         child: ViewBonsaiTabbedPage(),
       ),

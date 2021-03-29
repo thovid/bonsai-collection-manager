@@ -57,6 +57,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         final collection = AppContext.of(context).bonsaiCollection;
         final logbookRepository = AppContext.of(context).logbookRepository;
         final imageRepository = AppContext.of(context).imageRepository;
+        final reminderRepository = AppContext.of(context).reminderRepository;
 
         final future = Future.wait([
           tree.fetchImages(),
@@ -64,6 +65,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
               logbookRepository: logbookRepository,
               imageRepository: imageRepository,
               subjectId: tree.id),
+          ReminderList.load(
+            reminderRepository,
+            subjectId: tree.id,
+          ),
         ]);
         return FutureBuilder(
           future: future,
@@ -81,6 +86,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 ),
                 ChangeNotifierProvider<Logbook>.value(
                   value: snapshot.data[1],
+                ),
+                ChangeNotifierProvider<ReminderList>.value(
+                  value: snapshot.data[2],
                 ),
               ],
               child: I18n(child: ViewBonsaiTabbedPage()),
@@ -157,8 +165,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case EditReminderConfigurationPage.route_name:
       return MaterialPageRoute(builder: (context) {
-        final args =
-            settings.arguments as Tuple2<ReminderList, UpdateableReminderConfiguration>;
+        final args = settings.arguments
+            as Tuple2<ReminderList, UpdateableReminderConfiguration>;
         final reminderList = args.item1;
         final reminderConfiguration = args.item2;
         return ChangeNotifierProvider<ReminderList>.value(
@@ -176,7 +184,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
         return ChangeNotifierProvider<ReminderList>.value(
           value: reminderList,
-          child: I18n(child: EditReminderConfigurationPage()),
+          child: I18n(child: EditReminderConfigurationPage(subjectID: reminderList.subjectId,)),
         );
       });
 

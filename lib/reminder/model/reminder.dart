@@ -24,8 +24,53 @@ mixin Reminder {
   int dueInFrom(DateTime date);
 }
 
+abstract class ReminderRepository {
+  Future<List<ReminderConfiguration>> loadReminderFor(ModelID subjectId);
+  Future add(ReminderConfiguration reminderConfiguration);
+}
+
 class ReminderList with ChangeNotifier {
-  List<Reminder> get entries => [];
+  static Future<ReminderList> load(ReminderRepository repository,
+          {ModelID subjectId}) async =>
+      repository.loadReminderFor(subjectId).then((reminders) =>
+          ReminderList._internal(
+              reminders: reminders,
+              subjectId: subjectId,
+              repository: repository));
+
+  final ReminderRepository _repository;
+  final List<ReminderConfiguration> _configurations;
+  final ModelID subjectId;
+  ReminderList._internal(
+      {List<ReminderConfiguration> reminders,
+      ModelID subjectId,
+      ReminderRepository repository})
+      : _configurations = new List<ReminderConfiguration>.from(reminders),
+        subjectId = subjectId,
+        _repository = repository;
+
+  List<Reminder> get entries =>
+      _configurations.map((e) => e.getReminder()).toList();
+
+  Future<ReminderConfiguration> add(ReminderConfiguration configuration) async {
+    final result = await _addToCacheAndRepository(configuration);
+    notifyListeners();
+    return result;
+  }
+
+  Future<ReminderConfiguration> _addToCacheAndRepository(
+      ReminderConfiguration configuration) async {
+    await _repository.add(configuration);
+    final int index =
+        _configurations.indexWhere((element) => element.id == configuration.id);
+    if (index >= 0) {
+      _configurations[index] = configuration;
+    } else {
+      _configurations.add(configuration);
+    }
+    // _configurations.sort((a, b) => -a.entry.date.compareTo(b.entry.date)); // TODO sort
+    return configuration;
+  }
 }
 
 class UpdateableReminderConfiguration with ChangeNotifier {

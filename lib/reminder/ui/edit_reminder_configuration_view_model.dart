@@ -4,6 +4,7 @@
 
 import 'package:flutter/foundation.dart';
 
+import '../../shared/model/model_id.dart';
 import '../../worktype/model/work_type.dart';
 import '../model/reminder.dart';
 
@@ -14,9 +15,10 @@ class EditReminderConfigurationViewModel with HasWorkType {
   final SetState setState;
 
   EditReminderConfigurationViewModel(this.setState,
-      {ReminderConfiguration reminderConfiguration})
+      {ReminderConfiguration reminderConfiguration, ModelID subjectID})
       : _configurationBuilder = ReminderConfigurationBuilder(
-            fromConfiguration: reminderConfiguration);
+            fromConfiguration: reminderConfiguration)
+          ..subjectID = subjectID;
 
   String get pageTitle => 'Create reminder';
 
@@ -109,8 +111,9 @@ class EditReminderConfigurationViewModel with HasWorkType {
   String get workTypeName => _configurationBuilder.workTypeName;
 
   Future<ReminderConfiguration> save(ReminderList reminderList) async {
-    // TODO implement saving
-    return _configurationBuilder.build();
+    final result = _configurationBuilder.build();
+    await reminderList.add(result);
+    return result;
   }
 
   @override

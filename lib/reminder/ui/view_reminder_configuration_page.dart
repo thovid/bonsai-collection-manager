@@ -56,6 +56,7 @@ class ViewReminderConfigurationPage extends StatelessWidget {
             value: reminderList,
             builder: (_, __) => EditReminderConfigurationPage(
               reminderConfiguration: reminderConfiguration,
+              subjectID: reminderConfiguration.value.subjectID,
             ),
           ),
         ),

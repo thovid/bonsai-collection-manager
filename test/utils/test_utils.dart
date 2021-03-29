@@ -90,9 +90,11 @@ Future<Logbook> loadLogbookWith(List<LogbookEntry> entries,
       subjectId: subject);
 }
 
-Future<ReminderList> loadReminderListWith(List<DummyReminder> entries,
+Future<ReminderList> loadReminderListWith(List<ReminderConfiguration> entries,
     {ModelID subject}) async {
   subject ??= ModelID.newId();
 
-  return ReminderList();
+  var repo = MockReminderRepository();
+  when(repo.loadReminderFor(subject)).thenAnswer((_) => Future.value(entries));
+  return ReminderList.load(repo, subjectId: subject);
 }
