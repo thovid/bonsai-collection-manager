@@ -14,15 +14,10 @@ enum LogWorkType {
   pinched,
 }
 
-enum Tenses {
-  present, past
-}
+enum Tenses { present, past }
 
 mixin HasWorkType {
   LogWorkType get workType;
-  //set workType(LogWorkType workType);
   String get workTypeName;
-  //set workTypeName(String name);
-
   void updateWorkType(LogWorkType workType, String workTypeName);
 }

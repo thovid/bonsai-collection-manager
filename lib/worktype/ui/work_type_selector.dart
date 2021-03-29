@@ -60,9 +60,8 @@ class _WorkTypeSelectorState extends State<WorkTypeSelector> {
             onChanged: (value) {
               widget.hasWorkType
                   .updateWorkType(value, value.toString().tense(widget.tense));
-              _workTypeNameController.text = value.toString().tense(widget.tense);
-
-             // setState(() {});
+              _workTypeNameController.text =
+                  value.toString().tense(widget.tense);
             },
           ),
         ),
