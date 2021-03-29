@@ -7,7 +7,7 @@ import '../../shared/model/model_id.dart';
 import '../../worktype/model/work_type.dart';
 import 'package:flutter/foundation.dart';
 
-class DummyReminder {
+class DummyReminder with Reminder {
   String get treeName => "Tree Name";
 
   LogWorkType get workType => LogWorkType.custom;
@@ -17,26 +17,26 @@ class DummyReminder {
   int dueInFrom(DateTime now) => 2;
 }
 
-class Reminder {
-  final String treeName;
-  final LogWorkType workType;
-  final String workTypeName;
-  Reminder._internal({this.treeName, this.workType, this.workTypeName});
-
-  int dueInFrom(DateTime date) => 2;
+mixin Reminder {
+  String get treeName;
+  LogWorkType get workType;
+  String get workTypeName;
+  int dueInFrom(DateTime date);
 }
 
 class ReminderList with ChangeNotifier {
   List<Reminder> get entries => [];
 }
 
-class ReminderConfiguration {
+class ReminderConfiguration with Reminder {
   final ModelID<ReminderConfiguration> id;
   final String treeName;
   final ModelID subjectID;
   final LogWorkType workType;
   final String workTypeName;
   final DateTime firstReminder;
+  final DateTime nextReminder;
+  final int numberOfPreviousReminders;
   final bool repeat;
   final int frequency;
   final FrequencyUnit frequencyUnit;
@@ -51,6 +51,8 @@ class ReminderConfiguration {
         workType = builder.workType,
         workTypeName = builder.workTypeName,
         firstReminder = builder.firstReminder,
+        nextReminder = builder.nextReminder,
+        numberOfPreviousReminders = builder.numberOfPreviousReminders,
         repeat = builder.repeat,
         frequency = builder.frequency,
         frequencyUnit = builder.frequencyUnit,
@@ -59,9 +61,13 @@ class ReminderConfiguration {
         endingAfterRepetitions = builder.endingAfterRepetitions;
 
   Reminder getReminder() {
-    return Reminder._internal(
-        treeName: treeName, workType: workType, workTypeName: workTypeName);
+    return this;
   }
+
+  @override
+  int dueInFrom(DateTime date) => nextReminder
+      .difference(date)
+      .inDays;
 }
 
 class ReminderConfigurationBuilder with HasWorkType {
@@ -71,6 +77,8 @@ class ReminderConfigurationBuilder with HasWorkType {
   LogWorkType workType;
   String workTypeName;
   DateTime firstReminder;
+  DateTime nextReminder;
+  int numberOfPreviousReminders;
   bool repeat;
   int frequency;
   FrequencyUnit frequencyUnit;
@@ -98,7 +106,15 @@ class ReminderConfigurationBuilder with HasWorkType {
             DateTime.now().add(Duration(days: 1)),
         endingAfterRepetitions = fromConfiguration?.endingAfterRepetitions ?? 1;
 
-  ReminderConfiguration build() => ReminderConfiguration._builder(this);
+  ReminderConfiguration build() {
+    if (nextReminder == null) {
+      nextReminder = firstReminder;
+    }
+    if (numberOfPreviousReminders == null) {
+      numberOfPreviousReminders = 0;
+    }
+    return ReminderConfiguration._builder(this);
+  }
 }
 
 enum FrequencyUnit { days, weeks, months, years }

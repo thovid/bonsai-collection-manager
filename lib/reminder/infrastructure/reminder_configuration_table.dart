@@ -17,6 +17,8 @@ class ReminderConfigurationTable {
   static const work_type = 'work_type';
   static const work_type_name = 'work_type_name';
   static const first_reminder_at = 'first_reminder_at';
+  static const next_reminder_at = 'next_reminder_at';
+  static const num_prev_reminders = 'num_prev_reminders';
   static const repeat = 'repeat';
   static const frequency = 'frequency';
   static const frequency_unit = 'frequency_unit';
@@ -31,6 +33,8 @@ class ReminderConfigurationTable {
         '$work_type TEXT,' +
         '$work_type_name TEXT,' +
         '$first_reminder_at TEXT,' +
+        '$next_reminder_at TEXT,' +
+        '$num_prev_reminders INTEGER,' +
         '$repeat INTEGER,' +
         '$frequency INTEGER,' +
         '$frequency_unit TEXT,' +
@@ -46,6 +50,8 @@ class ReminderConfigurationTable {
     work_type,
     work_type_name,
     first_reminder_at,
+    next_reminder_at,
+    num_prev_reminders,
     repeat,
     frequency,
     frequency_unit,
@@ -87,6 +93,8 @@ class ReminderConfigurationTable {
         work_type: entry.workType.toString(),
         work_type_name: entry.workTypeName,
         first_reminder_at: entry.firstReminder.toIso8601String(),
+        next_reminder_at: entry.nextReminder.toIso8601String(),
+        num_prev_reminders: entry.numberOfPreviousReminders,
         repeat: entry.repeat ? 1 : 0,
         frequency: entry.frequency,
         frequency_unit: entry.frequencyUnit.toString(),
@@ -102,6 +110,8 @@ class ReminderConfigurationTable {
                 enumValueFromString(data[work_type], LogWorkType.values)
             ..workTypeName = data[work_type_name]
             ..firstReminder = DateTime.parse(data[first_reminder_at])
+            ..nextReminder = DateTime.parse(data[next_reminder_at])
+            ..numberOfPreviousReminders = data[num_prev_reminders]
             ..repeat = data[repeat] > 0
             ..frequency = data[frequency]
             ..frequencyUnit =
