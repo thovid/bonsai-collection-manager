@@ -2,7 +2,6 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/reminder/ui/edit_reminder_configuration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -14,16 +13,18 @@ import '../../worktype/model/work_type.dart';
 import '../i18n/view_reminder_configuration_page.i18n.dart';
 import '../model/reminder.dart';
 
+import 'edit_reminder_configuration_page.dart';
+
 class ViewReminderConfigurationPage extends StatelessWidget {
   static const String route_name = '/reminder/view-configuration';
 
   @override
   Widget build(BuildContext context) => SafeArea(
-        child: Consumer2<ReminderList, ReminderConfiguration>(
+        child: Consumer2<ReminderList, UpdateableReminderConfiguration>(
           builder: (context, reminderList, reminderConfiguration, _) =>
               Scaffold(
             appBar: AppBar(
-              title: Text(_title(reminderConfiguration)),
+              title: Text(_title(reminderConfiguration.value)),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.edit),
@@ -37,19 +38,7 @@ class ViewReminderConfigurationPage extends StatelessWidget {
                 )
               ],
             ),
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                WorkTypePanel(
-                  workType: reminderConfiguration.workType,
-                  workTypeName: reminderConfiguration.workTypeName,
-                  tense: Tenses.present,
-                ),
-                smallVerticalSpace,
-                _informationBox(context, reminderConfiguration),
-              ],
-            ),
+            body: _buildBody(context, reminderConfiguration.value),
           ),
         ),
       );
@@ -59,9 +48,9 @@ class ViewReminderConfigurationPage extends StatelessWidget {
   }
 
   Future<void> _startEdit(BuildContext context, ReminderList reminderList,
-          ReminderConfiguration reminderConfiguration) async =>
+          UpdateableReminderConfiguration reminderConfiguration) async =>
       Navigator.of(context).push(
-        MaterialPageRoute<ReminderConfiguration>(
+        MaterialPageRoute<UpdateableReminderConfiguration>(
           fullscreenDialog: true,
           builder: (context) => ChangeNotifierProvider.value(
             value: reminderList,
@@ -73,7 +62,21 @@ class ViewReminderConfigurationPage extends StatelessWidget {
       );
 
   _delete(BuildContext context, ReminderList reminderList,
-      ReminderConfiguration reminderConfiguration) {}
+      UpdateableReminderConfiguration reminderConfiguration) {}
+
+  _buildBody(BuildContext context, ReminderConfiguration value) => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          WorkTypePanel(
+            workType: value.workType,
+            workTypeName: value.workTypeName,
+            tense: Tenses.present,
+          ),
+          smallVerticalSpace,
+          _informationBox(context, value),
+        ],
+      );
 
   Widget _informationBox(
           BuildContext context, ReminderConfiguration reminderConfiguration) =>

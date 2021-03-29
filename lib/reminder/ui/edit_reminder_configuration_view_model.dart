@@ -2,9 +2,9 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../worktype/model/work_type.dart';
 import '../model/reminder.dart';
 
 typedef SetState = void Function(VoidCallback);
@@ -115,8 +115,8 @@ class EditReminderConfigurationViewModel with HasWorkType {
 
   @override
   void updateWorkType(LogWorkType workType, String workTypeName) {
-   // setState(() {
-      _configurationBuilder.updateWorkType(workType, workTypeName);
+    // setState(() {
+    _configurationBuilder.updateWorkType(workType, workTypeName);
     //});
   }
 }

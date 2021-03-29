@@ -28,6 +28,19 @@ class ReminderList with ChangeNotifier {
   List<Reminder> get entries => [];
 }
 
+class UpdateableReminderConfiguration with ChangeNotifier {
+  ReminderConfiguration _reminderConfiguration;
+
+  UpdateableReminderConfiguration(ReminderConfiguration reminderConfiguration)
+      : _reminderConfiguration = reminderConfiguration;
+
+  ReminderConfiguration get value => _reminderConfiguration;
+  set value(ReminderConfiguration v) {
+    _reminderConfiguration = v;
+    notifyListeners();
+  }
+}
+
 class ReminderConfiguration with Reminder {
   final ModelID<ReminderConfiguration> id;
   final String treeName;
