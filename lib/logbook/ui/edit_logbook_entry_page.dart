@@ -50,7 +50,7 @@ class _EditLogbookEntryPageState extends State<EditLogbookEntryPage> {
     _entryBuilder.workType =
         widget.entry?.entry?.workType ?? widget.initialWorkType;
     _entryBuilder.workTypeName = widget.entry?.entry?.workTypeName ??
-        widget.initialWorkType?.toString()?.i18n ??
+        widget.initialWorkType?.toString()?.tense(Tenses.past) ??
         '';
   }
 
@@ -121,7 +121,7 @@ class _EditLogbookEntryPageState extends State<EditLogbookEntryPage> {
     LogbookEntry entry = _entryBuilder.build();
     if (widget.entry != null) {
       widget.entry.entry = entry;
-      logbook.update(widget.entry);
+      await logbook.update(widget.entry);
       Navigator.of(context).pop(widget.entry);
       return;
     }

@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import '../../worktype/model/work_type.dart';
 import 'package:i18n_extension/i18n_extension.dart';
 import '../../worktype/i18n/log_work_type_translations.dart';
 import 'bonsai_enums.i18n.dart';
@@ -42,4 +43,6 @@ extension Localization on String {
           {"en_us": "Add reminder", "de": "Erinnerung hinzufügen"});
 
   String get i18n => localize(this, _t);
+  String tense(Tenses tense) =>
+      localizeVersion(tense, this, LogWorkTypeTranslations.t);
 }

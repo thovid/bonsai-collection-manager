@@ -65,9 +65,7 @@ class ReminderConfiguration with Reminder {
   }
 
   @override
-  int dueInFrom(DateTime date) => nextReminder
-      .difference(date)
-      .inDays;
+  int dueInFrom(DateTime date) => nextReminder.difference(date).inDays;
 }
 
 class ReminderConfigurationBuilder with HasWorkType {
@@ -114,6 +112,12 @@ class ReminderConfigurationBuilder with HasWorkType {
       numberOfPreviousReminders = 0;
     }
     return ReminderConfiguration._builder(this);
+  }
+
+  @override
+  void updateWorkType(LogWorkType workType, String workTypeName) {
+    this.workType = workType;
+    this.workTypeName = workTypeName;
   }
 }
 

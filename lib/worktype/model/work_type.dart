@@ -20,7 +20,9 @@ enum Tenses {
 
 mixin HasWorkType {
   LogWorkType get workType;
-  set workType(LogWorkType workType);
+  //set workType(LogWorkType workType);
   String get workTypeName;
-  set workTypeName(String name);
+  //set workTypeName(String name);
+
+  void updateWorkType(LogWorkType workType, String workTypeName);
 }

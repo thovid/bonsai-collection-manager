@@ -139,6 +139,12 @@ class LogbookEntryBuilder with HasWorkType {
   LogbookEntry build() {
     return LogbookEntry._builder(this);
   }
+
+  @override
+  void updateWorkType(LogWorkType workType, String workTypeName) {
+    this.workType = workType;
+    this.workTypeName = workTypeName;
+  }
 }
 
 class LogbookEntryWithImages with ChangeNotifier {

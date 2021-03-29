@@ -6,6 +6,8 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
+import 'package:bonsaicollectionmanager/reminder/ui/edit_reminder_configuration_page.dart';
 import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -77,7 +79,7 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                     },
                   ),
                   SpeedDialItem(
-                    label: LogWorkType.fertilized.toString().i18n,
+                    label: LogWorkType.fertilized.toString().tense(Tenses.past),
                     icon: Icon(LogWorkTypeIcons.seed_bag),
                     onPressed: () {
                       _addLogbookEntry(
@@ -85,7 +87,7 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                     },
                   ),
                   SpeedDialItem(
-                    label: LogWorkType.watered.toString().i18n,
+                    label: LogWorkType.watered.toString().tense(Tenses.past),
                     icon: Icon(LogWorkTypeIcons.watering),
                     onPressed: () {
                       _addLogbookEntry(context, LogWorkType.watered, logbook);
@@ -95,7 +97,7 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                     label: 'Add reminder'.i18n,
                     icon: Icon(Icons.add_alarm),
                     onPressed: () {
-                      _addReminder();
+                      _addReminder(context);
                     },
                   ),
                 ],
@@ -145,7 +147,9 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
         arguments: Tuple2(logbook, initialWorkType));
   }
 
-  void _addReminder() {
-    // TODO implement
+  void _addReminder(BuildContext context) {
+    Navigator.of(context).pushNamed(
+        EditReminderConfigurationPage.route_name_create,
+        arguments: ReminderList()); // TODO inject reminder list
   }
 }

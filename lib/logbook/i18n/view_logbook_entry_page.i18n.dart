@@ -2,7 +2,8 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/worktype/i18n/log_work_type_translations.dart';
+import '../../worktype/i18n/log_work_type_translations.dart';
+import '../../worktype/model/work_type.dart';
 import 'package:i18n_extension/i18n_extension.dart';
 
 extension Localization on String {
@@ -54,4 +55,6 @@ extension Localization on String {
       LogWorkTypeTranslations.t;
 
   String get i18n => localize(this, _t);
+  String tense(Tenses tense) =>
+      localizeVersion(tense, this, LogWorkTypeTranslations.t);
 }

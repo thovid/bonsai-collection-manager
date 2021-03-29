@@ -58,10 +58,11 @@ class _WorkTypeSelectorState extends State<WorkTypeSelector> {
             value: widget.hasWorkType.workType,
             items: _buildWorkTypeItems(),
             onChanged: (value) {
-              widget.hasWorkType.workType = value;
-              _workTypeNameController.text =
-                  value.toString().tense(widget.tense);
-              setState(() {});
+              widget.hasWorkType
+                  .updateWorkType(value, value.toString().tense(widget.tense));
+              _workTypeNameController.text = value.toString().tense(widget.tense);
+
+             // setState(() {});
             },
           ),
         ),
@@ -70,7 +71,8 @@ class _WorkTypeSelectorState extends State<WorkTypeSelector> {
           flex: 3,
           child: TextFormField(
             controller: _workTypeNameController,
-            onSaved: (newValue) => widget.hasWorkType.workTypeName = newValue,
+            onSaved: (newValue) => widget.hasWorkType
+                .updateWorkType(widget.hasWorkType.workType, newValue),
           ),
         ),
       ],

@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../shared/ui/widget_factory.dart';
 import '../../shared/ui/spaces.dart';
@@ -14,11 +15,12 @@ import '../../worktype/ui/work_type_selector.dart';
 import '../model/reminder.dart';
 import '../i18n/view_reminder_configuration_page.i18n.dart';
 
+import 'view_reminder_configuration_page.dart';
 import 'edit_reminder_configuration_view_model.dart';
 
 class EditReminderConfigurationPage extends StatefulWidget {
   static const route_name = '/reminder/edit-configuration';
-  static const route_name_create = '/logbook/create-configuration';
+  static const route_name_create = '/reminder/create-configuration';
 
   final ReminderConfiguration reminderConfiguration;
 
@@ -50,7 +52,9 @@ class _EditReminderConfigurationPageState
 
   void _initFromWidget() {
     _viewModel = EditReminderConfigurationViewModel(setState);
-    _viewModel.workTypeName = _viewModel.workType.toString().i18n;
+    _viewModel.updateWorkType(_viewModel.workType,
+        _viewModel.workType.toString().tense(Tenses.present));
+
     _frequencyController.text = _viewModel.frequency;
     _repetitionsController.text = _viewModel.endingAfterRepetitions;
     /*
@@ -96,6 +100,11 @@ class _EditReminderConfigurationPageState
     }
 
     _formKey.currentState.save();
+    ReminderConfiguration reminderConfiguration =
+        await _viewModel.save(reminderList);
+    Navigator.of(context).pushReplacementNamed(
+        ViewReminderConfigurationPage.route_name,
+        arguments: Tuple2(reminderList, reminderConfiguration));
   }
 
   Widget _buildBody(BuildContext context) => Scrollbar(
