@@ -88,4 +88,127 @@ main() {
     Reminder reminder = reminderConfiguration.getReminder();
     expect(reminder.dueInFrom(aDate), equals(10));
   });
+
+  test('can advance day-based reminder', () {
+    final today = DateTime.now();
+    final reminderConfiguration = (ReminderConfigurationBuilder()
+          ..subjectID = subjectId
+          ..repeat = true
+          ..endingConditionType = EndingConditionType.never
+          ..firstReminder = today
+          ..frequency = 10
+          ..frequencyUnit = FrequencyUnit.days)
+        .build();
+    final advancedReminder =
+        UpdateableReminderConfiguration(reminderConfiguration)
+            .advanceCurrentReminder();
+    expect(advancedReminder.dueInFrom(today), equals(10));
+  });
+
+  test('can advance week-based reminder', () {
+    final today = DateTime.now();
+    final reminderConfiguration = (ReminderConfigurationBuilder()
+          ..subjectID = subjectId
+          ..repeat = true
+          ..endingConditionType = EndingConditionType.never
+          ..firstReminder = today
+          ..frequency = 4
+          ..frequencyUnit = FrequencyUnit.weeks)
+        .build();
+    final advancedReminder =
+        UpdateableReminderConfiguration(reminderConfiguration)
+            .advanceCurrentReminder();
+    expect(advancedReminder.dueInFrom(today), equals(28));
+  });
+
+  test('can advance month-based reminder', () {
+    final today = DateTime(2021, 3, 10);
+    final reminderConfiguration = (ReminderConfigurationBuilder()
+          ..subjectID = subjectId
+          ..repeat = true
+          ..endingConditionType = EndingConditionType.never
+          ..firstReminder = today
+          ..frequency = 1
+          ..frequencyUnit = FrequencyUnit.months)
+        .build();
+    final advancedReminder =
+        UpdateableReminderConfiguration(reminderConfiguration)
+            .advanceCurrentReminder();
+    expect(advancedReminder.nextReminder, equals(DateTime(2021, 4, 10)));
+  });
+
+  test('can advance year-based reminder', () {
+    final today = DateTime(2021, 3, 10);
+    final reminderConfiguration = (ReminderConfigurationBuilder()
+          ..subjectID = subjectId
+          ..repeat = true
+          ..endingConditionType = EndingConditionType.never
+          ..firstReminder = today
+          ..frequency = 2
+          ..frequencyUnit = FrequencyUnit.years)
+        .build();
+    final advancedReminder =
+        UpdateableReminderConfiguration(reminderConfiguration)
+            .advanceCurrentReminder();
+    expect(advancedReminder.nextReminder, equals(DateTime(2023, 3, 10)));
+  });
+
+  test(
+      'returns null if advancing a reminder reaches date based ending condition',
+      () {
+    final today = DateTime.now();
+    final reminderConfiguration =
+        UpdateableReminderConfiguration((ReminderConfigurationBuilder()
+              ..subjectID = subjectId
+              ..repeat = true
+              ..endingConditionType = EndingConditionType.after_date
+              ..endingAtDate = today.add(Duration(days: 2))
+              ..firstReminder = today
+              ..frequency = 1
+              ..frequencyUnit = FrequencyUnit.days)
+            .build());
+
+    reminderConfiguration.advanceCurrentReminder();
+    reminderConfiguration.advanceCurrentReminder();
+    expect(reminderConfiguration.value.nextReminder,
+        equals(today.add(Duration(days: 2))));
+    reminderConfiguration.advanceCurrentReminder();
+    expect(reminderConfiguration.value, isNull);
+  });
+
+  test(
+      'returns null if advancing a reminder reaches number of repetitions' +
+          ' based ending condition', () {
+    final today = DateTime.now();
+    final reminderConfiguration =
+        UpdateableReminderConfiguration((ReminderConfigurationBuilder()
+              ..subjectID = subjectId
+              ..repeat = true
+              ..endingConditionType = EndingConditionType.after_repetitions
+              ..endingAfterRepetitions = 2
+              ..firstReminder = today
+              ..frequency = 1
+              ..frequencyUnit = FrequencyUnit.days)
+            .build());
+
+    reminderConfiguration.advanceCurrentReminder();
+    reminderConfiguration.advanceCurrentReminder();
+    expect(reminderConfiguration.value.nextReminder,
+        equals(today.add(Duration(days: 2))));
+    reminderConfiguration.advanceCurrentReminder();
+    expect(reminderConfiguration.value, isNull);
+  });
+
+  test('returns null if a not-repeated reminder is discarded', () {
+    final today = DateTime.now();
+    final reminderConfiguration =
+        UpdateableReminderConfiguration((ReminderConfigurationBuilder()
+              ..subjectID = subjectId
+              ..repeat = false
+              ..firstReminder = today)
+            .build());
+
+    reminderConfiguration.advanceCurrentReminder();
+    expect(reminderConfiguration.value, isNull);
+  });
 }

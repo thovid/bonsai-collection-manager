@@ -4,16 +4,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:i18n_extension/i18n_extension.dart';
-import 'package:intl/intl.dart';
+
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
+import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
 import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
 import 'package:bonsaicollectionmanager/reminder/ui/edit_reminder_configuration_page.dart';
 import 'package:bonsaicollectionmanager/reminder/ui/view_reminder_configuration_page.dart';
 
-import '../../utils/test_data.dart';
 import '../../utils/test_mocks.dart';
 import '../../utils/test_utils.dart' as testUtils;
 
@@ -57,5 +56,21 @@ Future<void> _openView(
         navigationObserver: navigatorObserver,
       ),
     );
+  }
+}
+
+class DummyReminder with Reminder {
+  LogWorkType get workType => LogWorkType.custom;
+
+  String get workTypeName => "Do bonsai work";
+
+  int dueInFrom(DateTime now) => 2;
+
+  @override
+  String resolveSubjectName(SubjectNameResolver resolver) => "Tree Name";
+
+  @override
+  UpdateableReminderConfiguration getConfiguration() {
+    throw UnimplementedError();
   }
 }

@@ -7,21 +7,7 @@ import '../../shared/model/model_id.dart';
 import '../../worktype/model/work_type.dart';
 import 'package:flutter/foundation.dart';
 
-class DummyReminder with Reminder {
-  LogWorkType get workType => LogWorkType.custom;
-
-  String get workTypeName => "Do bonsai work";
-
-  int dueInFrom(DateTime now) => 2;
-
-  @override
-  String resolveSubjectName(SubjectNameResolver resolver) => "Tree Name";
-
-  @override
-  UpdateableReminderConfiguration getConfiguration() {
-    throw UnimplementedError();
-  }
-}
+typedef SubjectNameResolver = String Function(ModelID);
 
 mixin Reminder {
   LogWorkType get workType;
@@ -34,9 +20,8 @@ mixin Reminder {
 abstract class ReminderRepository {
   Future<List<ReminderConfiguration>> loadReminderFor(ModelID subjectId);
   Future add(ReminderConfiguration reminderConfiguration);
+  Future<void> remove(ModelID<ReminderConfiguration> id);
 }
-
-typedef SubjectNameResolver = String Function(ModelID);
 
 class ReminderList with ChangeNotifier {
   static Future<ReminderList> load(ReminderRepository repository,
@@ -50,6 +35,7 @@ class ReminderList with ChangeNotifier {
   final ReminderRepository _repository;
   final List<ReminderConfiguration> _configurations;
   final ModelID subjectId;
+
   ReminderList._internal(
       {List<ReminderConfiguration> reminders,
       ModelID subjectId,
@@ -80,6 +66,22 @@ class ReminderList with ChangeNotifier {
     _configurations.sort((a, b) => a.nextReminder.compareTo(b.nextReminder));
     return configuration;
   }
+
+  Future<void> discardReminder(Reminder entry) async {
+    final currentReminder = entry.getConfiguration();
+    final currentReminderId = currentReminder.value.id;
+    final advancedReminder = currentReminder.advanceCurrentReminder();
+    if (advancedReminder != null) {
+      return add(advancedReminder);
+    }
+
+    _remove(currentReminderId);
+  }
+
+  Future<void> _remove(ModelID<ReminderConfiguration> id) async {
+    _configurations.removeWhere((element) => element.id == id);
+    return _repository.remove(id);
+  }
 }
 
 class UpdateableReminderConfiguration with ChangeNotifier {
@@ -89,9 +91,56 @@ class UpdateableReminderConfiguration with ChangeNotifier {
       : _reminderConfiguration = reminderConfiguration;
 
   ReminderConfiguration get value => _reminderConfiguration;
+
   set value(ReminderConfiguration v) {
     _reminderConfiguration = v;
     notifyListeners();
+  }
+
+  ReminderConfiguration advanceCurrentReminder() {
+    if (!value.repeat) {
+      value = null;
+      return null;
+    }
+
+    final advancedReminder =
+        (ReminderConfigurationBuilder(fromConfiguration: value)
+              ..nextReminder = _calculateNextReminder()
+              ..numberOfPreviousReminders = value.numberOfPreviousReminders + 1)
+            .build();
+
+    if (advancedReminder.endingConditionType ==
+            EndingConditionType.after_date &&
+        advancedReminder.nextReminder.isAfter(advancedReminder.endingAtDate)) {
+      value = null;
+      return null;
+    }
+    if (advancedReminder.endingConditionType ==
+            EndingConditionType.after_repetitions &&
+        advancedReminder.numberOfPreviousReminders >
+            advancedReminder.endingAfterRepetitions) {
+      value = null;
+      return null;
+    }
+
+    value = advancedReminder;
+    return value;
+  }
+
+  DateTime _calculateNextReminder() {
+    switch (value.frequencyUnit) {
+      case FrequencyUnit.days:
+        return value.nextReminder.add(Duration(days: value.frequency));
+      case FrequencyUnit.weeks:
+        return value.nextReminder.add(Duration(days: value.frequency * 7));
+      case FrequencyUnit.months:
+        return DateTime(value.nextReminder.year,
+            value.nextReminder.month + value.frequency, value.nextReminder.day);
+      case FrequencyUnit.years:
+        return DateTime(value.nextReminder.year + value.frequency,
+            value.nextReminder.month, value.nextReminder.day);
+    }
+    return value.nextReminder;
   }
 }
 
