@@ -8,26 +8,29 @@ import '../../worktype/model/work_type.dart';
 import 'package:flutter/foundation.dart';
 
 class DummyReminder with Reminder {
-  String get treeName => "Tree Name";
-
   LogWorkType get workType => LogWorkType.custom;
 
   String get workTypeName => "Do bonsai work";
 
   int dueInFrom(DateTime now) => 2;
+
+  @override
+  String resolveSubjectName(SubjectNameResolver resolver) => "Tree Name";
 }
 
 mixin Reminder {
-  String get treeName;
   LogWorkType get workType;
   String get workTypeName;
   int dueInFrom(DateTime date);
+  String resolveSubjectName(SubjectNameResolver resolver);
 }
 
 abstract class ReminderRepository {
   Future<List<ReminderConfiguration>> loadReminderFor(ModelID subjectId);
   Future add(ReminderConfiguration reminderConfiguration);
 }
+
+typedef SubjectNameResolver = String Function(ModelID);
 
 class ReminderList with ChangeNotifier {
   static Future<ReminderList> load(ReminderRepository repository,
@@ -68,7 +71,7 @@ class ReminderList with ChangeNotifier {
     } else {
       _configurations.add(configuration);
     }
-    // _configurations.sort((a, b) => -a.entry.date.compareTo(b.entry.date)); // TODO sort
+    _configurations.sort((a, b) => a.nextReminder.compareTo(b.nextReminder));
     return configuration;
   }
 }
@@ -88,7 +91,6 @@ class UpdateableReminderConfiguration with ChangeNotifier {
 
 class ReminderConfiguration with Reminder {
   final ModelID<ReminderConfiguration> id;
-  final String treeName;
   final ModelID subjectID;
   final LogWorkType workType;
   final String workTypeName;
@@ -104,7 +106,6 @@ class ReminderConfiguration with Reminder {
 
   ReminderConfiguration._builder(ReminderConfigurationBuilder builder)
       : id = builder._id,
-        treeName = builder.treeName,
         subjectID = builder.subjectID,
         workType = builder.workType,
         workTypeName = builder.workTypeName,
@@ -124,11 +125,15 @@ class ReminderConfiguration with Reminder {
 
   @override
   int dueInFrom(DateTime date) => nextReminder.difference(date).inDays;
+
+  @override
+  String resolveSubjectName(SubjectNameResolver resolver) {
+    return resolver(subjectID);
+  }
 }
 
 class ReminderConfigurationBuilder with HasWorkType {
   final ModelID<ReminderConfiguration> _id;
-  String treeName;
   ModelID subjectID;
   LogWorkType workType;
   String workTypeName;
@@ -147,7 +152,6 @@ class ReminderConfigurationBuilder with HasWorkType {
       : _id = ModelID<ReminderConfiguration>.fromID(id) ??
             fromConfiguration?.id ??
             ModelID<ReminderConfiguration>.newId(),
-        treeName = fromConfiguration?.treeName ?? '',
         subjectID = fromConfiguration?.subjectID,
         workType = fromConfiguration?.workType ?? LogWorkType.custom,
         workTypeName = fromConfiguration?.workTypeName,

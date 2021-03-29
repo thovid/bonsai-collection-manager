@@ -65,7 +65,6 @@ main() {
     final DateTime today = DateTime.now();
     final ReminderConfiguration reminderConfiguration =
         (ReminderConfigurationBuilder()
-              ..treeName = "My Tree"
               ..subjectID = subjectId
               ..workType = LogWorkType.fertilized
               ..workTypeName = "Some work"
@@ -75,7 +74,6 @@ main() {
     final Reminder reminder = reminderConfiguration.getReminder();
     expect(reminder.workType, equals(LogWorkType.fertilized));
     expect(reminder.workTypeName, equals("Some work"));
-    expect(reminder.treeName, equals("My Tree"));
     expect(reminder.dueInFrom(today), equals(2));
   });
 

@@ -68,7 +68,9 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                 children: <Widget>[
                   BonsaiWithImagesView(tree: tree),
                   LogbookView(logbook: logbook),
-                  ReminderView(reminderList: reminderList),
+                  ReminderView(
+                      reminderList: reminderList,
+                      treeNameResolver: (_) => tree.displayName),
                 ],
               ),
               floatingActionButton: SpeedDial(

@@ -89,7 +89,7 @@ class ViewReminderConfigurationPage extends StatelessWidget {
             child: Table(
               columnWidths: {0: FractionColumnWidth(.4)},
               children: [
-                _tableRow('For', reminderConfiguration.treeName),
+                // _tableRow('For', reminderConfiguration.treeName),
                 _tableRow(
                     'Starts',
                     DateFormat.yMMMd()

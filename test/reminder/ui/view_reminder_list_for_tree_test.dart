@@ -7,10 +7,6 @@ import 'package:bonsaicollectionmanager/reminder/ui/reminder_list_view.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-
-import '../../utils/test_data.dart';
-import '../../utils/test_mocks.dart';
 import '../../utils/test_utils.dart' as testUtils;
 
 main() {
@@ -29,6 +25,7 @@ Future _openView(WidgetTester tester, ReminderList reminderList,
       Scaffold(
           body: ReminderView(
         reminderList: reminderList,
+        treeNameResolver: (_) => "My Tree",
       )),
       navigationObserver: navigatorObserver,
     ),

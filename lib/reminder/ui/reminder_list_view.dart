@@ -11,8 +11,11 @@ import '../model/reminder.dart';
 
 class ReminderView extends StatelessWidget {
   final ReminderList reminderList;
+  final SubjectNameResolver treeNameResolver;
 
-  const ReminderView({Key key, this.reminderList}) : super(key: key);
+  const ReminderView(
+      {Key key, @required this.reminderList, @required this.treeNameResolver})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +39,8 @@ class ReminderView extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(entry.treeName, style: Theme.of(context).textTheme.headline6),
+          Text(entry.resolveSubjectName(treeNameResolver),
+              style: Theme.of(context).textTheme.headline6),
           Text(
               dueInDays >= 0
                   ? "Due in %d days".plural(dueInDays)
