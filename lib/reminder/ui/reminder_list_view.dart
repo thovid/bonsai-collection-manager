@@ -2,7 +2,9 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/reminder/ui/view_reminder_configuration_page.dart';
 import 'package:flutter/material.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../worktype/ui/icon_for_work_type.dart';
 
@@ -57,7 +59,13 @@ class ReminderView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(icon: Icon(Icons.delete), onPressed: () {}),
-            IconButton(icon: Icon(Icons.settings), onPressed: () {}),
+            IconButton(
+                icon: Icon(Icons.settings),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(
+                      ViewReminderConfigurationPage.route_name,
+                      arguments: Tuple2(reminderList, entry.getConfiguration()));
+                }),
             IconButton(icon: Icon(Icons.snooze), onPressed: () {}),
             IconButton(icon: Icon(Icons.check), onPressed: () {}),
           ],

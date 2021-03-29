@@ -16,6 +16,11 @@ class DummyReminder with Reminder {
 
   @override
   String resolveSubjectName(SubjectNameResolver resolver) => "Tree Name";
+
+  @override
+  UpdateableReminderConfiguration getConfiguration() {
+    throw UnimplementedError();
+  }
 }
 
 mixin Reminder {
@@ -23,6 +28,7 @@ mixin Reminder {
   String get workTypeName;
   int dueInFrom(DateTime date);
   String resolveSubjectName(SubjectNameResolver resolver);
+  UpdateableReminderConfiguration getConfiguration();
 }
 
 abstract class ReminderRepository {
@@ -129,6 +135,11 @@ class ReminderConfiguration with Reminder {
   @override
   String resolveSubjectName(SubjectNameResolver resolver) {
     return resolver(subjectID);
+  }
+
+  @override
+  UpdateableReminderConfiguration getConfiguration() {
+    return UpdateableReminderConfiguration(this);
   }
 }
 
