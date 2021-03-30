@@ -10,6 +10,7 @@ import 'package:tuple/tuple.dart';
 
 import '../../worktype/model/work_type.dart';
 import '../../worktype/ui/work_type_selector.dart';
+import '../../shared/ui/toast.dart';
 import '../../shared/ui/spaces.dart';
 import '../../shared/ui/widget_factory.dart';
 import '../i18n/view_logbook_entry_page.i18n.dart';
@@ -123,11 +124,13 @@ class _EditLogbookEntryPageState extends State<EditLogbookEntryPage> {
       widget.entry.entry = entry;
       await logbook.update(widget.entry);
       Navigator.of(context).pop(widget.entry);
+      showInformation(context: context, information: "Entry saved".i18n);
       return;
     }
 
     final LogbookEntryWithImages newEntry = await logbook.add(entry);
     Navigator.of(context).pushReplacementNamed(ViewLogbookEntryPage.route_name,
         arguments: Tuple2(logbook, newEntry));
+    showInformation(context: context, information: "Entry created".i18n);
   }
 }

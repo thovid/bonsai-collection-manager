@@ -2,11 +2,13 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../shared/ui/spaces.dart';
+import '../../shared/ui/toast.dart';
 import '../../worktype/ui/work_type_panel.dart';
 import '../../worktype/model/work_type.dart';
 
@@ -85,6 +87,7 @@ class ViewReminderConfigurationPage extends StatelessWidget {
     if (shouldDelete) {
       await reminderList.remove(reminder);
       Navigator.of(context).pop();
+      showInformation(context: context, information: "Reminder deleted".i18n);
     }
   }
 

@@ -2,10 +2,12 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../i18n/view_logbook_entry_page.i18n.dart';
 
+import '../../shared/ui/toast.dart';
+import '../i18n/view_logbook_entry_page.i18n.dart';
 import '../model/logbook.dart';
 import './edit_logbook_entry_page.dart';
 import './log_entry_with_images_view.dart';
@@ -63,6 +65,7 @@ class ViewLogbookEntryPage extends StatelessWidget {
     if (shouldDelete) {
       await logbook.delete(entry.id);
       Navigator.of(context).pop();
+      showInformation(context: context, information: "Entry deleted".i18n);
     }
   }
 

@@ -2,6 +2,7 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../shared/model/model_id.dart';
+import '../../shared/ui/toast.dart';
 import '../../shared/ui/widget_factory.dart';
 import '../../shared/ui/spaces.dart';
 import '../../worktype/model/work_type.dart';
@@ -97,9 +99,8 @@ class _EditReminderConfigurationPageState
         )),
       );
 
-  Widget _buildTitle() => Text(widget.reminder != null
-      ? 'Edit reminder'.i18n
-      : 'Create reminder'.i18n);
+  Widget _buildTitle() => Text(
+      widget.reminder != null ? 'Edit reminder'.i18n : 'Create reminder'.i18n);
 
   Future _save(ReminderList reminderList) async {
     if (!_formKey.currentState.validate()) {
@@ -112,13 +113,14 @@ class _EditReminderConfigurationPageState
     if (widget.reminder != null) {
       widget.reminder.configuration = result;
       Navigator.of(context).pop(widget.reminder);
+      showInformation(context: context, information: "Reminder saved".i18n);
       return;
     }
 
     Navigator.of(context).pushReplacementNamed(
         ViewReminderConfigurationPage.route_name,
-        arguments:
-            Tuple2(reminderList, Reminder(result)));
+        arguments: Tuple2(reminderList, Reminder(result)));
+    showInformation(context: context, information: "Reminder created".i18n);
   }
 
   Widget _buildBody(BuildContext context) => Scrollbar(

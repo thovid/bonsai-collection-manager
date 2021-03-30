@@ -6,19 +6,20 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
-import 'package:bonsaicollectionmanager/reminder/ui/edit_reminder_configuration_page.dart';
-import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../reminder/ui/reminder_list_view.dart';
+import '../../reminder/model/reminder.dart';
+import '../../reminder/ui/edit_reminder_configuration_page.dart';
+import '../../worktype/model/work_type.dart';
 import '../../logbook/ui/logbook_view.dart';
 import '../../logbook/model/logbook.dart';
 import '../../logbook/ui/edit_logbook_entry_page.dart';
 import '../../shared/icons/log_work_type_icons.dart';
 import '../../shared/ui/speed_dial.dart';
+import '../../shared/ui/toast.dart';
 import '../model/bonsai_tree_collection.dart';
 import '../model/bonsai_tree_with_images.dart';
 import '../i18n/bonsai_tree_view.i18n.dart';
@@ -69,8 +70,10 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                   BonsaiWithImagesView(tree: tree),
                   LogbookView(logbook: logbook),
                   ReminderView(
-                      reminderList: reminderList,
-                      treeNameResolver: (_) => tree.displayName),
+                    reminderList: reminderList,
+                    treeNameResolver: (_) => tree.displayName,
+                    lookupLogbook: (_) => logbook,
+                  ),
                 ],
               ),
               floatingActionButton: SpeedDial(
@@ -141,7 +144,9 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
     if (shouldDelete) {
       await collection.delete(tree);
       await logbook.deleteAll();
+      // TODO delete all reminders
       Navigator.of(context).pop();
+      showInformation(context: context, information: "Tree deleted".i18n);
     }
   }
 

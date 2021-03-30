@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
+import '../../shared/ui/toast.dart';
 import '../../worktype/ui/icon_for_work_type.dart';
 import '../i18n/reminder_tile_translation.dart';
 import '../model/reminder.dart';
@@ -13,9 +14,13 @@ import 'view_reminder_configuration_page.dart';
 class ReminderView extends StatelessWidget {
   final ReminderList reminderList;
   final SubjectNameResolver treeNameResolver;
+  final LookupLogbook lookupLogbook;
 
   const ReminderView(
-      {Key key, @required this.reminderList, @required this.treeNameResolver})
+      {Key key,
+      @required this.reminderList,
+      @required this.treeNameResolver,
+      @required this.lookupLogbook})
       : super(key: key);
 
   @override
@@ -32,15 +37,15 @@ class ReminderView extends StatelessWidget {
   }
 
   Widget _buildReminderTile(
-      BuildContext context, ReminderList reminderList, Reminder entry) {
+      BuildContext context, ReminderList reminderList, Reminder reminder) {
     final now = DateTime.now();
-    final int dueInDays = entry.dueInFrom(now);
+    final int dueInDays = reminder.dueInFrom(now);
     return ExpansionTile(
-      leading: CircleAvatar(child: workTypeIconFor(entry.workType)),
+      leading: CircleAvatar(child: workTypeIconFor(reminder.workType)),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(entry.resolveSubjectName(treeNameResolver),
+          Text(reminder.resolveSubjectName(treeNameResolver),
               style: Theme.of(context).textTheme.headline6),
           Text(
               dueInDays >= 0
@@ -52,25 +57,34 @@ class ReminderView extends StatelessWidget {
                   .copyWith(fontStyle: FontStyle.italic)),
         ],
       ),
-      subtitle: Text(entry.workTypeName),
+      subtitle: Text(reminder.workTypeName),
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
                 icon: Icon(Icons.close),
-                onPressed: () {
-                  reminderList.discardReminder(entry);
+                onPressed: () async {
+                  await reminderList.discardReminder(reminder);
+                  showInformation(
+                      context: context, information: "Reminder discarded".i18n);
                 }),
             IconButton(
                 icon: Icon(Icons.settings),
                 onPressed: () {
                   Navigator.of(context).pushNamed(
                       ViewReminderConfigurationPage.route_name,
-                      arguments: Tuple2(reminderList, entry));
+                      arguments: Tuple2(reminderList, reminder));
                 }),
             IconButton(icon: Icon(Icons.snooze), onPressed: () {}),
-            IconButton(icon: Icon(Icons.check), onPressed: () {}),
+            IconButton(
+                icon: Icon(Icons.check),
+                onPressed: () async {
+                  await reminderList.confirmReminder(reminder, lookupLogbook);
+                  showInformation(
+                      context: context,
+                      information: "Logbook entry created".i18n);
+                }),
           ],
         )
       ],

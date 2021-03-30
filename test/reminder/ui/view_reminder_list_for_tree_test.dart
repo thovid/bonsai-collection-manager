@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../../utils/test_utils.dart' as testUtils;
 
+// TODO add tests for actions
 main() {
   testWidgets('can list all reminder for a tree', (WidgetTester tester) async {
     ReminderList reminderList = await testUtils

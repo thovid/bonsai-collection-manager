@@ -40,7 +40,10 @@ extension Localization on String {
           {"en_us": "Tree", "de": "Baum"} +
           {"en_us": "Logbook", "de": "Logbuch"} +
           {"en_us": "Reminder", "de": "Erinnerungen"} +
-          {"en_us": "Add reminder", "de": "Erinnerung hinzufügen"});
+          {"en_us": "Add reminder", "de": "Erinnerung hinzufügen"} +
+          {"en_us": "Tree deleted", "de": "Baum gelöscht"} +
+          {"en_us": "Tree created", "de": "Baum angelegt"} +
+          {"en_us": "Tree saved", "de": "Baum gespeichert"});
 
   String get i18n => localize(this, _t);
   String tense(Tenses tense) =>

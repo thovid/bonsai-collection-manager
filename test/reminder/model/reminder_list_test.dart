@@ -2,6 +2,7 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
 import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -97,6 +98,54 @@ main() {
     expect(reminderList.reminders, isEmpty);
     verify(repository.remove(reminderConfiguration.id));
   });
+
+  test('confirming reminder creates logbook entry', () async {
+    final LookupLogbookMock lookupLogbookMock = LookupLogbookMock();
+    final today = DateTime.now();
+    final reminderConfiguration = (ReminderConfigurationBuilder()
+          ..subjectID = subjectId
+          ..repeat = true
+          ..endingConditionType = EndingConditionType.never
+          ..firstReminder = today
+          ..frequency = 1
+          ..frequencyUnit = FrequencyUnit.days)
+        .build();
+
+    final repository =
+        repositoryProviding([reminderConfiguration], subjectId: subjectId);
+    final reminderList =
+        await ReminderList.load(repository, subjectId: subjectId);
+
+    final logbookEntry = await reminderList.confirmReminder(
+        reminderList.reminders[0], lookupLogbookMock.lookUp);
+    expect(logbookEntry.workType, equals(reminderConfiguration.workType));
+    expect(
+        logbookEntry.workTypeName, equals(reminderConfiguration.workTypeName));
+    verify(lookupLogbookMock.logbook.add(logbookEntry));
+  });
+
+  test('confirming reminder advances reminder', () async {
+    final today = DateTime.now();
+    final reminderConfiguration = (ReminderConfigurationBuilder()
+          ..subjectID = subjectId
+          ..repeat = true
+          ..endingConditionType = EndingConditionType.never
+          ..firstReminder = today
+          ..frequency = 1
+          ..frequencyUnit = FrequencyUnit.days)
+        .build();
+
+    final repository =
+        repositoryProviding([reminderConfiguration], subjectId: subjectId);
+    final reminderList =
+        await ReminderList.load(repository, subjectId: subjectId);
+
+    await reminderList.confirmReminder(
+        reminderList.reminders[0], LookupLogbookMock().lookUp);
+
+    expect(reminderList.reminders[0].dueInFrom(today), equals(1));
+    verify(repository.add(reminderList.reminders[0].configuration));
+  });
 }
 
 ReminderConfiguration aConfiguration({ModelID subject}) =>
@@ -109,3 +158,11 @@ ReminderRepository repositoryProviding(List<ReminderConfiguration> reminders,
       .thenAnswer((_) => Future.value(reminders));
   return repository;
 }
+
+class LookupLogbookMock {
+  Logbook logbook = LogbookMock();
+
+  Logbook lookUp(ModelID subject) => logbook;
+}
+
+class LogbookMock extends Mock implements Logbook {}

@@ -2,12 +2,14 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
-import '../../shared/model/model_id.dart';
-
-import '../../worktype/model/work_type.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../shared/model/model_id.dart';
+import '../../logbook/model/logbook.dart';
+import '../../worktype/model/work_type.dart';
+
 typedef SubjectNameResolver = String Function(ModelID);
+typedef LookupLogbook = Logbook Function(ModelID subject);
 
 abstract class ReminderRepository {
   Future<List<ReminderConfiguration>> loadReminderFor(ModelID subjectId);
@@ -59,16 +61,27 @@ class ReminderList with ChangeNotifier {
     return configuration;
   }
 
-  Future<void> discardReminder(Reminder entry) async {
-    final id = entry.configuration.id;
-    final advancedReminder = entry.configuration.advanceCurrentReminder();
+  Future<void> discardReminder(Reminder reminder) async =>
+      _advanceReminder(reminder);
+
+  Future<LogbookEntry> confirmReminder(
+      Reminder reminder, LookupLogbook lookupLogbook) async {
+    final LogbookEntry result = _createLogbookEntry(reminder);
+    await lookupLogbook(reminder.configuration.subjectID).add(result);
+    await _advanceReminder(reminder);
+    return result;
+  }
+
+  Future _advanceReminder(Reminder reminder) async {
+    final id = reminder.configuration.id;
+    final advancedReminder = reminder.configuration.advanceCurrentReminder();
     if (advancedReminder.hasEnded()) {
       _delete(id);
       return;
     }
-
     await add(advancedReminder);
-    entry.configuration = advancedReminder;
+    reminder.configuration = advancedReminder;
+    return;
   }
 
   Future<void> _delete(ModelID<ReminderConfiguration> id) async {
@@ -80,6 +93,12 @@ class ReminderList with ChangeNotifier {
   Future<void> remove(Reminder reminder) async {
     return _delete(reminder.configuration.id);
   }
+
+  LogbookEntry _createLogbookEntry(Reminder reminder) => (LogbookEntryBuilder()
+        ..workType = reminder.workType
+        ..workTypeName = reminder.workTypeName
+        ..date = DateTime.now())
+      .build();
 }
 
 class Reminder with ChangeNotifier {

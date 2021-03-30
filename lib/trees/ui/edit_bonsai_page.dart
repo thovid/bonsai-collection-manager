@@ -2,11 +2,11 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/trees/ui/view_bonsai_tabbed_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../shared/ui/toast.dart';
 import '../../shared/ui/spaces.dart';
 import '../../shared/ui/widget_factory.dart';
 import '../i18n/bonsai_tree_view.i18n.dart';
@@ -14,6 +14,7 @@ import '../model/bonsai_tree_collection.dart';
 import '../model/bonsai_tree_with_images.dart';
 import '../model/bonsai_tree_data.dart';
 import './species_picker.dart';
+import 'view_bonsai_tabbed_page.dart';
 
 class EditBonsaiPage extends StatefulWidget {
   static const route_name = '/edit-tree';
@@ -142,11 +143,13 @@ class _EditBonsaiPageState extends State<EditBonsaiPage> {
       widget.tree.treeData = treeData;
       bonsaiCollection.update(widget.tree);
       Navigator.of(context).pop(widget.tree);
+      showInformation(context: context, information: "Tree saved".i18n);
       return;
     }
 
     final BonsaiTreeWithImages newTree = await bonsaiCollection.add(treeData);
     Navigator.of(context).pushReplacementNamed(ViewBonsaiTabbedPage.route_name,
         arguments: newTree);
+    showInformation(context: context, information: "Tree created".i18n);
   }
 }
