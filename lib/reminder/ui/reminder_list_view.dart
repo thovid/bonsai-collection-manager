@@ -58,7 +58,7 @@ class ReminderView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-                icon: Icon(Icons.delete),
+                icon: Icon(Icons.close),
                 onPressed: () {
                   reminderList.discardReminder(entry);
                 }),
