@@ -60,19 +60,21 @@ class ReminderList with ChangeNotifier {
   }
 
   Future<void> discardReminder(Reminder entry) async {
-    final currentReminder = entry;
-    final currentReminderId = currentReminder.configuration.id;
-    final advancedReminder = currentReminder.advanceCurrentReminder();
-    if (advancedReminder != null) {
-      return add(advancedReminder);
+    final id = entry.configuration.id;
+    final advancedReminder = entry.configuration.advanceCurrentReminder();
+    if (advancedReminder.hasEnded()) {
+      _remove(id);
+      return;
     }
-    _remove(currentReminderId);
+
+    await add(advancedReminder);
+    entry.configuration = advancedReminder;
   }
 
   Future<void> _remove(ModelID<ReminderConfiguration> id) async {
-    //_reminders.removeWhere((element) => element.configuration.id == id);
-    _reminders.removeWhere((element) => element.configuration == null);
-    return _repository.remove(id);
+    _reminders.removeWhere((element) => element.configuration.id == id);
+    await _repository.remove(id);
+    notifyListeners();
   }
 }
 
@@ -98,59 +100,6 @@ class Reminder with ChangeNotifier {
   set configuration(ReminderConfiguration v) {
     _reminderConfiguration = v;
     notifyListeners();
-  }
-
-  ReminderConfiguration advanceCurrentReminder() {
-    if (!configuration.repeat) {
-      configuration = null;
-      return null;
-    }
-
-    final advancedReminder =
-        (ReminderConfigurationBuilder(fromConfiguration: configuration)
-              ..nextReminder = _calculateNextReminder()
-              ..numberOfPreviousReminders =
-                  configuration.numberOfPreviousReminders + 1)
-            .build();
-
-    if (advancedReminder.endingConditionType ==
-            EndingConditionType.after_date &&
-        advancedReminder.nextReminder.isAfter(advancedReminder.endingAtDate)) {
-      configuration = null;
-      return null;
-    }
-    if (advancedReminder.endingConditionType ==
-            EndingConditionType.after_repetitions &&
-        advancedReminder.numberOfPreviousReminders >
-            advancedReminder.endingAfterRepetitions) {
-      configuration = null;
-      return null;
-    }
-
-    configuration = advancedReminder;
-    return configuration;
-  }
-
-  DateTime _calculateNextReminder() {
-    switch (configuration.frequencyUnit) {
-      case FrequencyUnit.days:
-        return configuration.nextReminder
-            .add(Duration(days: configuration.frequency));
-      case FrequencyUnit.weeks:
-        return configuration.nextReminder
-            .add(Duration(days: configuration.frequency * 7));
-      case FrequencyUnit.months:
-        return DateTime(
-            configuration.nextReminder.year,
-            configuration.nextReminder.month + configuration.frequency,
-            configuration.nextReminder.day);
-      case FrequencyUnit.years:
-        return DateTime(
-            configuration.nextReminder.year + configuration.frequency,
-            configuration.nextReminder.month,
-            configuration.nextReminder.day);
-    }
-    return configuration.nextReminder;
   }
 }
 
@@ -183,6 +132,50 @@ class ReminderConfiguration {
         endingConditionType = builder.endingConditionType,
         endingAtDate = builder.endingAtDate,
         endingAfterRepetitions = builder.endingAfterRepetitions;
+
+  ReminderConfiguration advanceCurrentReminder() {
+    return (ReminderConfigurationBuilder(fromConfiguration: this)
+          ..nextReminder = _calculateNextReminder()
+          ..numberOfPreviousReminders = numberOfPreviousReminders + 1)
+        .build();
+  }
+
+  bool hasEnded() {
+    if (!repeat && numberOfPreviousReminders > 0) {
+      return true;
+    }
+
+    if (endingConditionType == EndingConditionType.after_date &&
+        nextReminder.isAfter(endingAtDate)) {
+      return true;
+    }
+    if (endingConditionType == EndingConditionType.after_repetitions &&
+        numberOfPreviousReminders > endingAfterRepetitions) {
+      return true;
+    }
+
+    return false;
+  }
+
+  DateTime _calculateNextReminder() {
+    if (!repeat) {
+      return null;
+    }
+
+    switch (frequencyUnit) {
+      case FrequencyUnit.days:
+        return nextReminder.add(Duration(days: frequency));
+      case FrequencyUnit.weeks:
+        return nextReminder.add(Duration(days: frequency * 7));
+      case FrequencyUnit.months:
+        return DateTime(nextReminder.year, nextReminder.month + frequency,
+            nextReminder.day);
+      case FrequencyUnit.years:
+        return DateTime(nextReminder.year + frequency, nextReminder.month,
+            nextReminder.day);
+    }
+    return null;
+  }
 }
 
 class ReminderConfigurationBuilder with HasWorkType {

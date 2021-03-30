@@ -73,65 +73,64 @@ main() {
 
   test('can advance day-based reminder', () {
     final today = DateTime.now();
-    final reminder = Reminder((ReminderConfigurationBuilder()
+    final reminder = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
           ..endingConditionType = EndingConditionType.never
           ..firstReminder = today
           ..frequency = 10
           ..frequencyUnit = FrequencyUnit.days)
-        .build());
-    reminder.advanceCurrentReminder();
-    expect(reminder.dueInFrom(today), equals(10));
+        .build();
+    final advancedReminder = Reminder(reminder.advanceCurrentReminder());
+    expect(advancedReminder.dueInFrom(today), equals(10));
   });
 
   test('can advance week-based reminder', () {
     final today = DateTime.now();
-    final reminder = Reminder((ReminderConfigurationBuilder()
+    final reminder = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
           ..endingConditionType = EndingConditionType.never
           ..firstReminder = today
           ..frequency = 4
           ..frequencyUnit = FrequencyUnit.weeks)
-        .build());
-    reminder.advanceCurrentReminder();
-    expect(reminder.dueInFrom(today), equals(28));
+        .build();
+    final advancedReminder = Reminder(reminder.advanceCurrentReminder());
+    expect(advancedReminder.dueInFrom(today), equals(28));
   });
 
   test('can advance month-based reminder', () {
     final today = DateTime(2021, 3, 10);
-    final reminder = Reminder((ReminderConfigurationBuilder()
+    final reminder = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
           ..endingConditionType = EndingConditionType.never
           ..firstReminder = today
           ..frequency = 1
           ..frequencyUnit = FrequencyUnit.months)
-        .build());
-    reminder.advanceCurrentReminder();
-    expect(reminder.configuration.nextReminder, equals(DateTime(2021, 4, 10)));
+        .build();
+    final advancedReminder = reminder.advanceCurrentReminder();
+    expect(advancedReminder.nextReminder, equals(DateTime(2021, 4, 10)));
   });
 
   test('can advance year-based reminder', () {
     final today = DateTime(2021, 3, 10);
-    final reminder = Reminder((ReminderConfigurationBuilder()
+    final reminder = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
           ..endingConditionType = EndingConditionType.never
           ..firstReminder = today
           ..frequency = 2
           ..frequencyUnit = FrequencyUnit.years)
-        .build());
-    reminder.advanceCurrentReminder();
-    expect(reminder.configuration.nextReminder, equals(DateTime(2023, 3, 10)));
+        .build();
+    final advancedReminder = reminder.advanceCurrentReminder();
+    expect(advancedReminder.nextReminder, equals(DateTime(2023, 3, 10)));
   });
 
-  test(
-      'returns null if advancing a reminder reaches date based ending condition',
+  test('has ended if advancing a reminder reaches date based ending condition',
       () {
     final today = DateTime.now();
-    final reminder = Reminder((ReminderConfigurationBuilder()
+    final reminder = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
           ..endingConditionType = EndingConditionType.after_date
@@ -139,21 +138,22 @@ main() {
           ..firstReminder = today
           ..frequency = 1
           ..frequencyUnit = FrequencyUnit.days)
-        .build());
+        .build();
 
-    reminder.advanceCurrentReminder();
-    reminder.advanceCurrentReminder();
-    expect(reminder.configuration.nextReminder,
-        equals(today.add(Duration(days: 2))));
-    reminder.advanceCurrentReminder();
-    expect(reminder.configuration, isNull);
+    var advancedReminder =
+        reminder.advanceCurrentReminder().advanceCurrentReminder();
+    expect(advancedReminder.nextReminder, equals(today.add(Duration(days: 2))));
+    expect(advancedReminder.hasEnded(), isFalse);
+
+    advancedReminder = advancedReminder.advanceCurrentReminder();
+    expect(advancedReminder.hasEnded(), isTrue);
   });
 
   test(
-      'returns null if advancing a reminder reaches number of repetitions' +
+      'has ended if advancing a reminder reaches number of repetitions' +
           ' based ending condition', () {
     final today = DateTime.now();
-    final reminder = Reminder((ReminderConfigurationBuilder()
+    final reminder = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
           ..endingConditionType = EndingConditionType.after_repetitions
@@ -161,25 +161,25 @@ main() {
           ..firstReminder = today
           ..frequency = 1
           ..frequencyUnit = FrequencyUnit.days)
-        .build());
+        .build();
 
-    reminder.advanceCurrentReminder();
-    reminder.advanceCurrentReminder();
-    expect(reminder.configuration.nextReminder,
-        equals(today.add(Duration(days: 2))));
-    reminder.advanceCurrentReminder();
-    expect(reminder.configuration, isNull);
+    var advancedReminder =
+        reminder.advanceCurrentReminder().advanceCurrentReminder();
+    expect(advancedReminder.nextReminder, equals(today.add(Duration(days: 2))));
+    expect(advancedReminder.hasEnded(), isFalse);
+    advancedReminder = advancedReminder.advanceCurrentReminder();
+    expect(advancedReminder.hasEnded(), isTrue);
   });
 
-  test('returns null if a not-repeated reminder is discarded', () {
+  test('has ended if a not-repeated reminder is discarded', () {
     final today = DateTime.now();
-    final reminder = Reminder((ReminderConfigurationBuilder()
+    final reminder = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = false
           ..firstReminder = today)
-        .build());
+        .build();
 
-    reminder.advanceCurrentReminder();
-    expect(reminder.configuration, isNull);
+    final advancedReminder = reminder.advanceCurrentReminder();
+    expect(advancedReminder.hasEnded(), isTrue);
   });
 }

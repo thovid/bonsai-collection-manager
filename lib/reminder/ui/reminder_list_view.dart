@@ -2,14 +2,13 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/reminder/ui/view_reminder_configuration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../worktype/ui/icon_for_work_type.dart';
-
 import '../i18n/reminder_tile_translation.dart';
 import '../model/reminder.dart';
+import 'view_reminder_configuration_page.dart';
 
 class ReminderView extends StatelessWidget {
   final ReminderList reminderList;
@@ -58,9 +57,11 @@ class ReminderView extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            IconButton(icon: Icon(Icons.delete), onPressed: () {
-              reminderList.discardReminder(entry);
-            }),
+            IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () {
+                  reminderList.discardReminder(entry);
+                }),
             IconButton(
                 icon: Icon(Icons.settings),
                 onPressed: () {

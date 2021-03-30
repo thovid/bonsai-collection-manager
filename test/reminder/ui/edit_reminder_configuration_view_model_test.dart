@@ -4,7 +4,6 @@
 
 import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
 import 'package:bonsaicollectionmanager/reminder/ui/edit_reminder_configuration_view_model.dart';
-import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:flutter/foundation.dart';
 import 'package:test/test.dart';
 
