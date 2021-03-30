@@ -8,7 +8,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
-import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
 import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
 import 'package:bonsaicollectionmanager/reminder/ui/edit_reminder_configuration_page.dart';
 import 'package:bonsaicollectionmanager/reminder/ui/view_reminder_configuration_page.dart';
@@ -34,11 +33,12 @@ main() {
 }
 
 Future<void> _openView(
-    WidgetTester tester, ReminderList reminderList, DummyReminder entry,
+    WidgetTester tester, ReminderList reminderList, Reminder reminder,
     {NavigatorObserver navigatorObserver}) async {
-  if (entry != null) {
+  if (reminder != null) {
     return tester.pumpWidget(
       await testUtils.testAppWith(
+        // TODO provide reminder
         ChangeNotifierProvider<ReminderList>.value(
           value: reminderList,
           builder: (context, child) => ViewReminderConfigurationPage(),
@@ -56,21 +56,5 @@ Future<void> _openView(
         navigationObserver: navigatorObserver,
       ),
     );
-  }
-}
-
-class DummyReminder with Reminder {
-  LogWorkType get workType => LogWorkType.custom;
-
-  String get workTypeName => "Do bonsai work";
-
-  int dueInFrom(DateTime now) => 2;
-
-  @override
-  String resolveSubjectName(SubjectNameResolver resolver) => "Tree Name";
-
-  @override
-  UpdateableReminderConfiguration getConfiguration() {
-    throw UnimplementedError();
   }
 }

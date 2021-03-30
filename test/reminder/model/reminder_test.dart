@@ -4,7 +4,6 @@
 
 import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
-import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
 
 import 'package:test/test.dart';
 
@@ -61,22 +60,6 @@ main() {
     expect(reminderConfiguration.numberOfPreviousReminders, equals(2));
   });
 
-  test('can get reminder from configuration', () async {
-    final DateTime today = DateTime.now();
-    final ReminderConfiguration reminderConfiguration =
-        (ReminderConfigurationBuilder()
-              ..subjectID = subjectId
-              ..workType = LogWorkType.fertilized
-              ..workTypeName = "Some work"
-              ..firstReminder = today.add(Duration(days: 2)))
-            .build();
-
-    final Reminder reminder = reminderConfiguration.getReminder();
-    expect(reminder.workType, equals(LogWorkType.fertilized));
-    expect(reminder.workTypeName, equals("Some work"));
-    expect(reminder.dueInFrom(today), equals(2));
-  });
-
   test('uses next reminder date for due in calculation', () {
     DateTime aDate = DateTime.now();
     DateTime next = aDate.add(Duration(days: 10));
@@ -85,8 +68,7 @@ main() {
               ..firstReminder = aDate
               ..nextReminder = next)
             .build();
-    Reminder reminder = reminderConfiguration.getReminder();
-    expect(reminder.dueInFrom(aDate), equals(10));
+    expect(reminderConfiguration.dueInFrom(aDate), equals(10));
   });
 
   test('can advance day-based reminder', () {
@@ -100,7 +82,7 @@ main() {
           ..frequencyUnit = FrequencyUnit.days)
         .build();
     final advancedReminder =
-        UpdateableReminderConfiguration(reminderConfiguration)
+        Reminder(reminderConfiguration)
             .advanceCurrentReminder();
     expect(advancedReminder.dueInFrom(today), equals(10));
   });
@@ -116,7 +98,7 @@ main() {
           ..frequencyUnit = FrequencyUnit.weeks)
         .build();
     final advancedReminder =
-        UpdateableReminderConfiguration(reminderConfiguration)
+        Reminder(reminderConfiguration)
             .advanceCurrentReminder();
     expect(advancedReminder.dueInFrom(today), equals(28));
   });
@@ -132,7 +114,7 @@ main() {
           ..frequencyUnit = FrequencyUnit.months)
         .build();
     final advancedReminder =
-        UpdateableReminderConfiguration(reminderConfiguration)
+        Reminder(reminderConfiguration)
             .advanceCurrentReminder();
     expect(advancedReminder.nextReminder, equals(DateTime(2021, 4, 10)));
   });
@@ -148,7 +130,7 @@ main() {
           ..frequencyUnit = FrequencyUnit.years)
         .build();
     final advancedReminder =
-        UpdateableReminderConfiguration(reminderConfiguration)
+        Reminder(reminderConfiguration)
             .advanceCurrentReminder();
     expect(advancedReminder.nextReminder, equals(DateTime(2023, 3, 10)));
   });
@@ -158,7 +140,7 @@ main() {
       () {
     final today = DateTime.now();
     final reminderConfiguration =
-        UpdateableReminderConfiguration((ReminderConfigurationBuilder()
+        Reminder((ReminderConfigurationBuilder()
               ..subjectID = subjectId
               ..repeat = true
               ..endingConditionType = EndingConditionType.after_date
@@ -170,10 +152,10 @@ main() {
 
     reminderConfiguration.advanceCurrentReminder();
     reminderConfiguration.advanceCurrentReminder();
-    expect(reminderConfiguration.value.nextReminder,
+    expect(reminderConfiguration.configuration.nextReminder,
         equals(today.add(Duration(days: 2))));
     reminderConfiguration.advanceCurrentReminder();
-    expect(reminderConfiguration.value, isNull);
+    expect(reminderConfiguration.configuration, isNull);
   });
 
   test(
@@ -181,7 +163,7 @@ main() {
           ' based ending condition', () {
     final today = DateTime.now();
     final reminderConfiguration =
-        UpdateableReminderConfiguration((ReminderConfigurationBuilder()
+        Reminder((ReminderConfigurationBuilder()
               ..subjectID = subjectId
               ..repeat = true
               ..endingConditionType = EndingConditionType.after_repetitions
@@ -193,22 +175,22 @@ main() {
 
     reminderConfiguration.advanceCurrentReminder();
     reminderConfiguration.advanceCurrentReminder();
-    expect(reminderConfiguration.value.nextReminder,
+    expect(reminderConfiguration.configuration.nextReminder,
         equals(today.add(Duration(days: 2))));
     reminderConfiguration.advanceCurrentReminder();
-    expect(reminderConfiguration.value, isNull);
+    expect(reminderConfiguration.configuration, isNull);
   });
 
   test('returns null if a not-repeated reminder is discarded', () {
     final today = DateTime.now();
     final reminderConfiguration =
-        UpdateableReminderConfiguration((ReminderConfigurationBuilder()
+        Reminder((ReminderConfigurationBuilder()
               ..subjectID = subjectId
               ..repeat = false
               ..firstReminder = today)
             .build());
 
     reminderConfiguration.advanceCurrentReminder();
-    expect(reminderConfiguration.value, isNull);
+    expect(reminderConfiguration.configuration, isNull);
   });
 }

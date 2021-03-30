@@ -20,11 +20,11 @@ class ViewReminderConfigurationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SafeArea(
-        child: Consumer2<ReminderList, UpdateableReminderConfiguration>(
+        child: Consumer2<ReminderList, Reminder>(
           builder: (context, reminderList, reminderConfiguration, _) =>
               Scaffold(
             appBar: AppBar(
-              title: Text(_title(reminderConfiguration.value)),
+              title: Text(_title(reminderConfiguration.configuration)),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.edit),
@@ -38,7 +38,7 @@ class ViewReminderConfigurationPage extends StatelessWidget {
                 )
               ],
             ),
-            body: _buildBody(context, reminderConfiguration.value),
+            body: _buildBody(context, reminderConfiguration.configuration),
           ),
         ),
       );
@@ -48,22 +48,22 @@ class ViewReminderConfigurationPage extends StatelessWidget {
   }
 
   Future<void> _startEdit(BuildContext context, ReminderList reminderList,
-          UpdateableReminderConfiguration reminderConfiguration) async =>
+          Reminder reminderConfiguration) async =>
       Navigator.of(context).push(
-        MaterialPageRoute<UpdateableReminderConfiguration>(
+        MaterialPageRoute<Reminder>(
           fullscreenDialog: true,
           builder: (context) => ChangeNotifierProvider.value(
             value: reminderList,
             builder: (_, __) => EditReminderConfigurationPage(
               reminderConfiguration: reminderConfiguration,
-              subjectID: reminderConfiguration.value.subjectID,
+              subjectID: reminderConfiguration.configuration.subjectID,
             ),
           ),
         ),
       );
 
   _delete(BuildContext context, ReminderList reminderList,
-      UpdateableReminderConfiguration reminderConfiguration) { /* TODO implement*/}
+      Reminder reminderConfiguration) { /* TODO implement*/}
 
   _buildBody(BuildContext context, ReminderConfiguration value) => Column(
         mainAxisAlignment: MainAxisAlignment.start,

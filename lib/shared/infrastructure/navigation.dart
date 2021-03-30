@@ -149,14 +149,14 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case ViewReminderConfigurationPage.route_name:
       return MaterialPageRoute(builder: (context) {
         final args = settings.arguments
-            as Tuple2<ReminderList, UpdateableReminderConfiguration>;
+            as Tuple2<ReminderList, Reminder>;
         final reminderList = args.item1;
         final reminderConfiguration = args.item2;
 
         return MultiProvider(
           providers: [
             ChangeNotifierProvider<ReminderList>.value(value: reminderList),
-            ChangeNotifierProvider<UpdateableReminderConfiguration>.value(
+            ChangeNotifierProvider<Reminder>.value(
                 value: reminderConfiguration),
           ],
           child: I18n(child: ViewReminderConfigurationPage()),
@@ -166,7 +166,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case EditReminderConfigurationPage.route_name:
       return MaterialPageRoute(builder: (context) {
         final args = settings.arguments
-            as Tuple2<ReminderList, UpdateableReminderConfiguration>;
+            as Tuple2<ReminderList, Reminder>;
         final reminderList = args.item1;
         final reminderConfiguration = args.item2;
         return ChangeNotifierProvider<ReminderList>.value(

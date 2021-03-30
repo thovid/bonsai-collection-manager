@@ -57,10 +57,10 @@ main() {
         await ReminderList.load(repository, subjectId: subjectId);
 
     expect(reminderList.entries[0].dueInFrom(today), equals(0));
-    await reminderList.discardReminder(reminderConfiguration.getReminder());
+    await reminderList.discardReminder(reminderList.entries[0]);
 
     expect(reminderList.entries[0].dueInFrom(today), equals(1));
-    verify(repository.add(reminderList.entries[0]));
+    verify(repository.add(reminderList.entries[0].configuration));
   });
 
   test(

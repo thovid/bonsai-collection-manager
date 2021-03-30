@@ -9,14 +9,6 @@ import 'package:flutter/foundation.dart';
 
 typedef SubjectNameResolver = String Function(ModelID);
 
-mixin Reminder {
-  LogWorkType get workType;
-  String get workTypeName;
-  int dueInFrom(DateTime date);
-  String resolveSubjectName(SubjectNameResolver resolver);
-  UpdateableReminderConfiguration getConfiguration();
-}
-
 abstract class ReminderRepository {
   Future<List<ReminderConfiguration>> loadReminderFor(ModelID subjectId);
   Future add(ReminderConfiguration reminderConfiguration);
@@ -33,19 +25,19 @@ class ReminderList with ChangeNotifier {
               repository: repository));
 
   final ReminderRepository _repository;
-  final List<ReminderConfiguration> _configurations;
+  final List<Reminder> _reminders;
   final ModelID subjectId;
 
   ReminderList._internal(
       {List<ReminderConfiguration> reminders,
       ModelID subjectId,
       ReminderRepository repository})
-      : _configurations = new List<ReminderConfiguration>.from(reminders),
+      : _reminders = reminders.map((e) => Reminder(e)).toList(),
         subjectId = subjectId,
         _repository = repository;
 
   List<Reminder> get entries =>
-      _configurations.map((e) => e.getReminder()).toList();
+      _reminders;
 
   Future<ReminderConfiguration> add(ReminderConfiguration configuration) async {
     final result = await _addToCacheAndRepository(configuration);
@@ -57,94 +49,100 @@ class ReminderList with ChangeNotifier {
       ReminderConfiguration configuration) async {
     await _repository.add(configuration);
     final int index =
-        _configurations.indexWhere((element) => element.id == configuration.id);
+        _reminders.indexWhere((element) => element.configuration.id == configuration.id);
     if (index >= 0) {
-      _configurations[index] = configuration;
+      _reminders[index].configuration = configuration;
     } else {
-      _configurations.add(configuration);
+      _reminders.add(Reminder(configuration));
     }
-    _configurations.sort((a, b) => a.nextReminder.compareTo(b.nextReminder));
+    _reminders.sort((a, b) => a.configuration.nextReminder.compareTo(b.configuration.nextReminder));
     return configuration;
   }
 
   Future<void> discardReminder(Reminder entry) async {
-    final currentReminder = entry.getConfiguration();
-    final currentReminderId = currentReminder.value.id;
+    final currentReminder = entry;
+    final currentReminderId = currentReminder.configuration.id;
     final advancedReminder = currentReminder.advanceCurrentReminder();
     if (advancedReminder != null) {
       return add(advancedReminder);
     }
-
     _remove(currentReminderId);
   }
 
   Future<void> _remove(ModelID<ReminderConfiguration> id) async {
-    _configurations.removeWhere((element) => element.id == id);
+    //_reminders.removeWhere((element) => element.configuration.id == id);
+    _reminders.removeWhere((element) => element.configuration == null);
     return _repository.remove(id);
   }
 }
 
-class UpdateableReminderConfiguration with ChangeNotifier {
+class Reminder with ChangeNotifier {
   ReminderConfiguration _reminderConfiguration;
 
-  UpdateableReminderConfiguration(ReminderConfiguration reminderConfiguration)
+  Reminder(ReminderConfiguration reminderConfiguration)
       : _reminderConfiguration = reminderConfiguration;
 
-  ReminderConfiguration get value => _reminderConfiguration;
+  LogWorkType get workType => _reminderConfiguration.workType;
+  String get workTypeName => _reminderConfiguration.workTypeName;
+  int dueInFrom(DateTime date) => _reminderConfiguration.dueInFrom(date);
+  String resolveSubjectName(SubjectNameResolver resolver) =>
+      _reminderConfiguration.resolveSubjectName(resolver);
 
-  set value(ReminderConfiguration v) {
+  ReminderConfiguration get configuration => _reminderConfiguration;
+
+  set configuration(ReminderConfiguration v) {
     _reminderConfiguration = v;
     notifyListeners();
   }
 
   ReminderConfiguration advanceCurrentReminder() {
-    if (!value.repeat) {
-      value = null;
+    if (!configuration.repeat) {
+      configuration = null;
       return null;
     }
 
     final advancedReminder =
-        (ReminderConfigurationBuilder(fromConfiguration: value)
+        (ReminderConfigurationBuilder(fromConfiguration: configuration)
               ..nextReminder = _calculateNextReminder()
-              ..numberOfPreviousReminders = value.numberOfPreviousReminders + 1)
+              ..numberOfPreviousReminders = configuration.numberOfPreviousReminders + 1)
             .build();
 
     if (advancedReminder.endingConditionType ==
             EndingConditionType.after_date &&
         advancedReminder.nextReminder.isAfter(advancedReminder.endingAtDate)) {
-      value = null;
+      configuration = null;
       return null;
     }
     if (advancedReminder.endingConditionType ==
             EndingConditionType.after_repetitions &&
         advancedReminder.numberOfPreviousReminders >
             advancedReminder.endingAfterRepetitions) {
-      value = null;
+      configuration = null;
       return null;
     }
 
-    value = advancedReminder;
-    return value;
+    configuration = advancedReminder;
+    return configuration;
   }
 
   DateTime _calculateNextReminder() {
-    switch (value.frequencyUnit) {
+    switch (configuration.frequencyUnit) {
       case FrequencyUnit.days:
-        return value.nextReminder.add(Duration(days: value.frequency));
+        return configuration.nextReminder.add(Duration(days: configuration.frequency));
       case FrequencyUnit.weeks:
-        return value.nextReminder.add(Duration(days: value.frequency * 7));
+        return configuration.nextReminder.add(Duration(days: configuration.frequency * 7));
       case FrequencyUnit.months:
-        return DateTime(value.nextReminder.year,
-            value.nextReminder.month + value.frequency, value.nextReminder.day);
+        return DateTime(configuration.nextReminder.year,
+            configuration.nextReminder.month + configuration.frequency, configuration.nextReminder.day);
       case FrequencyUnit.years:
-        return DateTime(value.nextReminder.year + value.frequency,
-            value.nextReminder.month, value.nextReminder.day);
+        return DateTime(configuration.nextReminder.year + configuration.frequency,
+            configuration.nextReminder.month, configuration.nextReminder.day);
     }
-    return value.nextReminder;
+    return configuration.nextReminder;
   }
 }
 
-class ReminderConfiguration with Reminder {
+class ReminderConfiguration {
   final ModelID<ReminderConfiguration> id;
   final ModelID subjectID;
   final LogWorkType workType;
@@ -174,10 +172,6 @@ class ReminderConfiguration with Reminder {
         endingAtDate = builder.endingAtDate,
         endingAfterRepetitions = builder.endingAfterRepetitions;
 
-  Reminder getReminder() {
-    return this;
-  }
-
   @override
   int dueInFrom(DateTime date) => nextReminder.difference(date).inDays;
 
@@ -187,8 +181,8 @@ class ReminderConfiguration with Reminder {
   }
 
   @override
-  UpdateableReminderConfiguration getConfiguration() {
-    return UpdateableReminderConfiguration(this);
+  Reminder getConfiguration() {
+    return Reminder(this);
   }
 }
 

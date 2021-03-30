@@ -23,7 +23,7 @@ class EditReminderConfigurationPage extends StatefulWidget {
   static const route_name = '/reminder/edit-configuration';
   static const route_name_create = '/reminder/create-configuration';
 
-  final UpdateableReminderConfiguration reminderConfiguration;
+  final Reminder reminderConfiguration;
 
   final ModelID subjectID;
 
@@ -55,7 +55,7 @@ class _EditReminderConfigurationPageState
 
   void _initFromWidget() {
     _viewModel = EditReminderConfigurationViewModel(setState,
-        reminderConfiguration: widget.reminderConfiguration?.value,
+        reminderConfiguration: widget.reminderConfiguration?.configuration,
         subjectID: widget.subjectID);
     if (widget.reminderConfiguration == null) {
       _viewModel.updateWorkType(_viewModel.workType,
@@ -110,7 +110,7 @@ class _EditReminderConfigurationPageState
     ReminderConfiguration result = await _viewModel.save(reminderList);
 
     if (widget.reminderConfiguration != null) {
-      widget.reminderConfiguration.value = result;
+      widget.reminderConfiguration.configuration = result;
       Navigator.of(context).pop(widget.reminderConfiguration);
       return;
     }
@@ -118,7 +118,7 @@ class _EditReminderConfigurationPageState
     Navigator.of(context).pushReplacementNamed(
         ViewReminderConfigurationPage.route_name,
         arguments:
-            Tuple2(reminderList, UpdateableReminderConfiguration(result)));
+            Tuple2(reminderList, Reminder(result)));
   }
 
   Widget _buildBody(BuildContext context) => Scrollbar(
