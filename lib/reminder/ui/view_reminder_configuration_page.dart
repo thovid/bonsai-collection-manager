@@ -63,7 +63,7 @@ class ViewReminderConfigurationPage extends StatelessWidget {
       );
 
   _delete(BuildContext context, ReminderList reminderList,
-      UpdateableReminderConfiguration reminderConfiguration) {}
+      UpdateableReminderConfiguration reminderConfiguration) { /* TODO implement*/}
 
   _buildBody(BuildContext context, ReminderConfiguration value) => Column(
         mainAxisAlignment: MainAxisAlignment.start,
