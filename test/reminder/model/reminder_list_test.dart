@@ -81,6 +81,22 @@ main() {
     expect(reminderList.reminders, isEmpty);
     verify(repository.remove(reminderConfiguration.id));
   });
+
+  test('can delete reminder', () async {
+    final reminderConfiguration = (ReminderConfigurationBuilder()
+          ..subjectID = subjectId
+          ..repeat = false
+          ..firstReminder = DateTime.now())
+        .build();
+
+    final repository =
+        repositoryProviding([reminderConfiguration], subjectId: subjectId);
+    final reminderList =
+        await ReminderList.load(repository, subjectId: subjectId);
+    reminderList.delete(reminderList.reminders[0]);
+    expect(reminderList.reminders, isEmpty);
+    verify(repository.remove(reminderConfiguration.id));
+  });
 }
 
 ReminderConfiguration aConfiguration({ModelID subject}) =>

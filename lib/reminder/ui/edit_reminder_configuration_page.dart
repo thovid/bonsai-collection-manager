@@ -23,11 +23,11 @@ class EditReminderConfigurationPage extends StatefulWidget {
   static const route_name = '/reminder/edit-configuration';
   static const route_name_create = '/reminder/create-configuration';
 
-  final Reminder reminderConfiguration;
+  final Reminder reminder;
 
   final ModelID subjectID;
 
-  EditReminderConfigurationPage({this.reminderConfiguration, this.subjectID});
+  EditReminderConfigurationPage({this.reminder, this.subjectID});
   @override
   _EditReminderConfigurationPageState createState() {
     return _EditReminderConfigurationPageState();
@@ -55,9 +55,9 @@ class _EditReminderConfigurationPageState
 
   void _initFromWidget() {
     _viewModel = EditReminderConfigurationViewModel(setState,
-        reminderConfiguration: widget.reminderConfiguration?.configuration,
+        reminderConfiguration: widget.reminder?.configuration,
         subjectID: widget.subjectID);
-    if (widget.reminderConfiguration == null) {
+    if (widget.reminder == null) {
       _viewModel.updateWorkType(_viewModel.workType,
           _viewModel.workType.toString().tense(Tenses.present));
     }
@@ -97,7 +97,7 @@ class _EditReminderConfigurationPageState
         )),
       );
 
-  Widget _buildTitle() => Text(widget.reminderConfiguration != null
+  Widget _buildTitle() => Text(widget.reminder != null
       ? 'Edit reminder'.i18n
       : 'Create reminder'.i18n);
 
@@ -109,9 +109,9 @@ class _EditReminderConfigurationPageState
     _formKey.currentState.save();
     ReminderConfiguration result = await _viewModel.save(reminderList);
 
-    if (widget.reminderConfiguration != null) {
-      widget.reminderConfiguration.configuration = result;
-      Navigator.of(context).pop(widget.reminderConfiguration);
+    if (widget.reminder != null) {
+      widget.reminder.configuration = result;
+      Navigator.of(context).pop(widget.reminder);
       return;
     }
 

@@ -76,6 +76,10 @@ class ReminderList with ChangeNotifier {
     await _repository.remove(id);
     notifyListeners();
   }
+
+  Future<void> delete(Reminder reminder) async {
+    return _remove(reminder.configuration.id);
+  }
 }
 
 class Reminder with ChangeNotifier {

@@ -48,22 +48,45 @@ class ViewReminderConfigurationPage extends StatelessWidget {
   }
 
   Future<void> _startEdit(BuildContext context, ReminderList reminderList,
-          Reminder reminderConfiguration) async =>
+          Reminder reminder) async =>
       Navigator.of(context).push(
         MaterialPageRoute<Reminder>(
           fullscreenDialog: true,
           builder: (context) => ChangeNotifierProvider.value(
             value: reminderList,
             builder: (_, __) => EditReminderConfigurationPage(
-              reminderConfiguration: reminderConfiguration,
-              subjectID: reminderConfiguration.configuration.subjectID,
+              reminder: reminder,
+              subjectID: reminder.configuration.subjectID,
             ),
           ),
         ),
       );
 
   _delete(BuildContext context, ReminderList reminderList,
-      Reminder reminderConfiguration) { /* TODO implement*/}
+      Reminder reminder) async {
+    final bool shouldDelete = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Really delete?'.i18n),
+        content: Text('Deletion can not be made undone!'.i18n),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('Cancel'.i18n),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('Delete'.i18n),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldDelete) {
+      await reminderList.delete(reminder);
+      Navigator.of(context).pop();
+    }
+  }
 
   _buildBody(BuildContext context, ReminderConfiguration value) => Column(
         mainAxisAlignment: MainAxisAlignment.start,

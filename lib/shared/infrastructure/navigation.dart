@@ -173,7 +173,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           value: reminderList,
           child: I18n(
               child: EditReminderConfigurationPage(
-            reminderConfiguration: reminderConfiguration,
+            reminder: reminderConfiguration,
           )),
         );
       });
