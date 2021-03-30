@@ -2,7 +2,6 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
-import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../model/reminder.dart';
