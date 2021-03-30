@@ -36,8 +36,7 @@ class ReminderList with ChangeNotifier {
         subjectId = subjectId,
         _repository = repository;
 
-  List<Reminder> get entries =>
-      _reminders;
+  List<Reminder> get reminders => _reminders;
 
   Future<ReminderConfiguration> add(ReminderConfiguration configuration) async {
     final result = await _addToCacheAndRepository(configuration);
@@ -48,14 +47,15 @@ class ReminderList with ChangeNotifier {
   Future<ReminderConfiguration> _addToCacheAndRepository(
       ReminderConfiguration configuration) async {
     await _repository.add(configuration);
-    final int index =
-        _reminders.indexWhere((element) => element.configuration.id == configuration.id);
+    final int index = _reminders
+        .indexWhere((element) => element.configuration.id == configuration.id);
     if (index >= 0) {
       _reminders[index].configuration = configuration;
     } else {
       _reminders.add(Reminder(configuration));
     }
-    _reminders.sort((a, b) => a.configuration.nextReminder.compareTo(b.configuration.nextReminder));
+    _reminders.sort((a, b) =>
+        a.configuration.nextReminder.compareTo(b.configuration.nextReminder));
     return configuration;
   }
 
@@ -83,10 +83,15 @@ class Reminder with ChangeNotifier {
       : _reminderConfiguration = reminderConfiguration;
 
   LogWorkType get workType => _reminderConfiguration.workType;
+
   String get workTypeName => _reminderConfiguration.workTypeName;
-  int dueInFrom(DateTime date) => _reminderConfiguration.dueInFrom(date);
-  String resolveSubjectName(SubjectNameResolver resolver) =>
-      _reminderConfiguration.resolveSubjectName(resolver);
+
+  int dueInFrom(DateTime date) =>
+      _reminderConfiguration.nextReminder.difference(date).inDays;
+
+  String resolveSubjectName(SubjectNameResolver resolver) {
+    return resolver(_reminderConfiguration.subjectID);
+  }
 
   ReminderConfiguration get configuration => _reminderConfiguration;
 
@@ -104,7 +109,8 @@ class Reminder with ChangeNotifier {
     final advancedReminder =
         (ReminderConfigurationBuilder(fromConfiguration: configuration)
               ..nextReminder = _calculateNextReminder()
-              ..numberOfPreviousReminders = configuration.numberOfPreviousReminders + 1)
+              ..numberOfPreviousReminders =
+                  configuration.numberOfPreviousReminders + 1)
             .build();
 
     if (advancedReminder.endingConditionType ==
@@ -128,15 +134,21 @@ class Reminder with ChangeNotifier {
   DateTime _calculateNextReminder() {
     switch (configuration.frequencyUnit) {
       case FrequencyUnit.days:
-        return configuration.nextReminder.add(Duration(days: configuration.frequency));
+        return configuration.nextReminder
+            .add(Duration(days: configuration.frequency));
       case FrequencyUnit.weeks:
-        return configuration.nextReminder.add(Duration(days: configuration.frequency * 7));
+        return configuration.nextReminder
+            .add(Duration(days: configuration.frequency * 7));
       case FrequencyUnit.months:
-        return DateTime(configuration.nextReminder.year,
-            configuration.nextReminder.month + configuration.frequency, configuration.nextReminder.day);
+        return DateTime(
+            configuration.nextReminder.year,
+            configuration.nextReminder.month + configuration.frequency,
+            configuration.nextReminder.day);
       case FrequencyUnit.years:
-        return DateTime(configuration.nextReminder.year + configuration.frequency,
-            configuration.nextReminder.month, configuration.nextReminder.day);
+        return DateTime(
+            configuration.nextReminder.year + configuration.frequency,
+            configuration.nextReminder.month,
+            configuration.nextReminder.day);
     }
     return configuration.nextReminder;
   }
@@ -171,19 +183,6 @@ class ReminderConfiguration {
         endingConditionType = builder.endingConditionType,
         endingAtDate = builder.endingAtDate,
         endingAfterRepetitions = builder.endingAfterRepetitions;
-
-  @override
-  int dueInFrom(DateTime date) => nextReminder.difference(date).inDays;
-
-  @override
-  String resolveSubjectName(SubjectNameResolver resolver) {
-    return resolver(subjectID);
-  }
-
-  @override
-  Reminder getConfiguration() {
-    return Reminder(this);
-  }
 }
 
 class ReminderConfigurationBuilder with HasWorkType {

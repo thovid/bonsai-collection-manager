@@ -21,7 +21,7 @@ class ReminderView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Reminder> entries = reminderList.entries;
+    List<Reminder> entries = reminderList.reminders;
 
     return Center(
       child: ListView.builder(

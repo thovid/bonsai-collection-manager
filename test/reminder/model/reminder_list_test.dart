@@ -16,7 +16,7 @@ main() {
 
     ReminderList reminderList =
         await ReminderList.load(repository, subjectId: subjectId);
-    expect(reminderList.entries.length, equals(0));
+    expect(reminderList.reminders.length, equals(0));
   });
 
   test('can load reminder for subject', () async {
@@ -25,7 +25,7 @@ main() {
 
     ReminderList reminderList =
         await ReminderList.load(repository, subjectId: subjectId);
-    expect(reminderList.entries.length, equals(1));
+    expect(reminderList.reminders.length, equals(1));
   });
 
   test('can save new reminder config in list', () async {
@@ -56,11 +56,11 @@ main() {
     final reminderList =
         await ReminderList.load(repository, subjectId: subjectId);
 
-    expect(reminderList.entries[0].dueInFrom(today), equals(0));
-    await reminderList.discardReminder(reminderList.entries[0]);
+    expect(reminderList.reminders[0].dueInFrom(today), equals(0));
+    await reminderList.discardReminder(reminderList.reminders[0]);
 
-    expect(reminderList.entries[0].dueInFrom(today), equals(1));
-    verify(repository.add(reminderList.entries[0].configuration));
+    expect(reminderList.reminders[0].dueInFrom(today), equals(1));
+    verify(repository.add(reminderList.reminders[0].configuration));
   });
 
   test(
@@ -77,8 +77,8 @@ main() {
         repositoryProviding([reminderConfiguration], subjectId: subjectId);
     final reminderList =
         await ReminderList.load(repository, subjectId: subjectId);
-    await reminderList.discardReminder(reminderList.entries[0]);
-    expect(reminderList.entries, isEmpty);
+    await reminderList.discardReminder(reminderList.reminders[0]);
+    expect(reminderList.reminders, isEmpty);
     verify(repository.remove(reminderConfiguration.id));
   });
 }
