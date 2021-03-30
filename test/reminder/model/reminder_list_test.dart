@@ -93,7 +93,7 @@ main() {
         repositoryProviding([reminderConfiguration], subjectId: subjectId);
     final reminderList =
         await ReminderList.load(repository, subjectId: subjectId);
-    reminderList.delete(reminderList.reminders[0]);
+    reminderList.remove(reminderList.reminders[0]);
     expect(reminderList.reminders, isEmpty);
     verify(repository.remove(reminderConfiguration.id));
   });

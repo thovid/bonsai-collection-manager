@@ -83,7 +83,7 @@ class ViewReminderConfigurationPage extends StatelessWidget {
     );
 
     if (shouldDelete) {
-      await reminderList.delete(reminder);
+      await reminderList.remove(reminder);
       Navigator.of(context).pop();
     }
   }

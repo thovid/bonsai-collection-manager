@@ -63,7 +63,7 @@ class ReminderList with ChangeNotifier {
     final id = entry.configuration.id;
     final advancedReminder = entry.configuration.advanceCurrentReminder();
     if (advancedReminder.hasEnded()) {
-      _remove(id);
+      _delete(id);
       return;
     }
 
@@ -71,14 +71,14 @@ class ReminderList with ChangeNotifier {
     entry.configuration = advancedReminder;
   }
 
-  Future<void> _remove(ModelID<ReminderConfiguration> id) async {
+  Future<void> _delete(ModelID<ReminderConfiguration> id) async {
     _reminders.removeWhere((element) => element.configuration.id == id);
     await _repository.remove(id);
     notifyListeners();
   }
 
-  Future<void> delete(Reminder reminder) async {
-    return _remove(reminder.configuration.id);
+  Future<void> remove(Reminder reminder) async {
+    return _delete(reminder.configuration.id);
   }
 }
 
