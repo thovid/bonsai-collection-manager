@@ -15,6 +15,8 @@ abstract class ReminderRepository {
   Future<List<ReminderConfiguration>> loadReminderFor(ModelID subjectId);
   Future add(ReminderConfiguration reminderConfiguration);
   Future<void> remove(ModelID<ReminderConfiguration> id);
+
+  Future<void> removeAll(ModelID subjectId);
 }
 
 class ReminderList with ChangeNotifier {
@@ -99,6 +101,12 @@ class ReminderList with ChangeNotifier {
         ..workTypeName = reminder.workTypeName
         ..date = DateTime.now())
       .build();
+
+  Future removeAll() async {
+    _reminders.clear();
+    _repository.removeAll(subjectId);
+    notifyListeners();
+  }
 }
 
 class Reminder with ChangeNotifier {

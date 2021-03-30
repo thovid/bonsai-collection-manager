@@ -2,6 +2,7 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
+import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../model/reminder.dart';
@@ -85,6 +86,13 @@ class ReminderConfigurationTable {
         table_name,
         where: '$entry_id = ?',
         whereArgs: [id.value],
+      );
+
+  static Future deleteAll(ModelID subjectId, DatabaseExecutor database) async =>
+      database.delete(
+        table_name,
+        where: '$subject_id = ?',
+        whereArgs: [subjectId.value],
       );
 
   static Future<List<ReminderConfiguration>> readAll(

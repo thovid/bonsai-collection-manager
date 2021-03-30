@@ -16,13 +16,14 @@ class SQLReminderRepository extends BaseRepository with ReminderRepository {
   }
 
   @override
-  Future add(ReminderConfiguration reminderConfiguration) {
-    return init().then(
-        (db) => ReminderConfigurationTable.write(reminderConfiguration, db));
-  }
+  Future add(ReminderConfiguration reminderConfiguration) => init().then(
+      (db) => ReminderConfigurationTable.write(reminderConfiguration, db));
 
   @override
-  Future<void> remove(ModelID<ReminderConfiguration> id) {
-    return init().then((db) => ReminderConfigurationTable.delete(id, db));
-  }
+  Future<void> remove(ModelID<ReminderConfiguration> id) =>
+      init().then((db) => ReminderConfigurationTable.delete(id, db));
+
+  @override
+  Future<void> removeAll(ModelID subjectId) =>
+      init().then((db) => ReminderConfigurationTable.deleteAll(subjectId, db));
 }

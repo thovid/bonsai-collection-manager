@@ -48,6 +48,28 @@ main() {
     fromDB = await ReminderConfigurationTable.read(fromDB.id, db);
     expect(fromDB, isNull);
   });
+
+  test('can get and delete all for a subject', () async {
+    DatabaseExecutor db = await openTestDatabase();
+    final otherSubject = ModelID.newId();
+    final entries = [
+      _anEntry(subject),
+      _anEntry(subject),
+      _anEntry(otherSubject),
+    ];
+    entries.forEach((element) async {
+      await ReminderConfigurationTable.write(element, db);
+    });
+
+    final forSubject = await ReminderConfigurationTable.readAll(subject, db);
+    expect(forSubject.length, equals(2));
+    await ReminderConfigurationTable.deleteAll(subject, db);
+    final deleted = await ReminderConfigurationTable.readAll(subject, db);
+    expect(deleted.length, equals(0));
+    final notDeleted =
+        await ReminderConfigurationTable.readAll(otherSubject, db);
+    expect(notDeleted.length, equals(1));
+  });
 }
 
 ReminderConfiguration _anEntry(ModelID subject, {bool repeat = false}) {

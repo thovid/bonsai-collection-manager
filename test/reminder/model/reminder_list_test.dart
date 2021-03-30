@@ -146,6 +146,17 @@ main() {
     expect(reminderList.reminders[0].dueInFrom(today), equals(1));
     verify(repository.add(reminderList.reminders[0].configuration));
   });
+
+  test('can remove all reminders', () async {
+    final repository = repositoryProviding([aConfiguration(), aConfiguration()],
+        subjectId: subjectId);
+    final reminderList =
+        await ReminderList.load(repository, subjectId: subjectId);
+    expect(reminderList.reminders.length, equals(2));
+    reminderList.removeAll();
+    expect(reminderList.reminders.length, equals(0));
+    verify(repository.removeAll(subjectId));
+  });
 }
 
 ReminderConfiguration aConfiguration({ModelID subject}) =>
