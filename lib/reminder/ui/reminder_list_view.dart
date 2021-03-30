@@ -45,8 +45,14 @@ class ReminderView extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(reminder.resolveSubjectName(treeNameResolver),
-              style: Theme.of(context).textTheme.headline6),
+          Expanded(
+            child: Text(
+              reminder.resolveSubjectName(treeNameResolver),
+              style: Theme.of(context).textTheme.headline6,
+              softWrap: false,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
           Text(
               dueInDays >= 0
                   ? "Due in %d days".plural(dueInDays)
@@ -80,7 +86,9 @@ class ReminderView extends StatelessWidget {
             IconButton(
                 icon: Icon(Icons.check),
                 onPressed: () async {
-                  await reminderList.confirmReminder(reminder, lookupLogbook);
+                  await reminderList.confirmReminder(reminder, lookupLogbook,
+                      workTypeTranslator: (type, tense) =>
+                          type.toString().tense(tense));
                   showInformation(
                       context: context,
                       information: "Logbook entry created".i18n);

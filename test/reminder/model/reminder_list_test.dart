@@ -5,6 +5,7 @@
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
 import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
+import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -108,6 +109,7 @@ main() {
           ..endingConditionType = EndingConditionType.never
           ..firstReminder = today
           ..frequency = 1
+          ..workTypeName = "some work"
           ..frequencyUnit = FrequencyUnit.days)
         .build();
 
@@ -121,6 +123,35 @@ main() {
     expect(logbookEntry.workType, equals(reminderConfiguration.workType));
     expect(
         logbookEntry.workTypeName, equals(reminderConfiguration.workTypeName));
+    verify(lookupLogbookMock.logbook.add(logbookEntry));
+  });
+
+  test(
+      'created logbook entry with standard work type name has work ' +
+          'type name in past tense', () async {
+    final LookupLogbookMock lookupLogbookMock = LookupLogbookMock();
+    final today = DateTime.now();
+    final reminderConfiguration = (ReminderConfigurationBuilder()
+          ..subjectID = subjectId
+          ..repeat = true
+          ..endingConditionType = EndingConditionType.never
+          ..firstReminder = today
+          ..frequency = 1
+          ..workType = LogWorkType.pruned
+          ..workTypeName = "Prune"
+          ..frequencyUnit = FrequencyUnit.days)
+        .build();
+
+    final repository =
+        repositoryProviding([reminderConfiguration], subjectId: subjectId);
+    final reminderList =
+        await ReminderList.load(repository, subjectId: subjectId);
+
+    final logbookEntry = await reminderList.confirmReminder(
+        reminderList.reminders[0], lookupLogbookMock.lookUp,
+        workTypeTranslator: mockWorkTypeTranslator("Pruned", "Prune"));
+    expect(logbookEntry.workType, equals(reminderConfiguration.workType));
+    expect(logbookEntry.workTypeName, equals("Pruned"));
     verify(lookupLogbookMock.logbook.add(logbookEntry));
   });
 
@@ -141,7 +172,9 @@ main() {
         await ReminderList.load(repository, subjectId: subjectId);
 
     await reminderList.confirmReminder(
-        reminderList.reminders[0], LookupLogbookMock().lookUp);
+      reminderList.reminders[0],
+      LookupLogbookMock().lookUp,
+    );
 
     expect(reminderList.reminders[0].dueInFrom(today), equals(1));
     verify(repository.add(reminderList.reminders[0].configuration));
@@ -177,3 +210,12 @@ class LookupLogbookMock {
 }
 
 class LogbookMock extends Mock implements Logbook {}
+
+WorkTypeTranslator mockWorkTypeTranslator(String past, String present) {
+  return (type, tense) {
+    if (tense == Tenses.past)
+      return past;
+    else
+      return present;
+  };
+}

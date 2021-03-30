@@ -9,7 +9,8 @@ import '../../logbook/model/logbook.dart';
 import '../../worktype/model/work_type.dart';
 
 typedef SubjectNameResolver = String Function(ModelID);
-typedef LookupLogbook = Logbook Function(ModelID subject);
+typedef LookupLogbook = Logbook Function(ModelID);
+typedef WorkTypeTranslator = String Function(LogWorkType, Tenses);
 
 abstract class ReminderRepository {
   Future<List<ReminderConfiguration>> loadReminderFor(ModelID subjectId);
@@ -67,8 +68,10 @@ class ReminderList with ChangeNotifier {
       _advanceReminder(reminder);
 
   Future<LogbookEntry> confirmReminder(
-      Reminder reminder, LookupLogbook lookupLogbook) async {
-    final LogbookEntry result = _createLogbookEntry(reminder);
+      Reminder reminder, LookupLogbook lookupLogbook,
+      {WorkTypeTranslator workTypeTranslator}) async {
+    final LogbookEntry result =
+        _createLogbookEntry(reminder, workTypeTranslator);
     await lookupLogbook(reminder.configuration.subjectID).add(result);
     await _advanceReminder(reminder);
     return result;
@@ -96,11 +99,20 @@ class ReminderList with ChangeNotifier {
     return _delete(reminder.configuration.id);
   }
 
-  LogbookEntry _createLogbookEntry(Reminder reminder) => (LogbookEntryBuilder()
-        ..workType = reminder.workType
-        ..workTypeName = reminder.workTypeName
-        ..date = DateTime.now())
-      .build();
+  LogbookEntry _createLogbookEntry(
+      Reminder reminder, WorkTypeTranslator workTypeTranslator) {
+    String workTypeName = reminder.workTypeName;
+    if (workTypeTranslator != null &&
+        workTypeTranslator(reminder.workType, Tenses.present) == workTypeName) {
+      workTypeName = workTypeTranslator(reminder.workType, Tenses.past);
+    }
+
+    return (LogbookEntryBuilder()
+          ..workType = reminder.workType
+          ..workTypeName = workTypeName
+          ..date = DateTime.now())
+        .build();
+  }
 
   Future removeAll() async {
     _reminders.clear();
