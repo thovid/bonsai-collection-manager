@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.lightGreen,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        initialRoute: ViewBonsaiCollectionPage.route_name,
+        initialRoute: ViewBonsaiCollectionPage.route_name_start,
         onGenerateRoute: generateRoute,
       ),
     );

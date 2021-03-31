@@ -14,7 +14,8 @@ import './edit_bonsai_page.dart';
 import 'species_picker.dart';
 
 class ViewBonsaiCollectionPage extends HomePageWithDrawer {
-  static const route_name = '/';
+  static const route_name = '/collection';
+  static const route_name_start = '/';
 
   ViewBonsaiCollectionPage({bool withInitAnimation = true})
       : super(withInitAnimation: withInitAnimation);

@@ -173,16 +173,20 @@ class MultiSubjectReminderList with ReminderList, ChangeNotifier {
   @override
   Future<LogbookEntry> confirmReminder(
       Reminder reminder, LookupLogbook lookupLogbook,
-      {WorkTypeTranslator workTypeTranslator}) {
-    return _remindersBySubject[reminder.configuration.subjectID]
+      {WorkTypeTranslator workTypeTranslator}) async {
+    final result = await _remindersBySubject[reminder.configuration.subjectID]
         .confirmReminder(reminder, lookupLogbook,
             workTypeTranslator: workTypeTranslator);
+    notifyListeners();
+    return result;
   }
 
   @override
-  Future<void> discardReminder(Reminder reminder) {
-    return _remindersBySubject[reminder.configuration.subjectID]
+  Future<void> discardReminder(Reminder reminder) async {
+    final result = await _remindersBySubject[reminder.configuration.subjectID]
         .discardReminder(reminder);
+    notifyListeners();
+    return result;
   }
 
   @override

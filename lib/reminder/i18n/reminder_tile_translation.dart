@@ -9,6 +9,7 @@ import '../../worktype/i18n/log_work_type_translations.dart';
 
 extension Localization on String {
   static var _t = (Translations("en_us") +
+          {"en_us": "Reminder", "de": "Erinnerungen"} +
           {
             "en_us": "Due in %d days".zero("Due today").one("Due tomorrow"),
             "de": "Fällig in %d Tagen".zero("Heute fällig").one("Morgen fällig")

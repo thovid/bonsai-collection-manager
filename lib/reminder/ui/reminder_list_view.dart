@@ -16,13 +16,15 @@ class ReminderView extends StatelessWidget {
   final ReminderList reminderList;
   final SubjectNameResolver treeNameResolver;
   final LookupLogbook lookupLogbook;
+  final bool showEdit;
 
-  const ReminderView(
-      {Key key,
-      @required this.reminderList,
-      @required this.treeNameResolver,
-      @required this.lookupLogbook})
-      : super(key: key);
+  const ReminderView({
+    Key key,
+    @required this.reminderList,
+    @required this.treeNameResolver,
+    @required this.lookupLogbook,
+    this.showEdit = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class ReminderView extends StatelessWidget {
   }
 
   Widget _buildReminderTile(
-      BuildContext context, SingleSubjectReminderList reminderList, Reminder reminder) {
+      BuildContext context, ReminderList reminderList, Reminder reminder) {
     final now = GregorianCalendar.now();
     final int dueInDays = reminder.dueInFrom(now);
     return ExpansionTile(
@@ -85,13 +87,14 @@ class ReminderView extends StatelessWidget {
                   showInformation(
                       context: context, information: "Reminder discarded".i18n);
                 }),
-            IconButton(
-                icon: Icon(Icons.settings),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(
-                      ViewReminderConfigurationPage.route_name,
-                      arguments: Tuple2(reminderList, reminder));
-                }),
+            if (showEdit)
+              IconButton(
+                  icon: Icon(Icons.settings),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(
+                        ViewReminderConfigurationPage.route_name,
+                        arguments: Tuple2(reminderList, reminder));
+                  }),
             IconButton(
                 icon: Icon(Icons.check),
                 onPressed: () async {

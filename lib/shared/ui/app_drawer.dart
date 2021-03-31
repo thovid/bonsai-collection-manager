@@ -2,12 +2,13 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/shared/ui/spaces.dart';
 import 'package:flutter/material.dart';
 
 import '../../credits/ui/credits_page.dart';
 import '../../trees/ui/view_bonsai_collection_page.dart';
+import '../../reminder/ui/view_next_reminders_page.dart';
 import '../i18n/app_drawer.i18n.dart';
+import 'spaces.dart';
 
 Drawer buildAppDrawer(
         {@required BuildContext context, @required String currentPage}) =>
@@ -41,6 +42,12 @@ Drawer buildAppDrawer(
                   context: context,
                   targetRoute: ViewBonsaiCollectionPage.route_name,
                   title: "My collection".i18n,
+                  currentRoute: currentPage),
+              _buildDrawerItem(
+                  icon: Icon(Icons.alarm),
+                  context: context,
+                  targetRoute: ViewNextRemindersPage.route_name,
+                  title: "Reminder".i18n,
                   currentRoute: currentPage),
               Divider(
                 color: Colors.black54,

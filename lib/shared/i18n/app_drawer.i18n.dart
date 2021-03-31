@@ -11,6 +11,10 @@ extension Localization on String {
         "de": "Meine Sammlung",
       } +
       {
+        "en_us": "Reminder",
+        "de": "Erinnerungen",
+      } +
+      {
         "en_us": aboutText,
         "de":
             """Bonsai Collection Manager ist eine App zur Verwaltung deiner Bonsaisammlung. Die App wird von mir als privates Hobbyprojekt entwickelt, es kann daher keine Garantie oder Gewährleistung übernommen werden.
