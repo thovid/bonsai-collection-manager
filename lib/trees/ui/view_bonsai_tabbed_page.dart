@@ -69,7 +69,7 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                 children: <Widget>[
                   BonsaiWithImagesView(tree: tree),
                   LogbookView(logbook: logbook),
-                  ReminderView(
+                  ReminderView<SingleSubjectReminderList>(
                     reminderList: reminderList,
                     treeNameResolver: (_) async => tree.displayName,
                     lookupLogbook: (_) async => logbook,

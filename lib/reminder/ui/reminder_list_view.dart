@@ -12,8 +12,8 @@ import '../i18n/reminder_tile_translation.dart';
 import '../model/reminder.dart';
 import 'view_reminder_configuration_page.dart';
 
-class ReminderView extends StatelessWidget {
-  final ReminderList reminderList;
+class ReminderView<T extends ReminderList> extends StatelessWidget {
+  final T reminderList;
   final SubjectNameResolver treeNameResolver;
   final LookupLogbook lookupLogbook;
   final bool showEdit;
@@ -93,7 +93,7 @@ class ReminderView extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pushNamed(
                         ViewReminderConfigurationPage.route_name,
-                        arguments: Tuple2(reminderList, reminder));
+                        arguments: Tuple2<T, Reminder>(reminderList, reminder));
                   }),
             IconButton(
                 icon: Icon(Icons.check),
