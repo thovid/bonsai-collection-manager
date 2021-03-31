@@ -82,7 +82,6 @@ class ReminderView extends StatelessWidget {
                       ViewReminderConfigurationPage.route_name,
                       arguments: Tuple2(reminderList, reminder));
                 }),
-            IconButton(icon: Icon(Icons.snooze), onPressed: () {}),
             IconButton(
                 icon: Icon(Icons.check),
                 onPressed: () async {
