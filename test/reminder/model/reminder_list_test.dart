@@ -207,7 +207,7 @@ ReminderRepository repositoryProviding(List<ReminderConfiguration> reminders,
 class LookupLogbookMock {
   Logbook logbook = LogbookMock();
 
-  Logbook lookUp(ModelID subject) => logbook;
+  Future<Logbook> lookUp(ModelID subject) async => logbook;
 }
 
 class LogbookMock extends Mock implements Logbook {}

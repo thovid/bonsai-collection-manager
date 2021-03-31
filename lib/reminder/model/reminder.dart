@@ -2,16 +2,16 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
-import 'package:bonsaicollectionmanager/shared/dates/date_functions.dart';
 import 'package:date_calendar/date_calendar.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../shared/dates/date_functions.dart';
 import '../../shared/model/model_id.dart';
 import '../../logbook/model/logbook.dart';
 import '../../worktype/model/work_type.dart';
 
-typedef SubjectNameResolver = String Function(ModelID);
-typedef LookupLogbook = Logbook Function(ModelID);
+typedef SubjectNameResolver = Future<String> Function(ModelID);
+typedef LookupLogbook = Future<Logbook> Function(ModelID);
 typedef WorkTypeTranslator = String Function(LogWorkType, Tenses);
 
 abstract class ReminderRepository {
@@ -74,7 +74,8 @@ class ReminderList with ChangeNotifier {
       {WorkTypeTranslator workTypeTranslator}) async {
     final LogbookEntry result =
         _createLogbookEntry(reminder, workTypeTranslator);
-    await lookupLogbook(reminder.configuration.subjectID).add(result);
+    await lookupLogbook(reminder.configuration.subjectID)
+        .then((lb) => lb.add(result));
     await _advanceReminder(reminder);
     return result;
   }
@@ -136,7 +137,7 @@ class Reminder with ChangeNotifier {
   int dueInFrom(Calendar date) =>
       differenceInDays(_reminderConfiguration.nextReminder, date);
 
-  String resolveSubjectName(SubjectNameResolver resolver) {
+  Future<String> resolveSubjectName(SubjectNameResolver resolver) {
     return resolver(_reminderConfiguration.subjectID);
   }
 

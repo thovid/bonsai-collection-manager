@@ -51,8 +51,8 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                   ),
                   IconButton(
                     icon: Icon(Icons.delete),
-                    onPressed: () =>
-                        _delete(context, tree, logbook, reminderList, collection),
+                    onPressed: () => _delete(
+                        context, tree, logbook, reminderList, collection),
                   )
                 ],
                 bottom: TabBar(
@@ -71,8 +71,8 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
                   LogbookView(logbook: logbook),
                   ReminderView(
                     reminderList: reminderList,
-                    treeNameResolver: (_) => tree.displayName,
-                    lookupLogbook: (_) => logbook,
+                    treeNameResolver: (_) async => tree.displayName,
+                    lookupLogbook: (_) async => logbook,
                   ),
                 ],
               ),
@@ -122,8 +122,12 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
       Navigator.of(context)
           .pushNamed(EditBonsaiPage.route_name, arguments: tree);
 
-  Future _delete(BuildContext context, BonsaiTreeWithImages tree,
-      Logbook logbook, ReminderList reminderList, BonsaiTreeCollection collection) async {
+  Future _delete(
+      BuildContext context,
+      BonsaiTreeWithImages tree,
+      Logbook logbook,
+      ReminderList reminderList,
+      BonsaiTreeCollection collection) async {
     final bool shouldDelete = await showDialog(
         context: context,
         builder: (context) => AlertDialog(

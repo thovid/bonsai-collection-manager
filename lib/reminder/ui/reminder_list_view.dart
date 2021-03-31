@@ -47,11 +47,20 @@ class ReminderView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            child: Text(
-              reminder.resolveSubjectName(treeNameResolver),
-              style: Theme.of(context).textTheme.headline6,
-              softWrap: false,
-              overflow: TextOverflow.ellipsis,
+            child: FutureBuilder(
+              future: reminder.resolveSubjectName(treeNameResolver),
+              builder: (context, snapshot) {
+                String text = "...";
+                if (snapshot.connectionState == ConnectionState.done) {
+                  text = snapshot.data;
+                }
+                return Text(
+                  text,
+                  style: Theme.of(context).textTheme.headline6,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                );
+              },
             ),
           ),
           Text(

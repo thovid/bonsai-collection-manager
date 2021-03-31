@@ -26,7 +26,7 @@ Future _openView(WidgetTester tester, ReminderList reminderList,
       Scaffold(
           body: ReminderView(
         reminderList: reminderList,
-        treeNameResolver: (_) => "My Tree",
+        treeNameResolver: (_) async => "My Tree",
       )),
       navigationObserver: navigatorObserver,
     ),
