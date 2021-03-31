@@ -17,8 +17,8 @@ main() {
   test('can load empty reminder list from repository', () async {
     final repository = repositoryProviding([], subjectId: subjectId);
 
-    ReminderList reminderList =
-        await ReminderList.load(repository, subjectId: subjectId);
+    SingleSubjectReminderList reminderList =
+        await SingleSubjectReminderList.load(repository, subjectId: subjectId);
     expect(reminderList.reminders.length, equals(0));
   });
 
@@ -26,16 +26,16 @@ main() {
     final repository = repositoryProviding([aConfiguration(subject: subjectId)],
         subjectId: subjectId);
 
-    ReminderList reminderList =
-        await ReminderList.load(repository, subjectId: subjectId);
+    SingleSubjectReminderList reminderList =
+        await SingleSubjectReminderList.load(repository, subjectId: subjectId);
     expect(reminderList.reminders.length, equals(1));
   });
 
   test('can save new reminder config in list', () async {
     final repository = repositoryProviding([], subjectId: subjectId);
 
-    ReminderList reminderList =
-        await ReminderList.load(repository, subjectId: subjectId);
+    SingleSubjectReminderList reminderList =
+        await SingleSubjectReminderList.load(repository, subjectId: subjectId);
 
     ReminderConfiguration configuration =
         (ReminderConfigurationBuilder()..subjectID = subjectId).build();
@@ -57,7 +57,7 @@ main() {
     final repository =
         repositoryProviding([reminderConfiguration], subjectId: subjectId);
     final reminderList =
-        await ReminderList.load(repository, subjectId: subjectId);
+        await SingleSubjectReminderList.load(repository, subjectId: subjectId);
 
     expect(reminderList.reminders[0].dueInFrom(today), equals(0));
     await reminderList.discardReminder(reminderList.reminders[0]);
@@ -79,7 +79,7 @@ main() {
     final repository =
         repositoryProviding([reminderConfiguration], subjectId: subjectId);
     final reminderList =
-        await ReminderList.load(repository, subjectId: subjectId);
+        await SingleSubjectReminderList.load(repository, subjectId: subjectId);
     await reminderList.discardReminder(reminderList.reminders[0]);
     expect(reminderList.reminders, isEmpty);
     verify(repository.remove(reminderConfiguration.id));
@@ -95,7 +95,7 @@ main() {
     final repository =
         repositoryProviding([reminderConfiguration], subjectId: subjectId);
     final reminderList =
-        await ReminderList.load(repository, subjectId: subjectId);
+        await SingleSubjectReminderList.load(repository, subjectId: subjectId);
     reminderList.remove(reminderList.reminders[0]);
     expect(reminderList.reminders, isEmpty);
     verify(repository.remove(reminderConfiguration.id));
@@ -117,7 +117,7 @@ main() {
     final repository =
         repositoryProviding([reminderConfiguration], subjectId: subjectId);
     final reminderList =
-        await ReminderList.load(repository, subjectId: subjectId);
+        await SingleSubjectReminderList.load(repository, subjectId: subjectId);
 
     final logbookEntry = await reminderList.confirmReminder(
         reminderList.reminders[0], lookupLogbookMock.lookUp);
@@ -146,7 +146,7 @@ main() {
     final repository =
         repositoryProviding([reminderConfiguration], subjectId: subjectId);
     final reminderList =
-        await ReminderList.load(repository, subjectId: subjectId);
+        await SingleSubjectReminderList.load(repository, subjectId: subjectId);
 
     final logbookEntry = await reminderList.confirmReminder(
         reminderList.reminders[0], lookupLogbookMock.lookUp,
@@ -170,7 +170,7 @@ main() {
     final repository =
         repositoryProviding([reminderConfiguration], subjectId: subjectId);
     final reminderList =
-        await ReminderList.load(repository, subjectId: subjectId);
+        await SingleSubjectReminderList.load(repository, subjectId: subjectId);
 
     await reminderList.confirmReminder(
       reminderList.reminders[0],
@@ -185,7 +185,7 @@ main() {
     final repository = repositoryProviding([aConfiguration(), aConfiguration()],
         subjectId: subjectId);
     final reminderList =
-        await ReminderList.load(repository, subjectId: subjectId);
+        await SingleSubjectReminderList.load(repository, subjectId: subjectId);
     expect(reminderList.reminders.length, equals(2));
     reminderList.removeAll();
     expect(reminderList.reminders.length, equals(0));

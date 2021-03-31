@@ -33,13 +33,13 @@ main() {
 }
 
 Future<void> _openView(
-    WidgetTester tester, ReminderList reminderList, Reminder reminder,
+    WidgetTester tester, SingleSubjectReminderList reminderList, Reminder reminder,
     {NavigatorObserver navigatorObserver}) async {
   if (reminder != null) {
     return tester.pumpWidget(
       await testUtils.testAppWith(
         // TODO provide reminder
-        ChangeNotifierProvider<ReminderList>.value(
+        ChangeNotifierProvider<SingleSubjectReminderList>.value(
           value: reminderList,
           builder: (context, child) => ViewReminderConfigurationPage(),
         ),
@@ -49,7 +49,7 @@ Future<void> _openView(
   } else {
     return tester.pumpWidget(
       await testUtils.testAppWith(
-        ChangeNotifierProvider<ReminderList>.value(
+        ChangeNotifierProvider<SingleSubjectReminderList>.value(
           value: reminderList,
           builder: (context, child) => EditReminderConfigurationPage(),
         ),

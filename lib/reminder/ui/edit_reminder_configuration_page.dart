@@ -82,7 +82,7 @@ class _EditReminderConfigurationPageState
   }
 
   @override
-  Widget build(BuildContext context) => Consumer<ReminderList>(
+  Widget build(BuildContext context) => Consumer<SingleSubjectReminderList>(
         builder: (context, reminderList, _) => SafeArea(
             child: Scaffold(
           appBar: AppBar(
@@ -102,7 +102,7 @@ class _EditReminderConfigurationPageState
   Widget _buildTitle() => Text(
       widget.reminder != null ? 'Edit reminder'.i18n : 'Create reminder'.i18n);
 
-  Future _save(ReminderList reminderList) async {
+  Future _save(SingleSubjectReminderList reminderList) async {
     if (!_formKey.currentState.validate()) {
       return;
     }

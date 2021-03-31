@@ -38,7 +38,7 @@ class ReminderView extends StatelessWidget {
   }
 
   Widget _buildReminderTile(
-      BuildContext context, ReminderList reminderList, Reminder reminder) {
+      BuildContext context, SingleSubjectReminderList reminderList, Reminder reminder) {
     final now = GregorianCalendar.now();
     final int dueInDays = reminder.dueInFrom(now);
     return ExpansionTile(

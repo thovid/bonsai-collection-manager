@@ -5,6 +5,7 @@
 import 'package:bonsaicollectionmanager/reminder/infrastructure/reminder_configuration_table.dart';
 import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
+import 'package:date_calendar/date_calendar.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:test/test.dart';
 
@@ -70,11 +71,46 @@ main() {
         await ReminderConfigurationTable.readAll(otherSubject, db);
     expect(notDeleted.length, equals(1));
   });
+
+  test('can get all reminders', () async {
+    DatabaseExecutor db = await openTestDatabase();
+    final otherSubject = ModelID.newId();
+    final entries = [
+      _anEntry(subject),
+      _anEntry(subject),
+      _anEntry(otherSubject),
+    ];
+    entries.forEach((element) async {
+      await ReminderConfigurationTable.write(element, db);
+    });
+
+    final all = await ReminderConfigurationTable.readAllUntil(db);
+    expect(all.length, equals(3));
+  });
+
+  test('can get all reminders until specific date', () async {
+    DatabaseExecutor db = await openTestDatabase();
+    final otherSubject = ModelID.newId();
+    final entries = [
+      _anEntry(subject, nextReminder: GregorianCalendar.now()),
+      _anEntry(subject, nextReminder: GregorianCalendar.now().addYears(1)),
+      _anEntry(otherSubject, nextReminder: GregorianCalendar.now().addDays(2)),
+    ];
+    entries.forEach((element) async {
+      await ReminderConfigurationTable.write(element, db);
+    });
+
+    final all = await ReminderConfigurationTable.readAllUntil(db,
+        until: GregorianCalendar.now().addDays(3));
+    expect(all.length, equals(2));
+  });
 }
 
-ReminderConfiguration _anEntry(ModelID subject, {bool repeat = false}) {
+ReminderConfiguration _anEntry(ModelID subject,
+    {bool repeat = false, Calendar nextReminder}) {
   return (ReminderConfigurationBuilder()
         ..subjectID = subject
+        ..nextReminder = nextReminder
         ..repeat = repeat)
       .build();
 }

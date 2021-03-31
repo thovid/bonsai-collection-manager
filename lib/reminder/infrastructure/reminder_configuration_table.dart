@@ -112,6 +112,25 @@ class ReminderConfigurationTable {
     return result;
   }
 
+  static Future<List<ReminderConfiguration>> readAllUntil(
+      DatabaseExecutor database,
+      {Calendar until}) async {
+    until ??= GregorianCalendar(9999);
+    List<Map<String, dynamic>> data = await database.query(
+      table_name,
+      columns: columns,
+      orderBy: '$next_reminder_at ASC',
+      where: '$next_reminder_at < ?',
+      whereArgs: [until.toDateTimeString()],
+    );
+
+    List<ReminderConfiguration> result = []..length = data.length;
+    for (int i = 0; i < data.length; i++) {
+      result[i] = _fromMap(data[i]);
+    }
+    return result;
+  }
+
   static Map<String, dynamic> _toMap(ReminderConfiguration entry) => {
         entry_id: entry.id.value,
         subject_id: entry.subjectID.value,

@@ -21,7 +21,7 @@ class ViewReminderConfigurationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SafeArea(
-        child: Consumer2<ReminderList, Reminder>(
+        child: Consumer2<SingleSubjectReminderList, Reminder>(
           builder: (context, reminderList, reminderConfiguration, _) =>
               Scaffold(
             appBar: AppBar(
@@ -48,7 +48,7 @@ class ViewReminderConfigurationPage extends StatelessWidget {
     return 'Reminder'.i18n;
   }
 
-  Future<void> _startEdit(BuildContext context, ReminderList reminderList,
+  Future<void> _startEdit(BuildContext context, SingleSubjectReminderList reminderList,
           Reminder reminder) async =>
       Navigator.of(context).push(
         MaterialPageRoute<Reminder>(
@@ -63,7 +63,7 @@ class ViewReminderConfigurationPage extends StatelessWidget {
         ),
       );
 
-  _delete(BuildContext context, ReminderList reminderList,
+  _delete(BuildContext context, SingleSubjectReminderList reminderList,
       Reminder reminder) async {
     final bool shouldDelete = await showDialog(
       context: context,

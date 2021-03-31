@@ -20,13 +20,23 @@ abstract class ReminderRepository {
   Future<void> remove(ModelID<ReminderConfiguration> id);
 
   Future<void> removeAll(ModelID subjectId);
+
+  Future<List<ReminderConfiguration>> loadReminders({Calendar until});
 }
 
-class ReminderList with ChangeNotifier {
-  static Future<ReminderList> load(ReminderRepository repository,
+abstract class ReminderList {
+  List<Reminder> get reminders;
+  Future<void> discardReminder(Reminder reminder);
+  Future<LogbookEntry> confirmReminder(
+      Reminder reminder, LookupLogbook lookupLogbook,
+      {WorkTypeTranslator workTypeTranslator});
+}
+
+class SingleSubjectReminderList with ReminderList, ChangeNotifier {
+  static Future<SingleSubjectReminderList> load(ReminderRepository repository,
           {ModelID subjectId}) async =>
       repository.loadReminderFor(subjectId).then((reminders) =>
-          ReminderList._internal(
+          SingleSubjectReminderList(
               reminders: reminders,
               subjectId: subjectId,
               repository: repository));
@@ -35,7 +45,7 @@ class ReminderList with ChangeNotifier {
   final List<Reminder> _reminders;
   final ModelID subjectId;
 
-  ReminderList._internal(
+  SingleSubjectReminderList(
       {List<ReminderConfiguration> reminders,
       ModelID subjectId,
       ReminderRepository repository})
@@ -43,6 +53,7 @@ class ReminderList with ChangeNotifier {
         subjectId = subjectId,
         _repository = repository;
 
+  @override
   List<Reminder> get reminders => _reminders;
 
   Future<ReminderConfiguration> add(ReminderConfiguration configuration) async {
@@ -66,9 +77,11 @@ class ReminderList with ChangeNotifier {
     return configuration;
   }
 
+  @override
   Future<void> discardReminder(Reminder reminder) async =>
       _advanceReminder(reminder);
 
+  @override
   Future<LogbookEntry> confirmReminder(
       Reminder reminder, LookupLogbook lookupLogbook,
       {WorkTypeTranslator workTypeTranslator}) async {
@@ -119,9 +132,64 @@ class ReminderList with ChangeNotifier {
 
   Future removeAll() async {
     _reminders.clear();
-    _repository.removeAll(subjectId);
+    await _repository.removeAll(subjectId);
     notifyListeners();
   }
+}
+
+class MultiSubjectReminderList with ReminderList, ChangeNotifier {
+  static Future<MultiSubjectReminderList> load(ReminderRepository repository,
+      {Calendar until}) async {
+    final List<ReminderConfiguration> allReminders =
+        await repository.loadReminders(until: until);
+
+    final Map<ModelID, List<ReminderConfiguration>> bySubject =
+        allReminders.fold(Map(), (m, e) {
+      if (m[e.subjectID] == null) m[e.subjectID] = [];
+      m[e.subjectID].add(e);
+      return m;
+    });
+
+    return MultiSubjectReminderList._internal(
+      remindersBySubject: bySubject.map(
+        (key, value) => MapEntry(
+          key,
+          SingleSubjectReminderList(
+            reminders: value,
+            subjectId: key,
+            repository: repository,
+          ),
+        ),
+      ),
+    );
+  }
+
+  final Map<ModelID, SingleSubjectReminderList> _remindersBySubject;
+
+  MultiSubjectReminderList._internal(
+      {Map<ModelID, SingleSubjectReminderList> remindersBySubject})
+      : _remindersBySubject = remindersBySubject;
+
+  @override
+  Future<LogbookEntry> confirmReminder(
+      Reminder reminder, LookupLogbook lookupLogbook,
+      {WorkTypeTranslator workTypeTranslator}) {
+    return _remindersBySubject[reminder.configuration.subjectID]
+        .confirmReminder(reminder, lookupLogbook,
+            workTypeTranslator: workTypeTranslator);
+  }
+
+  @override
+  Future<void> discardReminder(Reminder reminder) {
+    return _remindersBySubject[reminder.configuration.subjectID]
+        .discardReminder(reminder);
+  }
+
+  @override
+  List<Reminder> get reminders =>
+      _remindersBySubject.values.expand((element) => element.reminders).toList()
+        ..sort((a, b) => a.configuration.nextReminder
+            .compareTo(b.configuration.nextReminder));
 }
 
 class Reminder with ChangeNotifier {

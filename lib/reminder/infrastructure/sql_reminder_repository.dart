@@ -2,6 +2,8 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
+import 'package:date_calendar/date_calendar.dart';
+
 import 'reminder_configuration_table.dart';
 import '../../shared/model/model_id.dart';
 
@@ -26,4 +28,10 @@ class SQLReminderRepository extends BaseRepository with ReminderRepository {
   @override
   Future<void> removeAll(ModelID subjectId) =>
       init().then((db) => ReminderConfigurationTable.deleteAll(subjectId, db));
+
+  @override
+  Future<List<ReminderConfiguration>> loadReminders({Calendar until}) {
+    return init().then(
+        (db) => ReminderConfigurationTable.readAllUntil(db, until: until));
+  }
 }

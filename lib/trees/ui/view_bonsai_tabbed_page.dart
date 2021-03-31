@@ -33,12 +33,12 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
   Widget build(BuildContext context) => SafeArea(
         child: DefaultTabController(
           length: 3,
-          child: Consumer4<BonsaiTreeWithImages, Logbook, ReminderList,
+          child: Consumer4<BonsaiTreeWithImages, Logbook, SingleSubjectReminderList,
               BonsaiTreeCollection>(
             builder: (BuildContext context,
                     BonsaiTreeWithImages tree,
                     Logbook logbook,
-                    ReminderList reminderList,
+                    SingleSubjectReminderList reminderList,
                     BonsaiTreeCollection collection,
                     Widget child) =>
                 Scaffold(
@@ -126,7 +126,7 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
       BuildContext context,
       BonsaiTreeWithImages tree,
       Logbook logbook,
-      ReminderList reminderList,
+      SingleSubjectReminderList reminderList,
       BonsaiTreeCollection collection) async {
     final bool shouldDelete = await showDialog(
         context: context,
@@ -160,7 +160,7 @@ class ViewBonsaiTabbedPage extends StatelessWidget {
         arguments: Tuple2(logbook, initialWorkType));
   }
 
-  void _addReminder(BuildContext context, ReminderList reminderList) {
+  void _addReminder(BuildContext context, SingleSubjectReminderList reminderList) {
     Navigator.of(context).pushNamed(
         EditReminderConfigurationPage.route_name_create,
         arguments: reminderList);

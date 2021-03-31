@@ -65,7 +65,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
               logbookRepository: logbookRepository,
               imageRepository: imageRepository,
               subjectId: tree.id),
-          ReminderList.load(
+          SingleSubjectReminderList.load(
             reminderRepository,
             subjectId: tree.id,
           ),
@@ -87,7 +87,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
                 ChangeNotifierProvider<Logbook>.value(
                   value: snapshot.data[1],
                 ),
-                ChangeNotifierProvider<ReminderList>.value(
+                ChangeNotifierProvider<SingleSubjectReminderList>.value(
                   value: snapshot.data[2],
                 ),
               ],
@@ -149,13 +149,13 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case ViewReminderConfigurationPage.route_name:
       return MaterialPageRoute(builder: (context) {
         final args = settings.arguments
-            as Tuple2<ReminderList, Reminder>;
+            as Tuple2<SingleSubjectReminderList, Reminder>;
         final reminderList = args.item1;
         final reminderConfiguration = args.item2;
 
         return MultiProvider(
           providers: [
-            ChangeNotifierProvider<ReminderList>.value(value: reminderList),
+            ChangeNotifierProvider<SingleSubjectReminderList>.value(value: reminderList),
             ChangeNotifierProvider<Reminder>.value(
                 value: reminderConfiguration),
           ],
@@ -166,10 +166,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case EditReminderConfigurationPage.route_name:
       return MaterialPageRoute(builder: (context) {
         final args = settings.arguments
-            as Tuple2<ReminderList, Reminder>;
+            as Tuple2<SingleSubjectReminderList, Reminder>;
         final reminderList = args.item1;
         final reminderConfiguration = args.item2;
-        return ChangeNotifierProvider<ReminderList>.value(
+        return ChangeNotifierProvider<SingleSubjectReminderList>.value(
           value: reminderList,
           child: I18n(
               child: EditReminderConfigurationPage(
@@ -180,9 +180,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
 
     case EditReminderConfigurationPage.route_name_create:
       return MaterialPageRoute(builder: (context) {
-        final reminderList = settings.arguments as ReminderList;
+        final reminderList = settings.arguments as SingleSubjectReminderList;
 
-        return ChangeNotifierProvider<ReminderList>.value(
+        return ChangeNotifierProvider<SingleSubjectReminderList>.value(
           value: reminderList,
           child: I18n(child: EditReminderConfigurationPage(subjectID: reminderList.subjectId,)),
         );

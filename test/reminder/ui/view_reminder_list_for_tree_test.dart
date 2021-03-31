@@ -12,14 +12,14 @@ import '../../utils/test_utils.dart' as testUtils;
 // TODO add tests for actions
 main() {
   testWidgets('can list all reminder for a tree', (WidgetTester tester) async {
-    ReminderList reminderList = await testUtils
+    SingleSubjectReminderList reminderList = await testUtils
         .loadReminderListWith([aReminder(), aReminder(), aReminder()]);
     await _openView(tester, reminderList);
     expect(find.byType(ListTile), findsNWidgets(3));
   });
 }
 
-Future _openView(WidgetTester tester, ReminderList reminderList,
+Future _openView(WidgetTester tester, SingleSubjectReminderList reminderList,
     {NavigatorObserver navigatorObserver}) async {
   return tester.pumpWidget(
     await testUtils.testAppWith(
