@@ -248,6 +248,9 @@ class ReminderConfigurationBuilder with HasWorkType {
         workTypeName = fromConfiguration?.workTypeName,
         firstReminder = fromConfiguration?.firstReminder ??
             GregorianCalendar.now().addDays(1),
+        nextReminder = fromConfiguration?.nextReminder,
+        numberOfPreviousReminders =
+            fromConfiguration?.numberOfPreviousReminders,
         repeat = fromConfiguration?.repeat ?? false,
         frequency = fromConfiguration?.frequency ?? 1,
         frequencyUnit = fromConfiguration?.frequencyUnit ?? FrequencyUnit.days,
@@ -258,7 +261,7 @@ class ReminderConfigurationBuilder with HasWorkType {
         endingAfterRepetitions = fromConfiguration?.endingAfterRepetitions ?? 1;
 
   ReminderConfiguration build() {
-    if (nextReminder == null) {
+    if (nextReminder == null || nextReminder.compareTo(firstReminder) < 0) {
       nextReminder = firstReminder;
     }
     if (numberOfPreviousReminders == null) {

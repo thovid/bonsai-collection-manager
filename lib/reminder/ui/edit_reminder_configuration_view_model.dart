@@ -114,7 +114,7 @@ class EditReminderConfigurationViewModel with HasWorkType {
   @override
   String get workTypeName => _configurationBuilder.workTypeName;
 
-  Future<ReminderConfiguration> save(ReminderList reminderList) async {
+  Future<ReminderConfiguration> saveIn(ReminderList reminderList) async {
     final result = _configurationBuilder.build();
     await reminderList.add(result);
     return result;
@@ -122,8 +122,6 @@ class EditReminderConfigurationViewModel with HasWorkType {
 
   @override
   void updateWorkType(LogWorkType workType, String workTypeName) {
-    // setState(() {
     _configurationBuilder.updateWorkType(workType, workTypeName);
-    //});
   }
 }

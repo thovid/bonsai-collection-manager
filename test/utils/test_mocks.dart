@@ -90,6 +90,4 @@ class TestBonsaiRepository with BonsaiTreeRepository {
 
 class MockLogbookRepository extends Mock implements LogbookRepository {}
 
-class MockReminderRepository extends Mock implements ReminderRepository {
-
-}
+class MockReminderRepository extends Mock implements ReminderRepository {}

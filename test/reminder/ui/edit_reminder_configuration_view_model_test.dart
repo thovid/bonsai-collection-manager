@@ -4,9 +4,12 @@
 
 import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
 import 'package:bonsaicollectionmanager/reminder/ui/edit_reminder_configuration_view_model.dart';
+import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
 import 'package:date_calendar/date_calendar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:test/test.dart';
+
+import '../../utils/test_utils.dart';
 
 main() {
   group('model without existing configuration', () {
@@ -119,10 +122,12 @@ main() {
             'before the ending date does not change the ending date', () {
       model.repeatChanged(true);
       model.endingConditionTypeChanged(EndingConditionType.after_date);
-      model.firstReminderChanged(GregorianCalendar.now().addDays(1).toDateTimeLocal());
+      model.firstReminderChanged(
+          GregorianCalendar.now().addDays(1).toDateTimeLocal());
       final endingDate = GregorianCalendar.now().addDays(30);
       model.endingAtDateChanged(endingDate.toDateTimeLocal());
-      model.firstReminderChanged(GregorianCalendar.now().addDays(10).toDateTimeLocal());
+      model.firstReminderChanged(
+          GregorianCalendar.now().addDays(10).toDateTimeLocal());
       expect(model.endingAtDate, equals(endingDate));
     });
 
@@ -131,7 +136,8 @@ main() {
             'than the current ending date changes the current ending date', () {
       model.repeatChanged(true);
       model.endingConditionTypeChanged(EndingConditionType.after_date);
-      model.firstReminderChanged(GregorianCalendar.now().addDays(1).toDateTimeLocal());
+      model.firstReminderChanged(
+          GregorianCalendar.now().addDays(1).toDateTimeLocal());
       final firstEndDate = GregorianCalendar.now().addDays(2).toDateTimeLocal();
       model.endingAtDateChanged(firstEndDate);
       final newReminderDate = GregorianCalendar.now().addDays(4);
@@ -169,6 +175,49 @@ main() {
       model.endingAfterRepetitionsChanged("1a");
       expect(model.endingAfterRepetitions, equals("5"));
       expect(setStateMock.called, isFalse);
+    });
+  });
+
+  group('model created from existing configuration', () {
+    final ReminderConfiguration initialConfiguration =
+        (ReminderConfigurationBuilder()
+              ..repeat = true
+              ..endingConditionType = EndingConditionType.never
+              ..frequency = 1
+              ..frequencyUnit = FrequencyUnit.days
+              ..firstReminder = GregorianCalendar.now().addDays(-5)
+              ..numberOfPreviousReminders = 5
+              ..nextReminder = GregorianCalendar.now())
+            .build();
+    EditReminderConfigurationViewModel model;
+    SetStateMock setStateMock;
+
+    setUp(() {
+      setStateMock = SetStateMock();
+      model = EditReminderConfigurationViewModel(setStateMock.setState,
+          reminderConfiguration: initialConfiguration);
+    });
+
+    test('keeps next reminder date if date is not changed', () async {
+      model.updateWorkType(LogWorkType.pruned, "Pruned");
+      final updatedConfiguration =
+          await model.saveIn(await loadReminderListWith([]));
+
+      expect(updatedConfiguration.nextReminder,
+          equals(initialConfiguration.nextReminder));
+      expect(updatedConfiguration.numberOfPreviousReminders,
+          equals(initialConfiguration.numberOfPreviousReminders));
+    });
+
+    test(
+        'updates next reminder if first reminder date is changed to be ' +
+            'after next reminder', () async {
+      final newInitialReminder = initialConfiguration.nextReminder.addDays(1);
+      model.firstReminderChanged(newInitialReminder.toDateTimeLocal());
+      final updatedConfiguration =
+          await model.saveIn(await loadReminderListWith([]));
+
+      expect(updatedConfiguration.nextReminder, equals(newInitialReminder));
     });
   });
 }

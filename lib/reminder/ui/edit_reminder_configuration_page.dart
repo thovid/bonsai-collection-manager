@@ -108,7 +108,7 @@ class _EditReminderConfigurationPageState
     }
 
     _formKey.currentState.save();
-    ReminderConfiguration result = await _viewModel.save(reminderList);
+    ReminderConfiguration result = await _viewModel.saveIn(reminderList);
 
     if (widget.reminder != null) {
       widget.reminder.configuration = result;
