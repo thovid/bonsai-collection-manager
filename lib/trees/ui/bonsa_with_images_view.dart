@@ -51,8 +51,8 @@ class BonsaiWithImagesView extends StatelessWidget {
                         'Pot Type', tree.treeData.potType.toString().i18n),
                     _tableRow(
                         'Acquired at',
-                        DateFormat.yMMMd(I18n.locale?.toString())
-                            .format(tree.treeData.acquiredAt)),
+                        DateFormat.yMMMd(I18n.locale?.toString()).format(
+                            tree.treeData.acquiredAt.toDateTimeLocal())),
                     _tableRow('Acquired from', tree.treeData.acquiredFrom),
                   ],
                 ),

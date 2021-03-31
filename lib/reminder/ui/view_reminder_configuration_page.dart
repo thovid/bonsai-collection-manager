@@ -2,7 +2,6 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -118,8 +117,8 @@ class ViewReminderConfigurationPage extends StatelessWidget {
                 // _tableRow('For', reminderConfiguration.treeName),
                 _tableRow(
                     'Starts',
-                    DateFormat.yMMMd()
-                        .format(reminderConfiguration.firstReminder)),
+                    DateFormat.yMMMd().format(
+                        reminderConfiguration.firstReminder.toDateTimeLocal())),
                 _tableRow(
                     'Repeats', _buildRepeatStatement(reminderConfiguration)),
                 _tableRow('Ends', _buildEndingStatement(reminderConfiguration)),
@@ -167,8 +166,10 @@ class ViewReminderConfigurationPage extends StatelessWidget {
         return "After %d repetitions"
             .plural(reminderConfiguration.endingAfterRepetitions);
       case EndingConditionType.after_date:
-        return "At %s".i18n.fill(
-            [DateFormat.yMMMd().format(reminderConfiguration.endingAtDate)]);
+        return "At %s".i18n.fill([
+          DateFormat.yMMMd()
+              .format(reminderConfiguration.endingAtDate.toDateTimeLocal())
+        ]);
     }
     return "";
   }

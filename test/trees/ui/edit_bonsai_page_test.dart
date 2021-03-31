@@ -16,14 +16,16 @@ import '../../utils/test_utils.dart' as testUtils;
 main() {
   testWidgets('screen shows tree data', (WidgetTester tester) async {
     var collection = await testUtils.loadCollectionWith([aBonsaiTree]);
-    await tester.pumpWidget( await testUtils.testAppWith(
+    await tester.pumpWidget(await testUtils.testAppWith(
         EditBonsaiPage(tree: aBonsaiTreeWithImages),
         bonsaiCollection: collection));
 
     expect(find.text(aBonsaiTree.displayName), findsOneWidget);
     expect(find.text(aBonsaiTree.species.latinName), findsOneWidget);
     expect(find.text(aBonsaiTree.treeName), findsOneWidget);
-    expect(find.text(DateFormat.yMMMd().format(aBonsaiTree.acquiredAt)),
+    expect(
+        find.text(DateFormat.yMMMd()
+            .format(aBonsaiTree.acquiredAt.toDateTimeLocal())),
         findsOneWidget);
     expect(find.text(aBonsaiTree.acquiredFrom), findsOneWidget);
   });

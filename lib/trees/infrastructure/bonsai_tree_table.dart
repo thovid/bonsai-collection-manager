@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:date_calendar/date_calendar.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../shared/infrastructure/enum_utils.dart';
@@ -94,7 +95,7 @@ class BonsaiTreeTable {
         potType: tree.potType.toString(),
         developmentLevel: tree.developmentLevel.toString(),
         acquiredFrom: tree.acquiredFrom,
-        acquiredAt: tree.acquiredAt.toIso8601String(),
+        acquiredAt: tree.acquiredAt.toDateTimeString(),
       };
 
   static Future<BonsaiTreeData> _fromMap(Map<String, dynamic> values,
@@ -107,7 +108,7 @@ class BonsaiTreeTable {
             ..potType = enumValueFromString(values[potType], PotType.values)
             ..developmentLevel = enumValueFromString(
                 values[developmentLevel], DevelopmentLevel.values)
-            ..acquiredAt = DateTime.parse(values[acquiredAt])
+            ..acquiredAt = GregorianCalendar.parse(values[acquiredAt])
             ..acquiredFrom = values[acquiredFrom])
           .build();
 }

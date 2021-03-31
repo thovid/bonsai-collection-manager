@@ -30,7 +30,8 @@ main() {
     expect(find.text(// title
         'Logbook entry'), findsOneWidget);
     expect(find.text(anEntry.workTypeName), findsOneWidget);
-    expect(find.text(DateFormat.yMMMd().format(anEntry.date)), findsOneWidget);
+    expect(find.text(DateFormat.yMMMd().format(anEntry.date.toDateTimeLocal())),
+        findsOneWidget);
     expect(find.text(anEntry.notes), findsOneWidget);
   });
 

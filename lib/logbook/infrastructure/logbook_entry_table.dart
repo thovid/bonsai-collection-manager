@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:date_calendar/date_calendar.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 
 import '../model/logbook.dart';
@@ -91,7 +92,7 @@ class LogbookEntryTable {
         subject_id: subject.value,
         work_type: entry.workType.toString(),
         work_type_name: entry.workTypeName,
-        date: entry.date.toIso8601String(),
+        date: entry.date.toDateTimeString(),
         notes: entry.notes
       };
 
@@ -100,7 +101,7 @@ class LogbookEntryTable {
             ..workType =
                 enumValueFromString(data[work_type], LogWorkType.values)
             ..workTypeName = data[work_type_name]
-            ..date = DateTime.parse(data[date])
+            ..date = GregorianCalendar.parse(data[date])
             ..notes = data[notes])
           .build();
 }

@@ -4,6 +4,7 @@
 
 import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
+import 'package:date_calendar/date_calendar.dart';
 
 import 'package:test/test.dart';
 
@@ -14,7 +15,7 @@ main() {
         (ReminderConfigurationBuilder()
               ..frequency = 4
               ..frequencyUnit = FrequencyUnit.weeks
-              ..firstReminder = DateTime.now())
+              ..firstReminder = GregorianCalendar.now())
             .build();
 
     expect(reminderConfiguration.frequency, equals(4));
@@ -22,7 +23,7 @@ main() {
   });
 
   test('sets next reminder to first reminder if not explicitly given', () {
-    DateTime aDate = DateTime.now();
+    Calendar aDate = GregorianCalendar.now();
     final ReminderConfiguration reminderConfiguration =
         (ReminderConfigurationBuilder()..firstReminder = aDate).build();
 
@@ -30,8 +31,8 @@ main() {
   });
 
   test('keeps next reminder if explicitly given', () {
-    DateTime aDate = DateTime.now();
-    DateTime next = aDate.add(Duration(days: 10));
+    Calendar aDate = GregorianCalendar.now();
+    Calendar next = aDate.addDays(10);
     final ReminderConfiguration reminderConfiguration =
         (ReminderConfigurationBuilder()
               ..firstReminder = aDate
@@ -42,7 +43,7 @@ main() {
   });
 
   test('sets number of previous reminders to zero if not explicitly given', () {
-    DateTime aDate = DateTime.now();
+    Calendar aDate = GregorianCalendar.now();
     final ReminderConfiguration reminderConfiguration =
         (ReminderConfigurationBuilder()..firstReminder = aDate).build();
 
@@ -50,7 +51,7 @@ main() {
   });
 
   test('keeps number of previous reminders if explicitly given', () {
-    DateTime aDate = DateTime.now();
+    Calendar aDate = GregorianCalendar.now();
     final ReminderConfiguration reminderConfiguration =
         (ReminderConfigurationBuilder()
               ..firstReminder = aDate
@@ -61,8 +62,8 @@ main() {
   });
 
   test('uses next reminder date for due in calculation', () {
-    DateTime aDate = DateTime.now();
-    DateTime next = aDate.add(Duration(days: 10));
+    Calendar aDate = GregorianCalendar.now();
+    Calendar next = aDate.addDays(10);
     final Reminder reminderConfiguration =
         Reminder((ReminderConfigurationBuilder()
               ..firstReminder = aDate
@@ -72,7 +73,7 @@ main() {
   });
 
   test('can advance day-based reminder', () {
-    final today = DateTime.now();
+    final today = GregorianCalendar.now();
     final reminder = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
@@ -86,7 +87,7 @@ main() {
   });
 
   test('can advance week-based reminder', () {
-    final today = DateTime.now();
+    final today = GregorianCalendar.now();
     final reminder = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
@@ -100,7 +101,7 @@ main() {
   });
 
   test('can advance month-based reminder', () {
-    final today = DateTime(2021, 3, 10);
+    final today = GregorianCalendar(2021, 3, 10);
     final reminder = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
@@ -110,11 +111,11 @@ main() {
           ..frequencyUnit = FrequencyUnit.months)
         .build();
     final advancedReminder = reminder.advanceCurrentReminder();
-    expect(advancedReminder.nextReminder, equals(DateTime(2021, 4, 10)));
+    expect(advancedReminder.nextReminder, equals(GregorianCalendar(2021, 4, 10)));
   });
 
   test('can advance year-based reminder', () {
-    final today = DateTime(2021, 3, 10);
+    final today = GregorianCalendar(2021, 3, 10);
     final reminder = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
@@ -124,17 +125,17 @@ main() {
           ..frequencyUnit = FrequencyUnit.years)
         .build();
     final advancedReminder = reminder.advanceCurrentReminder();
-    expect(advancedReminder.nextReminder, equals(DateTime(2023, 3, 10)));
+    expect(advancedReminder.nextReminder, equals(GregorianCalendar(2023, 3, 10)));
   });
 
   test('has ended if advancing a reminder reaches date based ending condition',
       () {
-    final today = DateTime.now();
+    final today = GregorianCalendar.now();
     final reminder = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
           ..endingConditionType = EndingConditionType.after_date
-          ..endingAtDate = today.add(Duration(days: 2))
+          ..endingAtDate = today.addDays(2)
           ..firstReminder = today
           ..frequency = 1
           ..frequencyUnit = FrequencyUnit.days)
@@ -142,7 +143,7 @@ main() {
 
     var advancedReminder =
         reminder.advanceCurrentReminder().advanceCurrentReminder();
-    expect(advancedReminder.nextReminder, equals(today.add(Duration(days: 2))));
+    expect(advancedReminder.nextReminder, equals(today.addDays(2)));
     expect(advancedReminder.hasEnded(), isFalse);
 
     advancedReminder = advancedReminder.advanceCurrentReminder();
@@ -152,7 +153,7 @@ main() {
   test(
       'has ended if advancing a reminder reaches number of repetitions' +
           ' based ending condition', () {
-    final today = DateTime.now();
+    final today = GregorianCalendar.now();
     final reminder = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
@@ -165,14 +166,14 @@ main() {
 
     var advancedReminder =
         reminder.advanceCurrentReminder().advanceCurrentReminder();
-    expect(advancedReminder.nextReminder, equals(today.add(Duration(days: 2))));
+    expect(advancedReminder.nextReminder, equals(today.addDays(2)));
     expect(advancedReminder.hasEnded(), isFalse);
     advancedReminder = advancedReminder.advanceCurrentReminder();
     expect(advancedReminder.hasEnded(), isTrue);
   });
 
   test('has ended if a not-repeated reminder is discarded', () {
-    final today = DateTime.now();
+    final today = GregorianCalendar.now();
     final reminder = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = false

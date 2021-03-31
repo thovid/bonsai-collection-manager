@@ -34,7 +34,8 @@ class LogbookView extends StatelessWidget {
         leading: CircleAvatar(child: workTypeIconFor(entry.entry.workType)),
         title: Text(entry.entry.workTypeName ?? ''),
         subtitle: Text(
-          DateFormat.yMMMd(I18n.locale?.toString()).format(entry.entry.date),
+          DateFormat.yMMMd(I18n.locale?.toString())
+              .format(entry.entry.date.toDateTimeLocal()),
         ),
         onTap: () {
           Navigator.of(context).pushNamed(ViewLogbookEntryPage.route_name,

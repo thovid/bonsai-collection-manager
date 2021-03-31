@@ -2,7 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
-
+import 'package:date_calendar/date_calendar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -90,10 +90,11 @@ class _EditLogbookEntryPageState extends State<EditLogbookEntryPage> {
               mediumVerticalSpace,
               formDatePickerField(
                 context,
-                initialValue: _entryBuilder.date,
+                initialValue: _entryBuilder.date.toDateTimeLocal(),
                 label: 'Date'.i18n,
                 readOnly: false,
-                onChanged: (value) => _entryBuilder.date = value,
+                onChanged: (value) =>
+                    _entryBuilder.date = GregorianCalendar.fromDateTime(value),
               ),
               mediumVerticalSpace,
               formTextField(

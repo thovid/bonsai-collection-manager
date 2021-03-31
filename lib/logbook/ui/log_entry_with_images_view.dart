@@ -37,7 +37,8 @@ class LogEntryWithImagesView extends StatelessWidget {
             child: Table(
               columnWidths: {0: FractionColumnWidth(.4)},
               children: [
-                _tableRow('Date', DateFormat.yMMMd().format(entry.date)),
+                _tableRow('Date',
+                    DateFormat.yMMMd().format(entry.date.toDateTimeLocal())),
                 _tableRow('Notes', entry.notes),
               ],
             ),

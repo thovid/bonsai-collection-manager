@@ -29,7 +29,9 @@ main() {
             '${aBonsaiTree.species.latinName} - ${aBonsaiTree.species.informalName}'),
         findsOneWidget);
     expect(find.text(aBonsaiTree.treeName), findsOneWidget);
-    expect(find.text(DateFormat.yMMMd().format(aBonsaiTree.acquiredAt)),
+    expect(
+        find.text(DateFormat.yMMMd()
+            .format(aBonsaiTree.acquiredAt.toDateTimeLocal())),
         findsOneWidget);
     expect(find.text(aBonsaiTree.acquiredFrom), findsOneWidget);
     expect(find.byType(ImageGallery), findsOneWidget);

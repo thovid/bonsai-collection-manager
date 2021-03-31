@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:date_calendar/date_calendar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -110,10 +111,11 @@ class _EditBonsaiPageState extends State<EditBonsaiPage> {
                     mediumVerticalSpace,
                     formDatePickerField(
                       context,
-                      initialValue: _treeBuilder.acquiredAt,
+                      initialValue: _treeBuilder.acquiredAt.toDateTimeLocal(),
                       readOnly: false,
                       label: "Acquired at".i18n,
-                      onChanged: (value) => _treeBuilder.acquiredAt = value,
+                      onChanged: (value) => _treeBuilder.acquiredAt =
+                          GregorianCalendar.fromDateTime(value),
                     ),
                     mediumVerticalSpace,
                     formTextField(

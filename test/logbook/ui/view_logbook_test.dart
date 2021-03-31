@@ -5,6 +5,7 @@
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
 import 'package:bonsaicollectionmanager/logbook/ui/logbook_view.dart';
 import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
+import 'package:date_calendar/date_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -18,12 +19,12 @@ main() {
     final LogbookEntry firstEntry = (LogbookEntryBuilder()
           ..workType = LogWorkType.deadwood
           ..workTypeName = 'deadwood worked'
-          ..date = DateTime(2020, 1, 1))
+          ..date = GregorianCalendar(2020, 1, 1))
         .build();
     final LogbookEntry secondEntry = (LogbookEntryBuilder()
           ..workType = LogWorkType.fertilized
           ..workTypeName = 'fertilized'
-          ..date = DateTime(2020, 2, 1))
+          ..date = GregorianCalendar(2020, 2, 1))
         .build();
     var logbook = await testUtils.loadLogbookWith([firstEntry, secondEntry]);
     await _openView(tester, logbook);

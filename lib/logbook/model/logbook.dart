@@ -2,6 +2,7 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:date_calendar/date_calendar.dart';
 import 'package:flutter/material.dart';
 
 import '../../worktype/model/work_type.dart';
@@ -109,7 +110,7 @@ class LogbookEntry {
   final ModelID<LogbookEntry> id;
   final LogWorkType workType;
   final String workTypeName;
-  final DateTime date;
+  final Calendar date;
   final String notes;
 
   LogbookEntry._builder(LogbookEntryBuilder builder)
@@ -124,7 +125,7 @@ class LogbookEntryBuilder with HasWorkType {
   final ModelID<LogbookEntry> _id;
   LogWorkType workType;
   String workTypeName;
-  DateTime date;
+  Calendar date;
   String notes;
 
   LogbookEntryBuilder({LogbookEntry fromEntry, String id})
@@ -132,7 +133,7 @@ class LogbookEntryBuilder with HasWorkType {
             fromEntry?.id ??
             ModelID<LogbookEntry>.newId(),
         workType = fromEntry?.workType ?? LogWorkType.custom,
-        date = fromEntry?.date ?? DateTime.now(),
+        date = fromEntry?.date ?? GregorianCalendar.now(),
         workTypeName = fromEntry?.workTypeName,
         notes = fromEntry?.notes;
 

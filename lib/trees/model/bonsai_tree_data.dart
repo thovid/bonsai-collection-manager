@@ -2,6 +2,8 @@
  * Copyright (c) 2020 by Thomas Vidic
  */
 
+import 'package:date_calendar/date_calendar.dart';
+
 import '../../shared/model/model_id.dart';
 import './species.dart';
 
@@ -37,7 +39,7 @@ class BonsaiTreeData {
   final PotType potType;
 
   /// Date the tree was acquired in local time.
-  final DateTime acquiredAt;
+  final Calendar acquiredAt;
 
   /// From whom or where the tree was acquired from.
   final String acquiredFrom;
@@ -70,17 +72,19 @@ class BonsaiTreeDataBuilder {
   int speciesOrdinal;
   DevelopmentLevel developmentLevel;
   PotType potType;
-  DateTime acquiredAt;
+  Calendar acquiredAt;
   String acquiredFrom;
 
   BonsaiTreeDataBuilder({BonsaiTreeData fromTree, String id})
-      : _id = ModelID<BonsaiTreeData>.fromID(id) ?? fromTree?.id ?? ModelID<BonsaiTreeData>.newId(),
+      : _id = ModelID<BonsaiTreeData>.fromID(id) ??
+            fromTree?.id ??
+            ModelID<BonsaiTreeData>.newId(),
         treeName = fromTree?.treeName ?? '',
         species = fromTree?.species ?? Species.unknown,
         speciesOrdinal = fromTree?.speciesOrdinal ?? 1,
         developmentLevel = fromTree?.developmentLevel ?? DevelopmentLevel.raw,
         potType = fromTree?.potType ?? PotType.nursery_pot,
-        acquiredAt = fromTree?.acquiredAt ?? DateTime.now(),
+        acquiredAt = fromTree?.acquiredAt ?? GregorianCalendar.now(),
         acquiredFrom = fromTree?.acquiredFrom ?? '';
 
   BonsaiTreeData build() => BonsaiTreeData._builder(this);

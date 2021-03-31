@@ -8,6 +8,7 @@ import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_collection.dart'
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_data.dart';
 import 'package:bonsaicollectionmanager/trees/model/bonsai_tree_with_images.dart';
 import 'package:bonsaicollectionmanager/trees/model/species.dart';
+import 'package:date_calendar/date_calendar.dart';
 
 import 'test_mocks.dart';
 
@@ -28,7 +29,7 @@ final BonsaiTreeData aBonsaiTree = (BonsaiTreeDataBuilder()
       ..speciesOrdinal = 1
       ..developmentLevel = DevelopmentLevel.refinement
       ..potType = PotType.bonsai_pot
-      ..acquiredAt = DateTime(2020, 5, 20)
+      ..acquiredAt = GregorianCalendar(2020, 5, 20)
       ..acquiredFrom = 'Bonsai Shop')
     .build();
 

@@ -141,8 +141,8 @@ class _EditReminderConfigurationPageState
                   mediumVerticalSpace,
                   formDatePickerField(
                     context,
-                    initialValue: _viewModel.firstReminder,
-                    firstDate: _viewModel.earliestFirstReminder,
+                    initialValue: _viewModel.firstReminder.toDateTimeLocal(),
+                    firstDate: _viewModel.earliestFirstReminder.toDateTimeLocal(),
                     label: 'On'.i18n,
                     readOnly: false,
                     onChanged: _viewModel.firstReminderChanged,
@@ -236,8 +236,8 @@ class _EditReminderConfigurationPageState
                               child: formDatePickerField(
                                 context,
                                 readOnly: !_viewModel.endingAtDateEditable,
-                                firstDate: _viewModel.earliestEndingAtDate,
-                                initialValue: _viewModel.endingAtDate,
+                                firstDate: _viewModel.earliestEndingAtDate.toDateTimeLocal(),
+                                initialValue: _viewModel.endingAtDate.toDateTimeLocal(),
                                 onChanged: _viewModel.endingAtDateChanged,
                               ),
                             ),

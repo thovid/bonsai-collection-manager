@@ -4,6 +4,7 @@
 import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
+import 'package:date_calendar/date_calendar.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -26,7 +27,7 @@ main() {
   test('can load logbook with entry', () async {
     final LogbookEntry logbookEntry = (LogbookEntryBuilder()
           ..workType = LogWorkType.pruned
-          ..date = DateTime.now()
+          ..date = GregorianCalendar.now()
           ..notes = "Some notes")
         .build();
     final LogbookRepository repository = MockLogbookRepository();
@@ -52,7 +53,7 @@ main() {
 
     final LogbookEntry logbookEntry = (LogbookEntryBuilder()
           ..workType = LogWorkType.pruned
-          ..date = DateTime.now()
+          ..date = GregorianCalendar.now()
           ..notes = "Some notes")
         .build();
 
@@ -65,7 +66,7 @@ main() {
   test('can get and update entry', () async {
     final LogbookEntry logbookEntry = (LogbookEntryBuilder()
           ..workType = LogWorkType.pruned
-          ..date = DateTime.now()
+          ..date = GregorianCalendar.now()
           ..notes = "Some notes")
         .build();
     final LogbookRepository repository = MockLogbookRepository();
@@ -98,7 +99,7 @@ main() {
   test('can delete entry', () async {
     final LogbookEntry logbookEntry = (LogbookEntryBuilder()
           ..workType = LogWorkType.pruned
-          ..date = DateTime.now()
+          ..date = GregorianCalendar.now()
           ..notes = "Some notes")
         .build();
     final LogbookRepository repository = MockLogbookRepository();

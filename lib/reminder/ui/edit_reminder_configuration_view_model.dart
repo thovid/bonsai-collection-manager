@@ -2,6 +2,7 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
+import 'package:date_calendar/date_calendar.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../shared/model/model_id.dart';
@@ -22,18 +23,20 @@ class EditReminderConfigurationViewModel with HasWorkType {
 
   String get pageTitle => 'Create reminder';
 
-  DateTime get firstReminder => _configurationBuilder.firstReminder;
+  Calendar get firstReminder => _configurationBuilder.firstReminder;
 
   ValueChanged<DateTime> get firstReminderChanged => (value) => setState(() {
-        _configurationBuilder.firstReminder = value;
+        _configurationBuilder.firstReminder =
+            GregorianCalendar.fromDateTime(value);
         if (_configurationBuilder.firstReminder
-            .isAfter(_configurationBuilder.endingAtDate)) {
+                .compareTo(_configurationBuilder.endingAtDate) >
+            0) {
           _configurationBuilder.endingAtDate =
               _configurationBuilder.firstReminder;
         }
       });
 
-  DateTime get earliestFirstReminder => DateTime.now().add(Duration(days: 1));
+  Calendar get earliestFirstReminder => GregorianCalendar.now().addDays(1);
 
   bool get repeat => _configurationBuilder.repeat;
 
@@ -76,12 +79,13 @@ class EditReminderConfigurationViewModel with HasWorkType {
       EndingConditionType.after_date ==
           _configurationBuilder.endingConditionType;
 
-  DateTime get endingAtDate => _configurationBuilder.endingAtDate;
+  Calendar get endingAtDate => _configurationBuilder.endingAtDate;
 
-  DateTime get earliestEndingAtDate => _configurationBuilder.firstReminder;
+  Calendar get earliestEndingAtDate => _configurationBuilder.firstReminder;
 
   ValueChanged<DateTime> get endingAtDateChanged => (value) => setState(() {
-        _configurationBuilder.endingAtDate = value;
+        _configurationBuilder.endingAtDate =
+            GregorianCalendar.fromDateTime(value);
       });
 
   bool get endingAfterRepetitionsEditable =>

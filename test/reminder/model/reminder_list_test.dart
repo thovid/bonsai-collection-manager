@@ -6,6 +6,7 @@ import 'package:bonsaicollectionmanager/logbook/model/logbook.dart';
 import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
 import 'package:bonsaicollectionmanager/shared/model/model_id.dart';
 import 'package:bonsaicollectionmanager/worktype/model/work_type.dart';
+import 'package:date_calendar/date_calendar.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -43,7 +44,7 @@ main() {
   });
 
   test('discarding a repeated reminder reminds for the next date', () async {
-    final today = DateTime.now();
+    final today = GregorianCalendar.now();
     final reminderConfiguration = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
@@ -68,7 +69,7 @@ main() {
   test(
       'discarding a reminder that ends after current reminder deletes the reminder',
       () async {
-    final today = DateTime.now();
+    final today = GregorianCalendar.now();
     final reminderConfiguration = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = false
@@ -88,7 +89,7 @@ main() {
     final reminderConfiguration = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = false
-          ..firstReminder = DateTime.now())
+          ..firstReminder = GregorianCalendar.now())
         .build();
 
     final repository =
@@ -102,7 +103,7 @@ main() {
 
   test('confirming reminder creates logbook entry', () async {
     final LookupLogbookMock lookupLogbookMock = LookupLogbookMock();
-    final today = DateTime.now();
+    final today = GregorianCalendar.now();
     final reminderConfiguration = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
@@ -130,7 +131,7 @@ main() {
       'created logbook entry with standard work type name has work ' +
           'type name in past tense', () async {
     final LookupLogbookMock lookupLogbookMock = LookupLogbookMock();
-    final today = DateTime.now();
+    final today = GregorianCalendar.now();
     final reminderConfiguration = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true
@@ -156,7 +157,7 @@ main() {
   });
 
   test('confirming reminder advances reminder', () async {
-    final today = DateTime.now();
+    final today = GregorianCalendar.now();
     final reminderConfiguration = (ReminderConfigurationBuilder()
           ..subjectID = subjectId
           ..repeat = true

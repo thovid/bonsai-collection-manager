@@ -2,6 +2,7 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
+import 'package:date_calendar/date_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
@@ -38,7 +39,7 @@ class ReminderView extends StatelessWidget {
 
   Widget _buildReminderTile(
       BuildContext context, ReminderList reminderList, Reminder reminder) {
-    final now = DateTime.now();
+    final now = GregorianCalendar.now();
     final int dueInDays = reminder.dueInFrom(now);
     return ExpansionTile(
       leading: CircleAvatar(child: workTypeIconFor(reminder.workType)),

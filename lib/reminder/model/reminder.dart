@@ -2,6 +2,7 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
+import 'package:date_calendar/date_calendar.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../shared/model/model_id.dart';
@@ -110,7 +111,7 @@ class ReminderList with ChangeNotifier {
     return (LogbookEntryBuilder()
           ..workType = reminder.workType
           ..workTypeName = workTypeName
-          ..date = DateTime.now())
+          ..date = GregorianCalendar.now())
         .build();
   }
 
@@ -131,8 +132,12 @@ class Reminder with ChangeNotifier {
 
   String get workTypeName => _reminderConfiguration.workTypeName;
 
-  int dueInFrom(DateTime date) =>
-      _reminderConfiguration.nextReminder.difference(date).inDays;
+  int dueInFrom(Calendar date) =>
+      // TODO do correct calculation
+      _reminderConfiguration.nextReminder
+          .toDateTimeLocal()
+          .difference(date.toDateTimeLocal())
+          .inDays;
 
   String resolveSubjectName(SubjectNameResolver resolver) {
     return resolver(_reminderConfiguration.subjectID);
@@ -151,14 +156,14 @@ class ReminderConfiguration {
   final ModelID subjectID;
   final LogWorkType workType;
   final String workTypeName;
-  final DateTime firstReminder;
-  final DateTime nextReminder;
+  final Calendar firstReminder;
+  final Calendar nextReminder;
   final int numberOfPreviousReminders;
   final bool repeat;
   final int frequency;
   final FrequencyUnit frequencyUnit;
   final EndingConditionType endingConditionType;
-  final DateTime endingAtDate;
+  final Calendar endingAtDate;
   final int endingAfterRepetitions;
 
   ReminderConfiguration._builder(ReminderConfigurationBuilder builder)
@@ -189,7 +194,7 @@ class ReminderConfiguration {
     }
 
     if (endingConditionType == EndingConditionType.after_date &&
-        nextReminder.isAfter(endingAtDate)) {
+        nextReminder.compareTo(endingAtDate) > 0) {
       return true;
     }
     if (endingConditionType == EndingConditionType.after_repetitions &&
@@ -200,22 +205,22 @@ class ReminderConfiguration {
     return false;
   }
 
-  DateTime _calculateNextReminder() {
+  Calendar _calculateNextReminder() {
     if (!repeat) {
       return null;
     }
 
     switch (frequencyUnit) {
       case FrequencyUnit.days:
-        return nextReminder.add(Duration(days: frequency));
+        return nextReminder.addDays(frequency);
       case FrequencyUnit.weeks:
-        return nextReminder.add(Duration(days: frequency * 7));
+        return nextReminder.addWeeks(frequency);
       case FrequencyUnit.months:
-        return DateTime(nextReminder.year, nextReminder.month + frequency,
-            nextReminder.day);
+        return GregorianCalendar(nextReminder.year,
+            nextReminder.month + frequency, nextReminder.day);
       case FrequencyUnit.years:
-        return DateTime(nextReminder.year + frequency, nextReminder.month,
-            nextReminder.day);
+        return GregorianCalendar(nextReminder.year + frequency,
+            nextReminder.month, nextReminder.day);
     }
     return null;
   }
@@ -226,14 +231,14 @@ class ReminderConfigurationBuilder with HasWorkType {
   ModelID subjectID;
   LogWorkType workType;
   String workTypeName;
-  DateTime firstReminder;
-  DateTime nextReminder;
+  Calendar firstReminder;
+  Calendar nextReminder;
   int numberOfPreviousReminders;
   bool repeat;
   int frequency;
   FrequencyUnit frequencyUnit;
   EndingConditionType endingConditionType;
-  DateTime endingAtDate;
+  Calendar endingAtDate;
   int endingAfterRepetitions;
 
   ReminderConfigurationBuilder(
@@ -245,14 +250,14 @@ class ReminderConfigurationBuilder with HasWorkType {
         workType = fromConfiguration?.workType ?? LogWorkType.custom,
         workTypeName = fromConfiguration?.workTypeName,
         firstReminder = fromConfiguration?.firstReminder ??
-            DateTime.now().add(Duration(days: 1)),
+            GregorianCalendar.now().addDays(1),
         repeat = fromConfiguration?.repeat ?? false,
         frequency = fromConfiguration?.frequency ?? 1,
         frequencyUnit = fromConfiguration?.frequencyUnit ?? FrequencyUnit.days,
         endingConditionType =
             fromConfiguration?.endingConditionType ?? EndingConditionType.never,
         endingAtDate = fromConfiguration?.endingAtDate ??
-            DateTime.now().add(Duration(days: 1)),
+            GregorianCalendar.now().addDays(1),
         endingAfterRepetitions = fromConfiguration?.endingAfterRepetitions ?? 1;
 
   ReminderConfiguration build() {

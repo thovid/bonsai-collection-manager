@@ -4,6 +4,7 @@
 
 import 'package:bonsaicollectionmanager/reminder/model/reminder.dart';
 import 'package:bonsaicollectionmanager/reminder/ui/edit_reminder_configuration_view_model.dart';
+import 'package:date_calendar/date_calendar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:test/test.dart';
 
@@ -22,21 +23,17 @@ main() {
     });
 
     test('has first reminder set to tomorrow', () {
-      expect(model.firstReminder.year, equals(DateTime.now().year));
-      expect(model.firstReminder.month, equals(DateTime.now().month));
-      expect(model.firstReminder.day, equals(DateTime.now().day + 1));
+      expect(model.firstReminder, equals(GregorianCalendar.now().addDays(1)));
     });
 
     test('earliest first reminder is tomorrow', () {
-      expect(model.earliestFirstReminder.year, equals(DateTime.now().year));
-      expect(model.earliestFirstReminder.month, equals(DateTime.now().month));
-      expect(model.earliestFirstReminder.day, equals(DateTime.now().day + 1));
+      expect(model.earliestFirstReminder,
+          equals(GregorianCalendar.now().addDays(1)));
     });
 
     test('can update first reminder', () {
-      DateTime value =
-          DateTime.now().add(Duration(days: 4 * DateTime.daysPerWeek));
-      model.firstReminderChanged(value);
+      final value = GregorianCalendar.now().addWeeks(4);
+      model.firstReminderChanged(value.toDateTimeLocal());
       expect(model.firstReminder, equals(value));
       expect(setStateMock.called, isTrue);
     });
@@ -103,16 +100,16 @@ main() {
     test('earliest ending date is the same as date of first reminder', () {
       model.repeatChanged(true);
       model.endingConditionTypeChanged(EndingConditionType.after_date);
-      final reminderDate = DateTime.now().add(Duration(days: 23));
-      model.firstReminderChanged(reminderDate);
+      final reminderDate = GregorianCalendar.now().addDays(23);
+      model.firstReminderChanged(reminderDate.toDateTimeLocal());
       expect(model.earliestEndingAtDate, equals(reminderDate));
     });
 
     test('can set and get ending date', () {
       model.repeatChanged(true);
       model.endingConditionTypeChanged(EndingConditionType.after_date);
-      final endDate = DateTime.now().add(Duration(days: 2));
-      model.endingAtDateChanged(endDate);
+      final endDate = GregorianCalendar.now().addDays(2);
+      model.endingAtDateChanged(endDate.toDateTimeLocal());
       expect(model.endingAtDate, equals(endDate));
       expect(setStateMock.called, isTrue);
     });
@@ -122,10 +119,10 @@ main() {
             'before the ending date does not change the ending date', () {
       model.repeatChanged(true);
       model.endingConditionTypeChanged(EndingConditionType.after_date);
-      model.firstReminderChanged(DateTime.now().add(Duration(days: 1)));
-      final DateTime endingDate = DateTime.now().add(Duration(days: 30));
-      model.endingAtDateChanged(endingDate);
-      model.firstReminderChanged(DateTime.now().add(Duration(days: 10)));
+      model.firstReminderChanged(GregorianCalendar.now().addDays(1).toDateTimeLocal());
+      final endingDate = GregorianCalendar.now().addDays(30);
+      model.endingAtDateChanged(endingDate.toDateTimeLocal());
+      model.firstReminderChanged(GregorianCalendar.now().addDays(10).toDateTimeLocal());
       expect(model.endingAtDate, equals(endingDate));
     });
 
@@ -134,13 +131,13 @@ main() {
             'than the current ending date changes the current ending date', () {
       model.repeatChanged(true);
       model.endingConditionTypeChanged(EndingConditionType.after_date);
-      model.firstReminderChanged(DateTime.now().add(Duration(days: 1)));
-      final firstEndDate = DateTime.now().add(Duration(days: 2));
+      model.firstReminderChanged(GregorianCalendar.now().addDays(1).toDateTimeLocal());
+      final firstEndDate = GregorianCalendar.now().addDays(2).toDateTimeLocal();
       model.endingAtDateChanged(firstEndDate);
-      final newReminderDate = DateTime.now().add(Duration(days: 4));
-      model.firstReminderChanged(newReminderDate);
-      expect(model.earliestEndingAtDate, equals(newReminderDate));
+      final newReminderDate = GregorianCalendar.now().addDays(4);
+      model.firstReminderChanged(newReminderDate.toDateTimeLocal());
 
+      expect(model.earliestEndingAtDate, equals(newReminderDate));
       expect(model.endingAtDate, equals(newReminderDate));
     });
 

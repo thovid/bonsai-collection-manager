@@ -2,6 +2,7 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
+import 'package:date_calendar/date_calendar.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../model/reminder.dart';
@@ -116,14 +117,14 @@ class ReminderConfigurationTable {
         subject_id: entry.subjectID.value,
         work_type: entry.workType.toString(),
         work_type_name: entry.workTypeName,
-        first_reminder_at: entry.firstReminder.toIso8601String(),
-        next_reminder_at: entry.nextReminder.toIso8601String(),
+        first_reminder_at: entry.firstReminder.toDateTimeString(),
+        next_reminder_at: entry.nextReminder.toDateTimeString(),
         num_prev_reminders: entry.numberOfPreviousReminders,
         repeat: entry.repeat ? 1 : 0,
         frequency: entry.frequency,
         frequency_unit: entry.frequencyUnit.toString(),
         ending_condition_type: entry.endingConditionType.toString(),
-        ending_at_date: entry.endingAtDate.toIso8601String(),
+        ending_at_date: entry.endingAtDate.toDateTimeString(),
         ending_after_repetitions: entry.endingAfterRepetitions,
       };
 
@@ -133,8 +134,8 @@ class ReminderConfigurationTable {
             ..workType =
                 enumValueFromString(data[work_type], LogWorkType.values)
             ..workTypeName = data[work_type_name]
-            ..firstReminder = DateTime.parse(data[first_reminder_at])
-            ..nextReminder = DateTime.parse(data[next_reminder_at])
+            ..firstReminder = GregorianCalendar.parse(data[first_reminder_at])
+            ..nextReminder = GregorianCalendar.parse(data[next_reminder_at])
             ..numberOfPreviousReminders = data[num_prev_reminders]
             ..repeat = data[repeat] > 0
             ..frequency = data[frequency]
@@ -142,7 +143,7 @@ class ReminderConfigurationTable {
                 enumValueFromString(data[frequency_unit], FrequencyUnit.values)
             ..endingConditionType = enumValueFromString(
                 data[ending_condition_type], EndingConditionType.values)
-            ..endingAtDate = DateTime.parse(data[ending_at_date])
+            ..endingAtDate = GregorianCalendar.parse(data[ending_at_date])
             ..endingAfterRepetitions = data[ending_after_repetitions])
           .build();
 }
