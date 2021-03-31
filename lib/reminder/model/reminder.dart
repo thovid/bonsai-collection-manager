@@ -2,6 +2,7 @@
  * Copyright (c) 2021 by Thomas Vidic
  */
 
+import 'package:bonsaicollectionmanager/shared/dates/date_functions.dart';
 import 'package:date_calendar/date_calendar.dart';
 import 'package:flutter/foundation.dart';
 
@@ -133,11 +134,7 @@ class Reminder with ChangeNotifier {
   String get workTypeName => _reminderConfiguration.workTypeName;
 
   int dueInFrom(Calendar date) =>
-      // TODO do correct calculation
-      _reminderConfiguration.nextReminder
-          .toDateTimeLocal()
-          .difference(date.toDateTimeLocal())
-          .inDays;
+      differenceInDays(_reminderConfiguration.nextReminder, date);
 
   String resolveSubjectName(SubjectNameResolver resolver) {
     return resolver(_reminderConfiguration.subjectID);
