@@ -3,7 +3,7 @@
 A flutter app (tested on android) that can be used to manage a bonsai collection.
 
 Note that this is just some stuff I use to learn flutter ;)
-
+Update to new flutter version required.
 # License
 The MIT License (MIT)
 
